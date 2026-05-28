@@ -1,0 +1,11 @@
+{
+  "discover-hidden-sub-markets": [
+    {
+      "report_id": "lg-us-stick-vacuum",
+      "title": "Major Korean Appliance Brand 미국 스틱청소기 클러스터 분석",
+      "date": "2026-03",
+      "sample_json_url": "/sample-data/discover-hidden-sub-markets--lg-us-stick-vacuum.json",
+      "example_md_url": "https://github.com/hyeonchoi-cpu/listeningmind-playbook/blob/main/skills/discover-hidden-sub-markets/examples/lg-us-stick-vacuum.md"
+    }
+  ]
+}

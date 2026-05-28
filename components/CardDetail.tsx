@@ -1,6 +1,9 @@
 import Link from "next/link";
-import type { Card } from "@/types";
+import type { Card, VerificationReport } from "@/types";
 import { IconTile } from "./IconTile";
+import reportsIndex from "@/data/verification-reports.json";
+
+const VERIFICATION_REPORTS = reportsIndex as Record<string, VerificationReport[]>;
 
 const BAND_LABEL: Record<Card["band"], string> = {
   discovery: "01 / Discovery",
@@ -22,6 +25,7 @@ function PricingValue({ value }: { value: string }) {
 }
 
 export function CardDetail({ card }: { card: Card }) {
+  const verificationReports = VERIFICATION_REPORTS[card.slug] ?? [];
   return (
     <div className="detail">
       <div className="detail-eyebrow">
@@ -134,6 +138,42 @@ export function CardDetail({ card }: { card: Card }) {
           </p>
         )}
       </div>
+
+      {/* === VERIFICATION REPORTS (auto-generated from verification-reports/) === */}
+      {verificationReports.length > 0 && (
+        <div className="detail-section">
+          <h2 className="detail-section-title">검증 리포트</h2>
+          <p className="reports-intro">실제 고객 분석 시나리오 기반 익명화 발췌본. 단가·API 호출 로그 포함.</p>
+          <ul className="reports-list">
+            {verificationReports.map((r) => (
+              <li key={r.report_id} className="reports-item">
+                <div className="reports-meta">
+                  <span className="reports-date">{r.date}</span>
+                  <span className="reports-title">{r.title}</span>
+                </div>
+                <div className="reports-actions">
+                  <a href={r.sample_json_url} download className="reports-link">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    JSON
+                  </a>
+                  <a href={r.example_md_url} target="_blank" rel="noopener noreferrer" className="reports-link">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                    Markdown
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* === RESOURCES (Sample Data & GitHub Skill) === */}
       {(card.sampleDataUrl || card.githubSkillUrl) && (

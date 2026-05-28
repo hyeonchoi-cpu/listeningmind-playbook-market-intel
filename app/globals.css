@@ -933,6 +933,75 @@ button { font-family: inherit; cursor: pointer; }
   margin-right: 4px;
 }
 
+/* === Verification Reports (auto-generated) === */
+.reports-intro {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.reports-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.2s;
+}
+.reports-item:hover { border-color: var(--ink-mute); }
+.reports-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.reports-date {
+  font-family: "Google Sans Code", monospace;
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+}
+.reports-title {
+  font-size: 13px;
+  color: var(--ink-strong);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.reports-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.reports-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface);
+  border-radius: 6px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s;
+}
+.reports-link:hover {
+  background: var(--ink-strong);
+  color: var(--bg);
+}
+
 /* === Resources (Sample Data / GitHub Skill) === */
 .resource-grid {
   display: grid;
@@ -1035,6 +1104,7 @@ button { font-family: inherit; cursor: pointer; }
   .usecase-flow { grid-template-columns: repeat(2, 1fr); }
   .flow-step + .flow-step::before { display: none; }
   .resource-grid { grid-template-columns: 1fr; }
+  .reports-item { flex-direction: column; align-items: flex-start; gap: 8px; }
 }
 @media (max-width: 720px) {
   .cover-grid { grid-template-columns: 1fr; }

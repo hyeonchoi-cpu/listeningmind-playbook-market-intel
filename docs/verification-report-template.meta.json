@@ -1,0 +1,22 @@
+{
+  "report_id": "company-market-category",
+  "card_slug": "discover-hidden-sub-markets",
+  "title": "회사 시장 카테고리 검증 리포트",
+  "date": "2026-03",
+  "anonymize": {
+    "replace": {
+      "고객사명": "Major Korean Brand A",
+      "경쟁사명": "Brand B"
+    }
+  },
+  "publish": {
+    "as_example_md": true,
+    "as_sample_json": true
+  },
+  "labels": {
+    "measured": "API 직접 반환값",
+    "estimated": "AI 해석",
+    "assumed": "전제 조건",
+    "gap": "데이터 공백"
+  }
+}

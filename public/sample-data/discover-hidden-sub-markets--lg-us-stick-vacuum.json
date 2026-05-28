@@ -1,0 +1,295 @@
+{
+  "report_id": "lg-us-stick-vacuum",
+  "card": "discover-hidden-sub-markets",
+  "title": "Major Korean Appliance Brand 미국 스틱청소기 클러스터 분석",
+  "date": "2026-03",
+  "tables": [
+    {
+      "index": 0,
+      "rows": [
+        [
+          "항목",
+          "내용"
+        ],
+        [
+          "분석 시장",
+          "미국 (gl=us)"
+        ],
+        [
+          "분석 키워드",
+          "brand-a cordless / brand-a a9 / brand-b furguard / Brand C stick vacuum cleaner"
+        ],
+        [
+          "총 API 호출 수",
+          "12회 (keyword_info 2 · cluster_finder 4 · intent_finder 6)"
+        ],
+        [
+          "사용 크레딧",
+          "11,888 credits"
+        ],
+        [
+          "기준일",
+          "2026.03 (volume_trend 기준월: 2026-02)"
+        ]
+      ]
+    },
+    {
+      "index": 1,
+      "rows": [
+        [
+          "키워드",
+          "연간 총 검색량",
+          "월평균 (3M)",
+          "3M 증감률",
+          "CPC ($)",
+          "비고"
+        ],
+        [
+          "brand-a cordless",
+          "43,300",
+          "4,133",
+          "▼ -45%",
+          "$0.64",
+          "성숙 시장 진입 [실제]"
+        ],
+        [
+          "brand-b furguard",
+          "15,540",
+          "1,766",
+          "▼ -55%",
+          "$2.08",
+          "2025-05 신규 등장 [실제]"
+        ],
+        [
+          "brand-a a9",
+          "5,450",
+          "396",
+          "▼ -55%",
+          "$0.87",
+          "하위 모델 라인 [실제]"
+        ],
+        [
+          "Brand C stick vacuum cleaner",
+          "N/A",
+          "N/A",
+          "N/A",
+          "-",
+          "exact keyword 데이터 없음 [실제]"
+        ],
+        [
+          "Brand C 확장 3종 합산 (추정)",
+          "~3,380",
+          "~280",
+          "-",
+          "$1.70~",
+          "보정치 [가정]"
+        ]
+      ]
+    },
+    {
+      "index": 2,
+      "rows": [
+        [
+          "No",
+          "API",
+          "대상 키워드 & 파라미터",
+          "호출 목적",
+          "소모 크레딧"
+        ],
+        [
+          "1",
+          "keyword_info",
+          "keywords=[seed 4개], gl=us, data_type=all",
+          "Seed 4개 검색량·추이 조회",
+          "40"
+        ],
+        [
+          "2",
+          "cluster_finder",
+          "keyword=brand-a cordless, gl=us, time_point=curr, hop=2, limit=120, orientation=UNDIRECTED",
+          "Brand A CordZero 검색 클러스터 확인",
+          "6,200"
+        ],
+        [
+          "3",
+          "intent_finder",
+          "keywords=[seed 4개], gl=us, volume_threshold=100, limit=120, sort=volume_total, order=desc",
+          "Seed keyword 기반 연관 검색어 탐색",
+          "208"
+        ],
+        [
+          "4",
+          "cluster_finder",
+          "keyword=brand-b furguard, gl=us, time_point=curr, hop=2, limit=120, orientation=UNDIRECTED",
+          "Bissell FurGuard 클러스터 분석",
+          "4,950"
+        ],
+        [
+          "5",
+          "cluster_finder",
+          "keyword=Brand C stick vacuum cleaner, gl=us, time_point=curr, hop=2, limit=120",
+          "Roborock Seed keyword 클러스터 시도 → rels=0 확인",
+          "0"
+        ],
+        [
+          "6",
+          "intent_finder",
+          "keywords=[Brand C 3종], gl=us, volume_threshold=10, limit=80",
+          "Roborock 실제 검색 표현 확장 탐색",
+          "96"
+        ],
+        [
+          "7",
+          "keyword_info",
+          "keywords=[Brand C 확장 4개], gl=us, data_type=all",
+          "Roborock 확장 키워드 검색량 확인",
+          "40"
+        ],
+        [
+          "8",
+          "cluster_finder",
+          "keyword=brand-b furguard, gl=us, time_point=12m, hop=2, limit=120",
+          "Bissell 클러스터 과거 시점 비교",
+          "0"
+        ],
+        [
+          "9",
+          "cluster_finder",
+          "keyword=brand-a cordless, gl=us, time_point=12m, hop=2, limit=120",
+          "Brand A 클러스터 과거 시점 비교",
+          "0"
+        ],
+        [
+          "10",
+          "intent_finder",
+          "keywords=[brand-a cordless, brand-a a9], gl=us, volume_threshold=50, limit=80",
+          "Brand A 관련 기능 키워드 재확인",
+          "208"
+        ],
+        [
+          "11",
+          "intent_finder",
+          "keywords=[brand-b furguard], gl=us, volume_threshold=50, limit=80",
+          "Bissell 기능 키워드 재확인",
+          "88"
+        ],
+        [
+          "12",
+          "intent_finder",
+          "keywords=[Brand C 3종], gl=us, volume_threshold=10, limit=40",
+          "Roborock 키워드 최종 재확인",
+          "58"
+        ],
+        [
+          "총 소모 크레딧",
+          "총 소모 크레딧",
+          "총 소모 크레딧",
+          "총 소모 크레딧",
+          "11,888"
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "rows": [
+        [
+          "키워드",
+          "연간 총 검색량",
+          "월평균 검색량",
+          "최근 3개월 증감률",
+          "광고 경쟁도",
+          "CPC(USD)"
+        ],
+        [
+          "brand-a cordless",
+          "43,300",
+          "4,133",
+          "-45%",
+          "HIGH (100)",
+          "$0.64"
+        ],
+        [
+          "brand-a a9",
+          "5,450",
+          "396",
+          "-55%",
+          "HIGH (94)",
+          "$0.87"
+        ],
+        [
+          "brand-b furguard",
+          "15,540",
+          "1,766",
+          "-55%",
+          "HIGH (100)",
+          "$2.08"
+        ],
+        [
+          "Brand C stick vacuum cleaner",
+          "N/A",
+          "N/A",
+          "N/A",
+          "-",
+          "-"
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "rows": [
+        [
+          "확장 키워드",
+          "연간 총",
+          "월평균",
+          "최근 3개월 증감률"
+        ],
+        [
+          "Brand C stick vacuum",
+          "1,660",
+          "173",
+          "-46%"
+        ],
+        [
+          "Brand C cordless vacuum",
+          "1,560",
+          "160",
+          "-33%"
+        ],
+        [
+          "Brand C h6 cordless stick vacuum",
+          "160",
+          "16",
+          "0%"
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "rows": [
+        [
+          "브랜드 클러스터",
+          "Dyson 비교 키워드 수"
+        ],
+        [
+          "Brand A CordZero",
+          "brand-a cordless a9 vs Premium Brand v15, brand-a cordless vs Premium Brand v15 (2개)"
+        ],
+        [
+          "Bissell FurGuard",
+          "11개 이상 (Premium Brand v8, v10, Premium Brand 비교 대거 확인)"
+        ],
+        [
+          "Roborock",
+          "해당 없음 (클러스터 미형성)"
+        ]
+      ]
+    }
+  ],
+  "source": "auto-extracted from verification report (anonymized)",
+  "labels": {
+    "measured": "API 직접 반환값 (volume_total, monthly_volume, cpc, rels, communities)",
+    "estimated": "AI 해석 (군집 테마, 시장 성장 신호)",
+    "assumed": "확장 키워드 합산이 카테고리 대표 / 80% 커버리지 임계값",
+    "gap": "roborock exact keyword 데이터 부재 / 12m 과거 시점 결측"
+  }
+}

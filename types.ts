@@ -35,6 +35,14 @@ export type Card = {
   githubSkillUrl?: string;
 };
 
+export type VerificationReport = {
+  report_id: string;
+  title: string;
+  date: string;
+  sample_json_url: string;
+  example_md_url: string;
+};
+
 export type ProfileRow = { label: string; value: string; isPain?: boolean };
 
 export type TopRanked = {

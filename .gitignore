@@ -10,3 +10,10 @@ next-env.d.ts
 .gstack/
 .qa/
 .claude/
+
+# Private verification reports (raw docx + sidecar meta).
+# 생성된 익명화 출력은 별도로 커밋됨:
+#   - skills/{slug}/examples/{report_id}.md
+#   - public/sample-data/{slug}--{report_id}.json
+#   - data/verification-reports.json (인덱스)
+/verification-reports/
