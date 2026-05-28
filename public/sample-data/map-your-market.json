@@ -1,0 +1,30 @@
+{
+  "endpoint": "intent_finder",
+  "card": "map-your-market",
+  "request": {
+    "seed_keywords": ["전기차", "EV 충전기", "전기차 보조금"],
+    "market": "KR",
+    "coverage_target": 0.8
+  },
+  "response": {
+    "coverage_achieved": 0.82,
+    "total_keywords": 47,
+    "labels": {
+      "measured": "search_volume",
+      "estimated": "category_match_score",
+      "assumed": "coverage_threshold=0.8",
+      "gap": "trailing_7_days"
+    },
+    "keywords": [
+      { "keyword": "전기차 보조금 2026", "search_volume": 142500, "category": "incentive", "intent": "informational", "confidence": 0.94 },
+      { "keyword": "테슬라 모델Y 가격", "search_volume": 98300, "category": "product_compare", "intent": "transactional", "confidence": 0.91 },
+      { "keyword": "현대 아이오닉5 단점", "search_volume": 56700, "category": "review", "intent": "consideration", "confidence": 0.88 },
+      { "keyword": "전기차 충전소 위치", "search_volume": 41200, "category": "infrastructure", "intent": "navigational", "confidence": 0.92 },
+      { "keyword": "EV6 vs 아이오닉5", "search_volume": 38900, "category": "product_compare", "intent": "consideration", "confidence": 0.90 }
+    ],
+    "blind_spots": [
+      { "cluster": "초소형 전기차 (마이크로 EV)", "estimated_volume": "TBD", "reason": "최근 7일 데이터 부족" }
+    ]
+  },
+  "_note": "이 파일은 데모용 샘플입니다. 실제 응답 스키마와 4-Label 라벨링 정책을 보여줍니다."
+}

@@ -1,0 +1,12 @@
+node_modules
+.next
+.env*
+!.env.example
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+.vercel
+.gstack/
+.qa/
+.claude/
