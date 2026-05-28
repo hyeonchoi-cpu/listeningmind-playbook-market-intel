@@ -1,0 +1,53 @@
+{
+  "endpoint": "keyword_info",
+  "card": "track-your-true-market-share",
+  "category": "us_stick_vacuum",
+  "period": "12M",
+  "brands": [
+    {
+      "brand_id": "lg_cordzero",
+      "canonical": "lg cordzero",
+      "variants": ["lg cordzero", "lg cordzero a9", "lg cordzero q3", "lg cordzero thinq", "cordzero a9"],
+      "brand_total_volume": 68500,
+      "sov_pct": 28.4,
+      "trend_3m": -45,
+      "label": "실제 데이터"
+    },
+    {
+      "brand_id": "bissell_furguard",
+      "canonical": "bissell furguard",
+      "variants": ["bissell furguard", "bissell powerclean furguard", "powerclean furguard deluxe"],
+      "brand_total_volume": 15540,
+      "sov_pct": 6.4,
+      "trend_3m": -55,
+      "label": "실제 데이터"
+    },
+    {
+      "brand_id": "roborock",
+      "canonical": "roborock stick vacuum",
+      "variants": ["roborock stick vacuum", "roborock cordless vacuum", "roborock h6"],
+      "brand_total_volume": 3380,
+      "sov_pct": 1.4,
+      "trend_3m": -46,
+      "label": "가정 (확장 키워드 합산 보정)"
+    },
+    {
+      "brand_id": "dyson",
+      "canonical": "dyson",
+      "variants": ["dyson v15", "dyson v8", "dyson v10", "dyson v11", "dyson cordless"],
+      "brand_total_volume": 89200,
+      "sov_pct": 37.0,
+      "trend_3m": -12,
+      "label": "실제 데이터"
+    }
+  ],
+  "uncategorized": { "volume": 64800, "sov_pct": 26.8 },
+  "category_total": 241420,
+  "labels": {
+    "measured": "브랜드별 키워드 검색량",
+    "estimated": "동의어/오타 매칭",
+    "assumed": "카테고리 경계 정의 / overlap_correction 가중치",
+    "gap": "신규 브랜드 등록 < 30일"
+  },
+  "_note": "Double Counting 보정: lg/dyson 비교 키워드 8건 → 가중 분배."
+}

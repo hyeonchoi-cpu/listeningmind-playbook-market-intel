@@ -1,0 +1,45 @@
+{
+  "endpoint": "keyword_info (주간 cron)",
+  "card": "benchmark-competitors-live",
+  "category": "us_stick_vacuum",
+  "week": "2026-W12",
+  "benchmark": [
+    {
+      "brand_id": "lg_cordzero",
+      "volume_wk": 8200,
+      "trend_wow": -0.04,
+      "sov_wk": 18.2,
+      "sov_delta": -1.8,
+      "message_share": 12.5,
+      "alert": "🔴 SOV 1.8%p 하락"
+    },
+    {
+      "brand_id": "bissell_furguard",
+      "volume_wk": 4100,
+      "trend_wow": 0.08,
+      "sov_wk": 9.1,
+      "sov_delta": 2.4,
+      "message_share": 8.7,
+      "alert": "🟢 SOV 2.4%p 상승 / 신규 'pet hair' modifier 7%"
+    },
+    {
+      "brand_id": "dyson_v15",
+      "volume_wk": 18900,
+      "trend_wow": 0.02,
+      "sov_wk": 42.0,
+      "sov_delta": 0.4,
+      "message_share": 35.1,
+      "alert": null
+    }
+  ],
+  "new_competitor_messages": [
+    { "brand": "bissell_furguard", "modifier": "pet hair", "share_pct": 7.0, "previous_week_share": 0 }
+  ],
+  "labels": {
+    "measured": "브랜드 검색량 · message 키워드",
+    "estimated": "정규화 분모 · 메시지 분류",
+    "assumed": "카테고리 경계 / 알림 임계값",
+    "gap": "라이브 데이터 ~24h 지연"
+  },
+  "_note": "주간 cron으로 갱신. 일간 비교는 노이즈 큼 → 주간 권장."
+}

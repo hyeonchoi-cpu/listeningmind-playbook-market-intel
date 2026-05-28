@@ -67,6 +67,8 @@ export const cards: Card[] = [
       plan: "Pro / Enterprise",
       referenceCase: "작업1 미국 스틱청소기 검증 리포트 (#10 lg 2개 시드 → 208 credits, #11 bissell 1개 시드 → 88 credits, 2026.03)",
     },
+    sampleDataUrl: "/sample-data/decode-why-people-search.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/decode-why-people-search",
   },
   {
     slug: "see-the-full-buying-path",
@@ -91,6 +93,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Pro / Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/see-the-full-buying-path.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/see-the-full-buying-path",
   },
   {
     slug: "discover-hidden-sub-markets",
@@ -116,6 +120,8 @@ export const cards: Card[] = [
       plan: "Pro / Enterprise",
       referenceCase: "작업1 미국 스틱청소기 검증 리포트 (#2 lg cordzero 6,200 · #4 bissell furguard 4,950 · #5 roborock 0 credits, 2026.03)",
     },
+    sampleDataUrl: "/sample-data/discover-hidden-sub-markets.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/discover-hidden-sub-markets",
   },
   // ─────────── BAND 2: INTELLIGENCE ───────────
   {
@@ -141,6 +147,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Starter / Pro / Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/spot-trends-6-months-early.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/spot-trends-6-months-early",
   },
   {
     slug: "track-your-true-market-share",
@@ -165,6 +173,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Pro / Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/track-your-true-market-share.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/track-your-true-market-share",
   },
   {
     slug: "separate-buyers-from-browsers",
@@ -189,6 +199,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Pro / Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/separate-buyers-from-browsers.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/separate-buyers-from-browsers",
   },
   {
     slug: "find-what-customers-actually-want",
@@ -214,6 +226,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Pro / Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/find-what-customers-actually-want.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/find-what-customers-actually-want",
   },
   // ─────────── BAND 3: ACTION ───────────
   {
@@ -239,6 +253,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Pro / Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/benchmark-competitors-live.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/benchmark-competitors-live",
   },
   {
     slug: "validate-ideas-before-you-build",
@@ -263,6 +279,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Pro / Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/validate-ideas-before-you-build.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/validate-ideas-before-you-build",
   },
   {
     slug: "compare-markets-across-countries",
@@ -288,6 +306,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD",
       plan: "Enterprise (TBD)",
     },
+    sampleDataUrl: "/sample-data/compare-markets-across-countries.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/compare-markets-across-countries",
   },
   {
     slug: "plug-into-your-ai-agents",
@@ -313,6 +333,8 @@ export const cards: Card[] = [
       estMonthlyCost: "TBD (used_credits 기반 사후 정산)",
       plan: "Enterprise 권장 (커스텀 SLA)",
     },
+    sampleDataUrl: "/sample-data/plug-into-your-ai-agents.json",
+    githubSkillUrl: "https://github.com/hyeonchoi-cpu/listeningmind-playbook/tree/main/skills/plug-into-your-ai-agents",
   },
 ];
 

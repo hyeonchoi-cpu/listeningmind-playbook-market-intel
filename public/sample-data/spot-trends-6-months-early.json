@@ -1,0 +1,24 @@
+{
+  "endpoint": "keyword_info (trend_only)",
+  "card": "spot-trends-6-months-early",
+  "request": {
+    "keywords": ["pet hair carpet vacuum", "cordless wet dry vacuum", "self emptying stick vacuum", "christmas vacuum gift"],
+    "gl": "us",
+    "data_type": "trend_only"
+  },
+  "response": {
+    "signals": [
+      { "keyword": "pet hair carpet vacuum", "volume_total": 3200, "growth": 0.42, "accel": 0.18, "persist": 5, "spread": 0.27, "trend_score": 82, "signal": "Early Signal", "seasonal": false, "label": "추정" },
+      { "keyword": "cordless wet dry vacuum", "volume_total": 2400, "growth": 0.35, "accel": 0.21, "persist": 7, "spread": 0.23, "trend_score": 79, "signal": "Emerging", "seasonal": false, "label": "추정" },
+      { "keyword": "self emptying stick vacuum", "volume_total": 1850, "growth": 0.29, "accel": 0.15, "persist": 6, "spread": 0.22, "trend_score": 75, "signal": "Emerging", "seasonal": false, "label": "추정" },
+      { "keyword": "christmas vacuum gift", "volume_total": 1200, "growth": 0.78, "accel": 0.62, "persist": 2, "spread": 0.15, "trend_score": 71, "signal": "Emerging", "seasonal": true, "label": "추정 · 시즌성" }
+    ],
+    "labels": {
+      "measured": "monthly_volume 배열",
+      "estimated": "4지표 스코어 / 신호 등급",
+      "assumed": "가중치 0.30/0.35/0.20/0.15 / 시즌 임계값 0.7",
+      "gap": "시계열 < 12주"
+    }
+  },
+  "_note": "시즌성 키워드는 seasonal_flag=true로 별도 분류. 가짜 양성 차단 목적."
+}

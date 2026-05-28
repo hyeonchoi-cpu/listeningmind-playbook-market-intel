@@ -1,0 +1,60 @@
+{
+  "endpoint": "keyword_info × markets",
+  "card": "compare-markets-across-countries",
+  "category": "stick_vacuum",
+  "countries": [
+    {
+      "country": "kr",
+      "canonical_keyword": "무선청소기",
+      "synonyms": ["무선청소기", "스틱청소기", "무선 스틱청소기", "무선 진공청소기"],
+      "volume_total": 82000,
+      "normalized_volume": 12.4,
+      "trend_3m": 0.18,
+      "cpc_index": 0.85,
+      "label": "실제 데이터"
+    },
+    {
+      "country": "us",
+      "canonical_keyword": "stick vacuum",
+      "synonyms": ["stick vacuum", "cordless vacuum", "cordless stick vacuum"],
+      "volume_total": 180000,
+      "normalized_volume": 5.6,
+      "trend_3m": 0.08,
+      "cpc_index": 1.10,
+      "label": "실제 데이터"
+    },
+    {
+      "country": "jp",
+      "canonical_keyword": "コードレス掃除機",
+      "synonyms": ["コードレス掃除機", "スティック掃除機", "ハンディクリーナー"],
+      "volume_total": 42000,
+      "normalized_volume": 4.1,
+      "trend_3m": 0.12,
+      "cpc_index": 0.92,
+      "label": "실제 데이터 (일부 < 90일 [데이터 공백])"
+    }
+  ],
+  "transferability": [
+    {
+      "from": "kr",
+      "to": "us",
+      "score": 76,
+      "verdict": "강한 전이 신호 (6개월 내 US trend 가속 예상)",
+      "label": "추정"
+    },
+    {
+      "from": "kr",
+      "to": "jp",
+      "score": 52,
+      "verdict": "부분 전이 — 일본 특유 ハンディクリーナー 선호 / 현지화 필요",
+      "label": "추정"
+    }
+  ],
+  "labels": {
+    "measured": "국가별 검색량 · CPC · trend",
+    "estimated": "동의어 매핑 · 정규화 인덱스",
+    "assumed": "분모 (인구/베이스라인) · 가중치",
+    "gap": "JP 일부 카테고리 < 90일 데이터"
+  },
+  "_note": "정규화 인덱스: volume / population_in_millions. 절대값 비교 불가."
+}

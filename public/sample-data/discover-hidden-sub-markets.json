@@ -1,0 +1,56 @@
+{
+  "endpoint": "cluster_finder",
+  "card": "discover-hidden-sub-markets",
+  "request": {
+    "keyword": "lg cordzero",
+    "gl": "us",
+    "time_point": "curr",
+    "hop": 2,
+    "limit": 120,
+    "orientation": "UNDIRECTED"
+  },
+  "response": {
+    "rels_count": 121,
+    "community_count": 41,
+    "communities": [
+      {
+        "id": 0,
+        "theme": "모델/제품군",
+        "confidence": 0.94,
+        "keywords": ["lg cordzero a9", "a949", "a925", "a931", "a926ksm", "a916bm", "a9k", "a913", "q3", "thinq", "charge plus", "all-in-one"]
+      },
+      {
+        "id": 1,
+        "theme": "유지보수/부품",
+        "confidence": 0.91,
+        "keywords": ["lg cordzero battery", "battery replacement", "battery charger", "battery not charging", "filter", "replacement parts", "attachments", "carpet head", "auto empty"]
+      },
+      {
+        "id": 2,
+        "theme": "비교/경쟁",
+        "confidence": 0.83,
+        "keywords": ["lg cordzero a9 vs dyson v15", "lg cordzero vs dyson v15"]
+      },
+      {
+        "id": 3,
+        "theme": "채널/구매",
+        "confidence": 0.79,
+        "keywords": ["lg cordzero costco", "lg cordzero home depot"]
+      },
+      {
+        "id": 4,
+        "theme": "정보탐색/리뷰",
+        "confidence": 0.88,
+        "keywords": ["lg cordzero review", "lg cordzero reddit"]
+      }
+    ],
+    "credits_used": 6200,
+    "labels": {
+      "measured": "rels · communities · weight",
+      "estimated": "군집 테마 라벨 (LLM)",
+      "assumed": "HDBSCAN 최소 군집 크기 5",
+      "gap": "12m 과거 시점 결측 / Roborock rels=0"
+    }
+  },
+  "_note": "LG 작업1 검증 리포트 #2 (cluster_finder lg cordzero curr → 6,200 credits) 발췌."
+}

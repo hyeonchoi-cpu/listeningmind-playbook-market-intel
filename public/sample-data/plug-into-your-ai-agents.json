@@ -1,0 +1,59 @@
+{
+  "workflow": "market_audit",
+  "card": "plug-into-your-ai-agents",
+  "mcp_client": "Claude Desktop",
+  "trigger": "사용자 요청: '미국 stick vacuum 시장 분석해줘'",
+  "execution_log": [
+    {
+      "step": 1,
+      "tool": "lm_keyword_info",
+      "params": { "keywords": ["lg cordzero", "bissell furguard"], "gl": "us", "data_type": "volume_only" },
+      "credits_used": 20,
+      "duration_ms": 850,
+      "status": "ok"
+    },
+    {
+      "step": 2,
+      "tool": "lm_intent_finder",
+      "params": { "keywords": ["lg cordzero", "bissell furguard"], "gl": "us", "volume_threshold": 100, "limit": 120 },
+      "credits_used": 208,
+      "duration_ms": 2400,
+      "status": "ok"
+    },
+    {
+      "step": 3,
+      "tool": "lm_cluster_finder",
+      "params": { "keyword": "lg cordzero", "gl": "us", "hop": 2, "limit": 120 },
+      "credits_used": 6200,
+      "duration_ms": 8200,
+      "status": "ok"
+    },
+    {
+      "step": 4,
+      "tool": "lm_cluster_finder",
+      "params": { "keyword": "bissell furguard", "gl": "us", "hop": 2, "limit": 120 },
+      "credits_used": 4950,
+      "duration_ms": 7100,
+      "status": "ok"
+    }
+  ],
+  "usage_dashboard": {
+    "total_calls": 4,
+    "total_credits_used": 11378,
+    "breakdown_by_endpoint": {
+      "keyword_info": { "calls": 1, "credits": 20, "pct": 0.2 },
+      "intent_finder": { "calls": 1, "credits": 208, "pct": 1.8 },
+      "cluster_finder": { "calls": 2, "credits": 11150, "pct": 98.0 },
+      "path_finder": { "calls": 0, "credits": 0, "pct": 0 }
+    },
+    "credits_remaining": 88622,
+    "rate_limit_remaining": "118/120 RPM"
+  },
+  "labels": {
+    "measured": "API 호출량 · used_credits",
+    "estimated": "비용 예측 (단가 × 호출 빈도)",
+    "assumed": "rate limit / 플랜",
+    "gap": "신규 endpoint 출시 ~7일 staging"
+  },
+  "_note": "에이전트 워크플로우 1건당 5~20 calls 일반적. cluster_finder 비중이 가장 큼."
+}

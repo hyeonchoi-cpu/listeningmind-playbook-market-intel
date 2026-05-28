@@ -24,34 +24,54 @@ skills/
 
 ---
 
-## 현재 수록 스킬
+## 현재 수록 스킬 (12/12 ✅)
 
-| Card # | Slug | Endpoint | Status |
-|--------|------|----------|--------|
-| 01 | [`map-your-market`](./map-your-market/SKILL.md) | `intent_finder` | ✅ 파일럿 (LG 작업1 검증) |
-| 02 | `decode-why-people-search` | `intent_finder` | ⏳ |
-| 03 | `see-the-full-buying-path` | `path_finder` | ⏳ |
-| 04 | `discover-hidden-sub-markets` | `cluster_finder` | ⏳ |
-| 05 | `spot-trends-6-months-early` | TBD | ⏳ |
-| 06~12 | — | — | ⏳ |
+### Band 1 — Discovery
+
+| Card # | Slug | Endpoint | 검증 |
+|--------|------|----------|------|
+| 01 | [`map-your-market`](./map-your-market/SKILL.md) | `intent_finder` | ✅ LG 작업1 |
+| 02 | [`decode-why-people-search`](./decode-why-people-search/SKILL.md) | `intent_finder` | ✅ LG 작업1 |
+| 03 | [`see-the-full-buying-path`](./see-the-full-buying-path/SKILL.md) | `path_finder` | 베타 |
+| 04 | [`discover-hidden-sub-markets`](./discover-hidden-sub-markets/SKILL.md) | `cluster_finder` | ✅ LG 작업1 |
+
+### Band 2 — Intelligence
+
+| Card # | Slug | Endpoint | 검증 |
+|--------|------|----------|------|
+| 05 | [`spot-trends-6-months-early`](./spot-trends-6-months-early/SKILL.md) | `keyword_info` (trend) | — |
+| 06 | [`track-your-true-market-share`](./track-your-true-market-share/SKILL.md) | `keyword_info` | — |
+| 07 | [`separate-buyers-from-browsers`](./separate-buyers-from-browsers/SKILL.md) | `keyword_info` + LLM | — |
+| 08 | [`find-what-customers-actually-want`](./find-what-customers-actually-want/SKILL.md) | `cluster_finder` + `intent_finder` | — |
+
+### Band 3 — Action
+
+| Card # | Slug | Endpoint | 검증 |
+|--------|------|----------|------|
+| 09 | [`benchmark-competitors-live`](./benchmark-competitors-live/SKILL.md) | `keyword_info` (주간) | — |
+| 10 | [`validate-ideas-before-you-build`](./validate-ideas-before-you-build/SKILL.md) | `intent_finder` + `keyword_info` | — |
+| 11 | [`compare-markets-across-countries`](./compare-markets-across-countries/SKILL.md) | `keyword_info` × markets | — |
+| 12 | [`plug-into-your-ai-agents`](./plug-into-your-ai-agents/SKILL.md) | 4 endpoints | — |
 
 ---
 
 ## 다운로드 / 설치
 
-### Claude Code (글로벌)
+### Claude Code (글로벌, 단일 스킬)
 ```bash
 git clone --depth 1 https://github.com/hyeonchoi-cpu/listeningmind-playbook.git /tmp/lm-playbook
 cp -r /tmp/lm-playbook/skills/map-your-market ~/.claude/skills/
 ```
 
-### Claude Code (프로젝트 스킬)
+### Claude Code (프로젝트 스킬, 12개 전체)
 ```bash
-cp -r /tmp/lm-playbook/skills/map-your-market .claude/skills/
+git clone --depth 1 https://github.com/hyeonchoi-cpu/listeningmind-playbook.git /tmp/lm-playbook
+mkdir -p .claude/skills
+cp -r /tmp/lm-playbook/skills/* .claude/skills/
 ```
 
 ### Cursor
-프로젝트 루트에 `.claude/skills/map-your-market/` 형태로 배치.
+프로젝트 루트에 `.claude/skills/{slug}/` 형태로 배치.
 
 ---
 

@@ -1,0 +1,25 @@
+{
+  "endpoint": "cluster_finder + intent_finder",
+  "card": "find-what-customers-actually-want",
+  "product": "lg_cordzero_us",
+  "decomposition": [
+    { "keyword": "lg cordzero auto empty", "volume_total": 1100, "growth_3m": 0.34, "cpc": 1.20, "axis": "Feature", "axis_confidence": 0.89, "priority_score": 11.7, "label": "추정" },
+    { "keyword": "lg cordzero wet dry mode", "volume_total": 760, "growth_3m": 0.41, "cpc": 0.95, "axis": "Feature", "axis_confidence": 0.86, "priority_score": 9.8, "label": "추정" },
+    { "keyword": "lg cordzero thinq integration", "volume_total": 590, "growth_3m": 0.25, "cpc": 0.88, "axis": "Feature", "axis_confidence": 0.84, "priority_score": 8.5, "label": "추정" },
+    { "keyword": "lg cordzero battery not charging", "volume_total": 480, "growth_3m": 0.62, "cpc": 0.71, "axis": "Pain", "axis_confidence": 0.92, "priority_score": 8.4, "label": "추정" },
+    { "keyword": "lg cordzero filter clogged", "volume_total": 340, "growth_3m": 0.38, "cpc": 0.58, "axis": "Pain", "axis_confidence": 0.90, "priority_score": 6.9, "label": "추정" },
+    { "keyword": "lg cordzero lightweight", "volume_total": 680, "growth_3m": 0.18, "cpc": 0.55, "axis": "Attribute", "axis_confidence": 0.85, "priority_score": 7.2, "label": "추정" }
+  ],
+  "axis_summary": {
+    "Feature": { "count": 24, "total_volume": 8400 },
+    "Attribute": { "count": 18, "total_volume": 5200 },
+    "Pain": { "count": 13, "total_volume": 3100 }
+  },
+  "labels": {
+    "measured": "키워드 · volume · trend · cluster rels",
+    "estimated": "Feature/Attribute/Pain 분류 / Priority Score",
+    "assumed": "LLM 임계값 0.7 / Pain negation 패턴",
+    "gap": "신제품 < 3개월 / B2B 카테고리"
+  },
+  "_note": "Roadmap 우선순위: Pain Top 3 즉시 개선, Feature Top 3 다음 분기."
+}

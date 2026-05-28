@@ -1,0 +1,30 @@
+{
+  "endpoint": "intent_finder",
+  "card": "decode-why-people-search",
+  "request": {
+    "keywords": ["lg cordzero", "lg a9"],
+    "gl": "us",
+    "volume_threshold": 50,
+    "limit": 80
+  },
+  "response": {
+    "results": [
+      { "keyword": "lg cordzero battery", "volume_total": 2800, "layer": "L4 Product", "layer_confidence": 0.91, "transactional_score": 55, "label": "추정" },
+      { "keyword": "lg cordzero a9 vs dyson v15", "volume_total": 1200, "layer": "L5 Brand", "layer_confidence": 0.95, "transactional_score": 72, "label": "추정" },
+      { "keyword": "carpet dust solution", "volume_total": 650, "layer": "L1 Need", "layer_confidence": 0.78, "transactional_score": 18, "label": "추정" },
+      { "keyword": "best stick vacuum 2026", "volume_total": 1450, "layer": "L4 Product", "layer_confidence": 0.88, "transactional_score": 68, "label": "추정" }
+    ],
+    "summary": {
+      "total_keywords": 80,
+      "avg_transactional_score": 47,
+      "funnel_distribution": { "awareness": "22%", "consideration": "51%", "decision": "27%" }
+    },
+    "labels": {
+      "measured": "키워드 출현 · volume_total",
+      "estimated": "5-Layer 분류 / Transactional Score",
+      "assumed": "5-Layer 모델 / 가중치",
+      "gap": "신조어 24h 이내"
+    }
+  },
+  "_note": "LG 작업1 검증 리포트 #10 (lg 2개 시드 → 208 credits) 패턴 발췌."
+}

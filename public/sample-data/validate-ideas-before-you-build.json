@@ -1,0 +1,34 @@
+{
+  "endpoint": "intent_finder + keyword_info",
+  "card": "validate-ideas-before-you-build",
+  "idea": "펫 가구 흡입에 특화된 코드리스 스틱청소기",
+  "market": "us",
+  "hypothesis_keywords": [
+    "pet stick vacuum", "pet hair cordless vacuum", "dog hair vacuum",
+    "best pet vacuum 2026", "pet hair carpet vacuum", "cat hair sofa vacuum"
+  ],
+  "pmf_score": 72,
+  "verdict": "🟡 Validated — MVP 출시 권장",
+  "metrics": {
+    "DEMAND": { "value": 27400, "score": 75, "label": "실제 데이터", "category": "중형" },
+    "GROWTH": { "value": 0.18, "score": 68, "label": "실제 데이터" },
+    "GAP": { "value": "Dyson 42% vs Bissell 9%", "score": 62, "label": "추정", "note": "1위와 2위 격차 큼 → 침투 어려움" },
+    "INTENT": { "value": 58, "score": 78, "label": "추정", "note": "Transactional Score 평균" }
+  },
+  "key_keywords": [
+    { "keyword": "pet stick vacuum", "volume_total": 4200, "growth_3m": 0.22, "layer": "L3 Solution", "transactional_score": 68 },
+    { "keyword": "best pet stick vacuum 2026", "volume_total": 1800, "growth_3m": 0.45, "layer": "L4 Product", "transactional_score": 82 },
+    { "keyword": "pet hair carpet vacuum", "volume_total": 3200, "growth_3m": 0.12, "layer": "L1 Need", "transactional_score": 45 }
+  ],
+  "recommended_actions": [
+    "MVP 출시 권장. Pet 특화 메시지로 bissell vs 자사 포지셔닝.",
+    "Dyson 대체재로 진입 어려움 → bissell 자리 견제 전략 우선.",
+    "L1 Need 키워드 (carpet/sofa pet hair) SEO 콘텐츠 우선 확보."
+  ],
+  "labels": {
+    "measured": "가설 키워드 volume / trend",
+    "estimated": "5-Layer 분해 / PMF Score",
+    "assumed": "PMF 가중치 / 임계 등급",
+    "gap": "zero-volume / 신조어"
+  }
+}
