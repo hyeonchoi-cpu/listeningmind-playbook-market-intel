@@ -51,6 +51,9 @@ export function Cover() {
           </div>
         </div>
         <div className="cover-actions">
+          <Link href="/industries" className="pill">
+            <span className="pill-dot" />업권별 마켓 인텔리전스 →
+          </Link>
           <span className="pill"><span className="pill-dot" />MCP-Native</span>
           <span className="pill">v2.0 · 2026</span>
         </div>
