@@ -20,3 +20,5 @@ next-env.d.ts
 
 # 로컬 개발용 KV/Blob 폴백 저장소 (lib/store.ts) — 실배포에서는 Vercel KV/Blob을 씀
 /.data/
+
+.vercel

@@ -3,7 +3,7 @@ import type { Industry } from "@/types";
 /**
  * 인더스트리 카탈로그 — Phase 1 목업.
  *
- * lima-agents(범용) + 6개 버티컬 오버레이 스킬(cosmetics·health-supplements·fin-bank/card/insurance/securities)의
+ * lima-agents(범용) + 7개 버티컬 오버레이 스킬(cosmetics·health-supplements·appliance·fin-bank/card/insurance/securities)의
  * 페르소나·엔티티사전·컴플라이언스 가드레일을 코드가 아니라 설정 데이터로 옮긴 것.
  * 상세: docs/market-intelligence-webapp-design.md §3.1, §5
  *
@@ -59,6 +59,23 @@ export const industries: Industry[] = [
       "검색 관심 ≠ 실제 섭취/구매",
     ],
     skillRef: "listeningmind-health-supplements",
+  },
+  {
+    slug: "appliance",
+    label: "가전",
+    shortLabel: "Appliance",
+    color: "green",
+    eyebrow: "For Home Appliances",
+    tagline:
+      "이사·혼수·고장교체·시즌 진입(냉방·제습) 등 생활 이벤트 트리거와 스펙·안전 근거를 바탕으로 가전 시장을 분석합니다.",
+    complianceLevel: "standard",
+    entityDictionaryLabel: "브랜드·카테고리·스펙 엔티티 사전 (에너지효율·소음·용량 등)",
+    guardrailSummary: [
+      "스펙 수치(에너지효율등급·소비전력·용량·소음 dB)는 제조사 공시/공식 출처만 인용",
+      "안전인증(KC)·리콜 이력은 공식 출처만 인용",
+      "위생·건강 표현(살균·초미세먼지 제거 등)은 근거 유형(제조사 주장/공인시험/시험조건/근거불명)으로 라벨링 — 의학적 효능 전환 금지",
+    ],
+    skillRef: "listeningmind-appliance",
   },
   {
     slug: "fin-bank",

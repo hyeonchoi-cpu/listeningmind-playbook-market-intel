@@ -63,6 +63,7 @@ export type IndustrySlug =
   | "universal"
   | "cosmetics"
   | "health-supplements"
+  | "appliance"
   | "fin-bank"
   | "fin-card"
   | "fin-insurance"
