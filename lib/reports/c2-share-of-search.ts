@@ -18,8 +18,12 @@ export async function generateC2Report(input: {
   }
 
   const landscape = await buildBrandLandscape({ industry, category, gl, mustInclude: [ourBrand] });
+  // LLM이 대표명을 정규화했을 수 있으므로(예: 입력 "엘지" → 대표명 "LG") 별칭까지 확인해 자사 식별
   const ourLower = ourBrand.toLowerCase();
-  const brands = landscape.brands.map((b) => ({ ...b, isOurs: b.name.toLowerCase() === ourLower }));
+  const brands = landscape.brands.map((b) => ({
+    ...b,
+    isOurs: b.name.toLowerCase() === ourLower || b.aliases.includes(ourLower),
+  }));
 
   return {
     meta: {

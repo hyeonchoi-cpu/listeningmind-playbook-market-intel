@@ -22,11 +22,14 @@ export const maxDuration = 300;
 const GLS: ReportGl[] = ["kr", "us", "jp"];
 const IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60; // 6시간 — 이 창 안에서는 같은 요청을 재사용해 중복 과금 방지
 const JOB_TTL_SECONDS = 30 * 24 * 60 * 60; // 30일 — 공유 링크가 그동안 살아있게
+// 파이프라인 로직이 바뀌면 올린다 — 캐시된 구버전 결과가 6시간 동안 새 로직을 가리는 것을 방지
+// (v2: 브랜드 별칭 정규화 + 단독 기업명 쿼리 제외)
+const PIPELINE_VERSION = "2";
 
 function idempotencyKey(industry: IndustrySlug, code: string, category: string, gl: Gl, brand: string): string {
   const norm = category.trim().toLowerCase();
   const brandNorm = brand.trim().toLowerCase();
-  return `idem:${industry}:${code}:${norm}:${gl}${brandNorm ? `:${brandNorm}` : ""}`;
+  return `idem:v${PIPELINE_VERSION}:${industry}:${code}:${norm}:${gl}${brandNorm ? `:${brandNorm}` : ""}`;
 }
 
 /** LLM 분류가 실패(partial)한 리포트는 캐시 재사용 대상에서 제외 — 재생성이 바로 사용자가 원하는 동작이므로.

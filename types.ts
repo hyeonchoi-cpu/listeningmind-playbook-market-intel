@@ -272,7 +272,9 @@ export type A3Report = {
 // ── C 밴드 공용 · 브랜드 집계 행 ──
 export type BrandRow = {
   name: string;
-  /** 브랜드명을 포함하는 키워드 수 (부분 문자열 매칭 — 근사) */
+  /** 매칭에 사용된 별칭 (한/영/축약 표기 — 검증 통과분). 투명성 확보용으로 뷰에 노출 */
+  aliases: string[];
+  /** 별칭을 포함하는 키워드 수 (부분 문자열 매칭 — 근사, 단독 기업명 쿼리는 의도 모호로 제외) */
   keywordCount: number;
   totalVolume: LabeledValue<number>;
   /** 감지된 브랜드 볼륨 합 대비 점유율 — 컴플라이언스 규율상 항상 "검색량 기준 근사"로 표기 */

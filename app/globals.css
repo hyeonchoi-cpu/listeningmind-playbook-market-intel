@@ -1410,6 +1410,11 @@ button { font-family: inherit; cursor: pointer; }
 /* C-1·C-2 브랜드 테이블 */
 .ours-row th, .ours-row td { background: var(--blue-soft); }
 .ours-chip { background: var(--blue); color: var(--bg); margin-left: 6px; }
+.brand-alias-line {
+  font-family: "Google Sans Code", monospace;
+  font-size: 9.5px; font-weight: 400;
+  color: var(--ink-mute); margin-top: 3px;
+}
 .brand-kw-cell {
   font-size: 11.5px; color: var(--ink-soft);
   max-width: 260px; text-align: left;
