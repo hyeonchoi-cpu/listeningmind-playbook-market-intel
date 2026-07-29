@@ -2,6 +2,7 @@
 
 import { useState, type ComponentType } from "react";
 import type { Industry, ReportCode, ReportGl } from "@/types";
+import { caseExampleFor } from "@/data/report-codes";
 import { estimateForCode } from "@/lib/reports/estimate";
 import { A1ReportView } from "./A1ReportView";
 import { A2ReportView } from "./A2ReportView";
@@ -65,12 +66,9 @@ const CODE_FORM: Record<
   "C-4": { brand: "optional" },
   "D-3": { brand: "required" },
   "A-4": { categoryPlaceholder: "예: 냉장고, 전세대출 (검색량 큰 대표 키워드 권장)" },
-  "P-1a": { categoryPlaceholder: "예: 감기약, 여행자보험" },
-  "P-1b": { categoryLabel: "메인 키워드", categoryPlaceholder: "예: 테라플루, 선크림" },
-  "P-2b": {
-    categoryLabel: "브랜드·제품 키워드",
-    categoryPlaceholder: "예: 오트리빈, 테라플루",
-  },
+  // P 밴드 placeholder는 업권별 예시(caseExampleFor)가 우선 적용됨 — 라벨만 지정
+  "P-1b": { categoryLabel: "메인 키워드" },
+  "P-2b": { categoryLabel: "브랜드·제품 키워드" },
 };
 
 export function ReportGenerateForm({ industry, code }: { industry: Industry; code: ReportCode }) {
@@ -86,6 +84,11 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
   const usesLlm = estimate.claudeUsdRange[1] > 0;
   const ReportView = REPORT_VIEWS[code.code];
   const formConfig = CODE_FORM[code.code] ?? {};
+  // P 밴드는 업권별 적용 예시 키워드를 placeholder로 우선 사용
+  const industryExample = caseExampleFor(code, industry.slug);
+  const categoryPlaceholder = industryExample
+    ? `예: ${industryExample.keyword}`
+    : formConfig.categoryPlaceholder ?? "예: 스킨케어, 전세대출, 다이어트 보조제";
 
   function handleSubmitClick() {
     if (!category.trim()) {
@@ -166,7 +169,7 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
           id="category"
           className="generate-form-input"
           type="text"
-          placeholder={formConfig.categoryPlaceholder ?? "예: 스킨케어, 전세대출, 다이어트 보조제"}
+          placeholder={categoryPlaceholder}
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           disabled={phase === "loading" || phase === "confirm"}

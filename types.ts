@@ -91,6 +91,9 @@ export type ReportBand = "A" | "B" | "C" | "D" | "P";
 export type ReportStatus = "implemented" | "planned" | "unsupported";
 export type DaasConnector = "keyword_info" | "intent_finder" | "cluster_finder" | "path_finder";
 
+/** P 밴드 케이스 템플릿의 업권별 예시 — keyword는 폼 placeholder로도 사용 */
+export type CaseExample = { keyword: string; scenario: string };
+
 export type ReportCode = {
   code: string; // "B-1"
   band: ReportBand;
@@ -100,8 +103,10 @@ export type ReportCode = {
   templateFolder: string | null; // lima-agents reports/<folder> — 없으면 null
   status: ReportStatus;
   connectors: DaasConnector[];
-  /** P(퍼블리시스 실전 케이스) 코드에서만 사용 — 실제 분석 대상 브랜드 */
+  /** P(퍼블리시스 실전 케이스) 코드에서만 사용 — 원 케이스의 분석 대상 브랜드 (출처 표기용) */
   caseBrand?: string;
+  /** P 코드가 일반 템플릿으로 승격되면서 추가 — 업권별로 적합한 적용 예시. universal이 폴백 */
+  industryExamples?: Partial<Record<IndustrySlug, CaseExample>>;
 };
 
 // ─────────── Report generation (Phase 2 — B-1 실서비스화) ───────────

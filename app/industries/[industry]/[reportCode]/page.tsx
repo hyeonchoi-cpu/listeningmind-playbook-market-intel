@@ -5,7 +5,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatusBadge } from "@/components/StatusBadge";
 import { ReportGenerateForm } from "@/components/report/ReportGenerateForm";
 import { industries, industryBySlug } from "@/data/industries";
-import { reportCodes, reportCodeByCode } from "@/data/report-codes";
+import { reportCodes, reportCodeByCode, caseExampleFor } from "@/data/report-codes";
 
 export function generateStaticParams() {
   return industries.flatMap((i) =>
@@ -38,6 +38,7 @@ export default function ReportCodePage({
 
   const isImplemented = code.status === "implemented";
   const fallbackCode = reportCodeByCode("B-1");
+  const example = caseExampleFor(code, industry.slug);
 
   return (
     <>
@@ -58,7 +59,13 @@ export default function ReportCodePage({
         <h1 className="detail-title">{code.title}</h1>
         {code.caseBrand && (
           <p className="detail-desc" style={{ marginBottom: 8 }}>
-            퍼블리시스 실전 케이스 · 분석 대상 브랜드: <strong>{code.caseBrand}</strong>
+            퍼블리시스 원 케이스 출처: <strong>{code.caseBrand}</strong>
+            {example && (
+              <>
+                {" "}
+                · {industry.label} 적용 예시: <strong>{example.keyword}</strong> — {example.scenario}
+              </>
+            )}
           </p>
         )}
 
