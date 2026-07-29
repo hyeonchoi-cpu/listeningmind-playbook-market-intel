@@ -6,6 +6,8 @@ import type { Industry } from "@/types";
 import { generateA1Report } from "./a1-volume-trend";
 import { generateA2Report } from "./a2-demography";
 import { generateA3Report } from "./a3-search-intent";
+import { generateA4Report } from "./a4-search-path";
+import { generateA5Report } from "./a5-brand-awareness";
 import { generateB1Report } from "./b1-segment-intent";
 import { generateC1Report } from "./c1-rising-brand";
 import { generateC2Report } from "./c2-share-of-search";
@@ -14,6 +16,9 @@ import { generateC4Report } from "./c4-painpoint";
 import { generateD1Report } from "./d1-cep-preemption";
 import { generateD3Report } from "./d3-strength-gap";
 import { generateD4Report } from "./d4-rising-cep";
+import { generateP1aReport } from "./p1a-context-shift";
+import { generateP1bReport } from "./p1b-season-persistence";
+import { generateP2bReport } from "./p2b-brand-concern";
 
 export type ReportGenerator = (input: {
   industry: Industry;
@@ -27,6 +32,8 @@ export const REPORT_GENERATORS: Record<string, ReportGenerator> = {
   "A-1": generateA1Report,
   "A-2": generateA2Report,
   "A-3": generateA3Report,
+  "A-4": generateA4Report,
+  "A-5": generateA5Report,
   "B-1": generateB1Report,
   "C-1": generateC1Report,
   "C-2": generateC2Report,
@@ -35,6 +42,9 @@ export const REPORT_GENERATORS: Record<string, ReportGenerator> = {
   "D-1": generateD1Report,
   "D-3": generateD3Report,
   "D-4": generateD4Report,
+  "P-1a": generateP1aReport,
+  "P-1b": generateP1bReport,
+  "P-2b": generateP2bReport,
 };
 
 export function getReportGenerator(code: string): ReportGenerator | null {

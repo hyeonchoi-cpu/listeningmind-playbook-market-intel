@@ -10,13 +10,15 @@ import type { C4PainGroup, C4Report, Industry, ReportInsight } from "@/types";
 const TOP_KEYWORDS_FOR_CLASSIFICATION = 250;
 const TOP_KEYWORDS_PER_GROUP = 6;
 
-export async function generateC4Report(input: {
+/** C-4(카테고리 시드)와 P-2b(브랜드 시드)가 공유하는 페인포인트 파이프라인 코어 */
+export async function buildPainpointReport(input: {
   industry: Industry;
   category: string;
   gl: Gl;
   brand?: string;
+  reportCode: "C-4" | "P-2b";
 }): Promise<C4Report> {
-  const { industry, category, gl } = input;
+  const { industry, category, gl, reportCode } = input;
   const brand = input.brand?.trim() || null;
   const brandLower = brand?.toLowerCase() ?? null;
 
@@ -78,7 +80,7 @@ export async function generateC4Report(input: {
   return {
     meta: {
       industry: industry.slug,
-      reportCode: "C-4",
+      reportCode,
       category,
       gl,
       brand,
@@ -155,4 +157,13 @@ function computeInsights(
   }
 
   return insights;
+}
+
+export async function generateC4Report(input: {
+  industry: Industry;
+  category: string;
+  gl: Gl;
+  brand?: string;
+}): Promise<C4Report> {
+  return buildPainpointReport({ ...input, reportCode: "C-4" });
 }

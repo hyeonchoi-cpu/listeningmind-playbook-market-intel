@@ -55,6 +55,28 @@ const ESTIMATES: Record<string, ReportEstimate> = {
   },
   "D-3": CLUSTER_PIPELINE_ESTIMATE,
   "D-4": CLUSTER_PIPELINE_ESTIMATE,
+  "A-4": {
+    daasCreditsRange: [100, 5000],
+    claudeUsdRange: [0, 0],
+    secondsRange: [10, 40],
+    note:
+      "path_finder는 베타 엔드포인트라 단가 편차가 큽니다(위 범위는 가정). 시드 검색량이 월 1,000 미만이면 여정 데이터가 비어 실패할 수 있습니다. " +
+      COMMON_NOTE,
+  },
+  "A-5": CLUSTER_PIPELINE_ESTIMATE,
+  "P-1a": {
+    daasCreditsRange: [6000, 16000],
+    claudeUsdRange: [0.05, 0.3],
+    secondsRange: [60, 150],
+    note:
+      "cluster_finder를 curr·12m 두 시점으로 호출하고 keyword_info도 두 시점 합집합을 조회해 크레딧이 다른 코드의 약 2배입니다. " +
+      COMMON_NOTE,
+  },
+  "P-1b": {
+    ...SINGLE_KEYWORD_ESTIMATE,
+    note: "메인 키워드 1개의 keyword_info 조회만 사용하는 저비용 리포트입니다. " + COMMON_NOTE,
+  },
+  "P-2b": CLUSTER_PIPELINE_ESTIMATE,
 };
 
 export function estimateForCode(code: string): ReportEstimate {

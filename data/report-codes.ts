@@ -4,7 +4,7 @@ import type { ReportCode, ReportBand } from "@/types";
  * 리포트 코드 카탈로그 — Phase 1 목업.
  *
  * 출처: lima-agents 스킬 `references/question-frame.md` (마케팅팀 표준 질문 프레임 A~D + 퍼블리시스 실전 케이스, 총 18개)를 그대로 이식.
- * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 A-1~3·B-1·C-1~4·D-1·D-3·D-4), 나머지는 "준비 중"/"미지원".
+ * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 16/18 — D-2·P-2a만 미지원), 나머지는 "준비 중"/"미지원".
  * connectors는 "필요 데이터" 컬럼에서 명시적으로 언급된 DaaS 커넥터만 매핑한 것으로, WebSearch·외부 SERP 스킬처럼
  * DaaS 4커넥터 밖의 소스는 connectors에 넣지 않고 dataNeeds 원문으로만 표시한다(추측 표기 금지).
  *
@@ -60,7 +60,7 @@ export const reportCodes: ReportCode[] = [
     title: "인지→구매 검색 경로",
     dataNeeds: "path_finder",
     templateFolder: "a4-search-path",
-    status: "planned",
+    status: "implemented",
     connectors: ["path_finder"],
   },
   {
@@ -70,8 +70,9 @@ export const reportCodes: ReportCode[] = [
     title: "브랜드 비보조 인지도 (검색 점유율)",
     dataNeeds: "cluster_finder + WebSearch",
     templateFolder: "a5-brand-awareness",
-    status: "planned",
-    connectors: ["cluster_finder"],
+    status: "implemented",
+    // 구현이 볼륨 확보를 위해 keyword_info도 호출. WebSearch 검증은 LLM 추출+키워드 재검증으로 대체(방법론 편차 — 리포트에 명시)
+    connectors: ["cluster_finder", "keyword_info"],
   },
 
   // ─────────── B · 타겟 심층 ───────────
@@ -180,9 +181,10 @@ export const reportCodes: ReportCode[] = [
     bandTitle: BAND_TITLE.P,
     title: "Theraflu · 감기약 소비 맥락 이동",
     dataNeeds: "CEP WHY·WHILE·WITH_WHAT · time_point 대조",
-    templateFolder: null,
-    status: "planned",
-    connectors: ["cluster_finder"],
+    templateFolder: "p1a-context-shift",
+    status: "implemented",
+    // 구현이 볼륨 확보를 위해 keyword_info도 호출 (curr·12m 두 시점 — 크레딧 약 2배)
+    connectors: ["cluster_finder", "keyword_info"],
     caseBrand: "Theraflu",
   },
   {
@@ -191,8 +193,8 @@ export const reportCodes: ReportCode[] = [
     bandTitle: BAND_TITLE.P,
     title: "Theraflu · 여름 시즌 수요 지속성",
     dataNeeds: "monthly_volume 48개월",
-    templateFolder: null,
-    status: "planned",
+    templateFolder: "p1b-season-persistence",
+    status: "implemented",
     connectors: ["keyword_info"],
     caseBrand: "Theraflu",
   },
@@ -213,9 +215,10 @@ export const reportCodes: ReportCode[] = [
     bandTitle: BAND_TITLE.P,
     title: "Otrivin · 부작용·성분 우려",
     dataNeeds: "CEP HOW_FEEL + 특정 노드 이웃",
-    templateFolder: null,
-    status: "planned",
-    connectors: ["cluster_finder"],
+    templateFolder: "p2b-brand-concern",
+    status: "implemented",
+    // C-4 페인포인트 파이프라인의 브랜드 시드 변형 — keyword_info도 호출
+    connectors: ["cluster_finder", "keyword_info"],
     caseBrand: "Otrivin",
   },
 ];

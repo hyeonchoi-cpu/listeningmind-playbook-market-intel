@@ -6,6 +6,8 @@ import { estimateForCode } from "@/lib/reports/estimate";
 import { A1ReportView } from "./A1ReportView";
 import { A2ReportView } from "./A2ReportView";
 import { A3ReportView } from "./A3ReportView";
+import { A4ReportView } from "./A4ReportView";
+import { A5ReportView } from "./A5ReportView";
 import { B1ReportView } from "./B1ReportView";
 import { C1ReportView } from "./C1ReportView";
 import { C2ReportView } from "./C2ReportView";
@@ -14,6 +16,8 @@ import { C4ReportView } from "./C4ReportView";
 import { D1ReportView } from "./D1ReportView";
 import { D3ReportView } from "./D3ReportView";
 import { D4ReportView } from "./D4ReportView";
+import { P1aReportView } from "./P1aReportView";
+import { P1bReportView } from "./P1bReportView";
 
 type Phase = "idle" | "confirm" | "loading" | "done" | "error";
 
@@ -36,6 +40,12 @@ const REPORT_VIEWS: Record<string, ComponentType<{ report: any }>> = {
   "D-1": D1ReportView,
   "D-3": D3ReportView,
   "D-4": D4ReportView,
+  "A-4": A4ReportView,
+  "A-5": A5ReportView,
+  "P-1a": P1aReportView,
+  "P-1b": P1bReportView,
+  // P-2b는 C-4 페인포인트 파이프라인의 브랜드 시드 변형 — 뷰도 공유
+  "P-2b": C4ReportView,
 };
 
 // 인구통계 태깅(KR 중심 커버리지)에 의존하는 코드 — KR 외 국가 선택 시 사전 경고
@@ -54,6 +64,13 @@ const CODE_FORM: Record<
   },
   "C-4": { brand: "optional" },
   "D-3": { brand: "required" },
+  "A-4": { categoryPlaceholder: "예: 냉장고, 전세대출 (검색량 큰 대표 키워드 권장)" },
+  "P-1a": { categoryPlaceholder: "예: 감기약, 여행자보험" },
+  "P-1b": { categoryLabel: "메인 키워드", categoryPlaceholder: "예: 테라플루, 선크림" },
+  "P-2b": {
+    categoryLabel: "브랜드·제품 키워드",
+    categoryPlaceholder: "예: 오트리빈, 테라플루",
+  },
 };
 
 export function ReportGenerateForm({ industry, code }: { industry: Industry; code: ReportCode }) {

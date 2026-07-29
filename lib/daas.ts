@@ -52,12 +52,18 @@ export interface ClusterResponse {
 export async function clusterFinder(
   keyword: string,
   gl: Gl,
-  opts: { hop?: number; limit?: number; dataType?: "communities" | "rels" | "all" } = {},
+  opts: {
+    hop?: number;
+    limit?: number;
+    dataType?: "communities" | "rels" | "all";
+    /** curr(기본) / 3m / 6m / 9m / 12m — P-1a 등 시점 대조용 */
+    timePoint?: "curr" | "3m" | "6m" | "9m" | "12m";
+  } = {},
 ): Promise<ClusterResponse> {
   return post<ClusterResponse>("/cluster_finder", {
     keyword,
     gl,
-    time_point: "curr",
+    time_point: opts.timePoint ?? "curr",
     hop: opts.hop ?? 2,
     limit: opts.limit ?? 5000,
     orientation: "UNDIRECTED",

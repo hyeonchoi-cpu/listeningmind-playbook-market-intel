@@ -371,7 +371,8 @@ export type C4PainGroup = {
 export type C4Report = {
   meta: {
     industry: IndustrySlug;
-    reportCode: "C-4";
+    /** P-2b(브랜드 부작용·성분 우려)는 같은 페인포인트 파이프라인의 브랜드 시드 변형 */
+    reportCode: "C-4" | "P-2b";
     category: string;
     gl: ReportGl;
     brand: string | null;
@@ -481,6 +482,112 @@ export type D4Report = {
     generatedAt: string;
   };
   risingItems: D4RisingItem[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── A-4 · 인지→구매 검색 경로 (path_finder, 카테고리 수준) ──
+export type A4Stage = {
+  stage: string; // "awareness" 등 — 스펙상 LLM 분류(추정), 미분류는 "미분류"
+  nodeCount: number;
+  topNodes: { keyword: string; sessionCount: LabeledValue<number> }[];
+};
+
+export type A4Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "A-4";
+    category: string;
+    gl: ReportGl;
+    totalNodes: number;
+    totalEdges: number;
+    generatedAt: string;
+  };
+  stages: A4Stage[];
+  topTransitions: { from: string; to: string; weight: LabeledValue<number> }[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── A-5 · 브랜드 비보조 인지도 (검색 점유율 프록시) ──
+export type A5Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "A-5";
+    category: string;
+    gl: ReportGl;
+    totalNodes: number;
+    llmModel: string;
+    brandExtraction: "complete" | "partial";
+    generatedAt: string;
+  };
+  brands: BrandRow[];
+  /** 검색 집중도 — 상위 1/3개 브랜드의 점유 합 (근사) */
+  concentration: { top1SharePct: LabeledValue<number>; top3SharePct: LabeledValue<number> };
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── P-1a · 소비 맥락 이동 (time_point 대조) ──
+export type P1aShiftGroup = {
+  id: string;
+  axis: string;
+  cepShort: string;
+  situation: string;
+  /** 군집 내 신규(12m 시점에 없던) 키워드 비중 */
+  newSharePct: LabeledValue<number>;
+  volume: LabeledValue<number>;
+  topKeywords: { keyword: string; volume: number }[];
+};
+
+export type P1aReport = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "P-1a";
+    category: string;
+    gl: ReportGl;
+    currNodes: number;
+    pastNodes: number;
+    newCount: number;
+    goneCount: number;
+    llmModel: string;
+    cepClassification: "complete" | "partial";
+    generatedAt: string;
+  };
+  /** 새로 등장한 검색 맥락 (신규 키워드 비중 높은 군집) */
+  emergingGroups: P1aShiftGroup[];
+  /** 12m 시점 그래프에는 있었지만 현재 그래프에서 빠진 키워드 (현재 볼륨순) */
+  fadedKeywords: { keyword: string; volume: LabeledValue<number> }[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── P-1b · 시즌 수요 지속성 (monthly 48개월) ──
+export type P1bReport = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "P-1b";
+    category: string;
+    gl: ReportGl;
+    monthsCovered: number;
+    yearsCovered: number;
+    generatedAt: string;
+  };
+  keyword: string;
+  /** 캘린더 월(1~12)별 시즌 지수 — 다년 평균 / 전체 평균 */
+  seasonalIndex: { month: number; index: LabeledValue<number>; avgVolume: number }[];
+  /** 연도 × 월 매트릭스 — 데이터 없는 칸은 null */
+  yearRows: { year: string; monthly: (number | null)[] }[];
+  persistence: {
+    peakMonth: number;
+    troughMonth: number;
+    /** 최저월 평균 / 최고월 평균 × 100 — 높을수록 비수기에도 수요 지속 */
+    offSeasonSharePct: LabeledValue<number>;
+  };
   insights: ReportInsight[];
   compliance: ComplianceBlock;
   costLog: CostLogEntry[];
