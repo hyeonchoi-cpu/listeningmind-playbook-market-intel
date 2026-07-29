@@ -65,7 +65,7 @@ export function D3ReportView({ report }: { report: D3Report }) {
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-label">부족(경쟁 커버) 상위</div>
+            <div className="stat-label">경쟁 브랜드 수요 상위</div>
             <div className="stat-value">{report.competitorGaps.length}개</div>
             <div className="stat-basis">표시 상한 10개</div>
           </div>
@@ -90,17 +90,25 @@ export function D3ReportView({ report }: { report: D3Report }) {
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">강점 — 자사 커버 상위 키워드</div>
-        <KeywordTable rows={report.strengths} showCoveredBy emptyText="자사 별칭이 매칭되는 키워드가 없습니다." />
+        <div className="detail-section-title">강점 — 자사 브랜드 결합 상위 쿼리</div>
+        <KeywordTable rows={report.strengths} showCoveredBy emptyText="자사 별칭이 붙은 결합 쿼리가 없습니다." />
+        <p className="estimate-box-note" style={{ marginTop: 8 }}>
+          단독 자사명 쿼리(내비게이션 수요)는 커버리지 수치에는 포함되지만 목록에서는 제외했습니다.
+        </p>
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">부족 — 경쟁은 커버, 자사는 미커버</div>
+        <div className="detail-section-title">경쟁 브랜드 수요 — 자사 미포함 결합 쿼리</div>
         <KeywordTable
           rows={report.competitorGaps}
           showCoveredBy
-          emptyText="경쟁 브랜드만 커버하는 키워드가 확인되지 않았습니다."
+          emptyText="경쟁 브랜드가 붙은 결합 쿼리가 확인되지 않았습니다."
         />
+        <p className="estimate-box-note" style={{ marginTop: 8 }}>
+          경쟁 브랜드명이 붙은 쿼리는 정의상 자사가 직접 커버할 수 없습니다 — 자사 콘텐츠 공백이 아니라
+          비교 콘텐츠·SEM 컨퀘스트 검토 대상으로 읽으세요. 단독 기업명 쿼리(예: &ldquo;삼성&rdquo; 단독)는
+          해당 브랜드의 내비게이션 수요로 보고 목록에서 제외했습니다.
+        </p>
       </div>
 
       <div className="detail-section">

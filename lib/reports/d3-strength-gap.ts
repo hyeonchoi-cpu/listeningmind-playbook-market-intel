@@ -1,15 +1,18 @@
 // D-3 · 자사 강점·부족 검색 키워드 — 브랜드 지형 공용 파이프라인의 키워드 수준 확장.
 //
 // 3개 축으로 나눈다:
-//  강점  = 자사 별칭을 포함하는 상위 키워드
-//  부족  = 경쟁 브랜드는 커버하는데 자사는 미커버인 상위 키워드
-//  기회  = 어떤 브랜드/기업 토큰도 붙지 않은 상위 논브랜드 키워드 (콘텐츠·SEO 열린 공간)
-// 분류 판정은 containsBrandToken(부분 문자열 포함 — 단독 기업명 쿼리도 브랜드 연관으로 취급)을 쓴다.
-// SoV용 matchesBrand(단독 쿼리 제외)를 여기 쓰면 단독 "삼성"이 논브랜드 기회로 새는 실사례가 있었음.
-// 소비자 브랜드가 아닌 기업·기관·종목명(otherEntities — 예: 공급망·주식 맥락 기업)도 논브랜드에서 제외.
+//  강점        = 자사 별칭이 붙은 상위 결합 쿼리 (단독 자사명 쿼리는 내비게이션 수요라 목록에서 제외)
+//  경쟁 수요   = 경쟁 브랜드가 붙은 결합 쿼리 중 자사 미포함 — "자사 콘텐츠 공백"이 아니라
+//               비교 콘텐츠·SEM 컨퀘스트 검토 대상. 단독 기업명 쿼리(예: "삼성")는 정의상 그 브랜드의
+//               내비게이션 수요일 뿐 자사가 커버할 수 있는 쿼리가 아니므로 여기서도 제외 (실사례 교정).
+//  기회        = 어떤 브랜드/기업 토큰도 붙지 않은 상위 논브랜드 키워드 (콘텐츠·SEO 열린 공간)
+// 판정 규칙 2종을 목적별로 나눠 쓴다:
+//  containsBrandToken(포함만) → "브랜드와 무관한가"(논브랜드 판정, 단독 쿼리도 브랜드 연관으로 취급)
+//  matchesBrand(포함+단독 쿼리 제외) → "실행 가능한 브랜드 결합 쿼리인가"(강점/경쟁 수요 목록 멤버십)
+// 소비자 브랜드가 아닌 기업·기관·종목명(otherEntities)과 비소비 맥락(주식·취업) 키워드는 전 축에서 제외.
 import type { Gl } from "@/lib/daas";
 import { getComplianceBlock } from "@/lib/compliance";
-import { buildBrandLandscape, containsBrandToken } from "./brands-shared";
+import { buildBrandLandscape, containsBrandToken, matchesBrand } from "./brands-shared";
 import { isNonConsumerKeyword } from "./consumer-filter";
 import type { D3KeywordRow, D3Report, Industry, ReportInsight } from "@/types";
 
@@ -58,12 +61,21 @@ export async function generateD3Report(input: {
 
   const byVolume = (a: string, b: string) => (kw2vol.get(b) ?? 0) - (kw2vol.get(a) ?? 0);
 
+  // 커버리지 통계는 포함 기준(단독 자사명 쿼리도 자사 수요) — 목록은 실행 가능한 결합 쿼리만
   const ourKws = allKeywords.filter((kw) => containsBrandToken(kw, ourAliases));
-  const strengths = [...ourKws].sort(byVolume).slice(0, TOP_ROWS).map((kw) => row(kw, coveredByFor(kw)));
+  const strengths = allKeywords
+    .filter((kw) => matchesBrand(kw, ourAliases))
+    .sort(byVolume)
+    .slice(0, TOP_ROWS)
+    .map((kw) => row(kw, coveredByFor(kw)));
 
+  // 경쟁 브랜드 수요 = 경쟁 별칭이 붙은 "결합" 쿼리(matchesBrand — 단독 기업명 쿼리 제외) 중 자사 미포함
   const gaps = allKeywords
     .filter((kw) => !containsBrandToken(kw, ourAliases))
-    .map((kw) => ({ kw, coveredBy: coveredByFor(kw) }))
+    .map((kw) => ({
+      kw,
+      coveredBy: competitors.filter((c) => matchesBrand(kw, c.aliases)).map((c) => c.name),
+    }))
     .filter((x) => x.coveredBy.length > 0)
     .sort((a, b) => byVolume(a.kw, b.kw))
     .slice(0, TOP_ROWS)
@@ -146,9 +158,9 @@ function computeInsights(
   }
   if (gaps.length) {
     insights.push({
-      kind: "gap",
-      title: `최대 부족 쿼리 · "${gaps[0].keyword}"`,
-      body: `${gaps[0].coveredBy.join("·")}는 커버하는데 자사 별칭이 없는 최대 볼륨 쿼리 · 자사 연관 콘텐츠/캠페인 공백 후보 (검색 커버리지 기준 근사)`,
+      kind: "competitor_demand",
+      title: `최대 경쟁 브랜드 수요 · "${gaps[0].keyword}"`,
+      body: `${gaps[0].coveredBy.join("·")} 브랜드가 붙은 결합 쿼리 중 최대 볼륨(자사 미포함) · 자사 일반 콘텐츠 공백이 아니라 비교 콘텐츠·SEM 컨퀘스트 검토 대상 (단독 기업명 쿼리는 내비게이션 수요로 보고 제외)`,
     });
   }
   if (unbranded.length) {
