@@ -1,17 +1,44 @@
-import type { A4Report } from "@/types";
+import type { A4FlowRow, A4Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
 import { ComplianceFooter } from "./ComplianceFooter";
 
+function EndpointTable({ rows, shareLabel }: { rows: A4FlowRow[]; shareLabel: string }) {
+  if (rows.length === 0) return <p className="estimate-box-note">데이터가 없습니다.</p>;
+  return (
+    <div className="cross-table-wrap">
+      <table className="cross-table">
+        <thead>
+          <tr>
+            <th>키워드</th>
+            <th>경로 수</th>
+            <th>{shareLabel}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.keyword}>
+              <th>{r.keyword}</th>
+              <td>{r.count}</td>
+              <td>
+                {r.sharePct.value}% <LabelBadge basis={r.sharePct.basis} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function A4ReportView({ report }: { report: A4Report }) {
   const generatedAt = new Date(report.meta.generatedAt);
-  const totalNodes = Math.max(1, report.meta.totalNodes);
 
   return (
     <div className="report-view">
       <div className="report-view-meta">
         <span>
-          {report.meta.category} · {report.meta.gl.toUpperCase()} · 노드 {report.meta.totalNodes.toLocaleString()}개 ·
-          엣지 {report.meta.totalEdges.toLocaleString()}개
+          {report.meta.category} · {report.meta.gl.toUpperCase()} · 경로 {report.meta.totalPaths.toLocaleString()}개 ·
+          평균 깊이 {report.meta.avgPathLength.value}
         </span>
         <span>{generatedAt.toLocaleString("ko-KR")} 생성</span>
       </div>
@@ -29,54 +56,29 @@ export function A4ReportView({ report }: { report: A4Report }) {
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">퍼널 단계 분포 (단계 분류는 알고리즘 추정)</div>
-        <div className="stat-grid">
-          {report.stages.map((s) => (
-            <div key={s.stage} className="stat-card">
-              <div className="stat-label">{s.stage}</div>
-              <div className="stat-value">{s.nodeCount}개</div>
-              <div className="stat-basis">
-                {Math.round((s.nodeCount / totalNodes) * 100)}% <LabelBadge basis="derived" />
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="detail-section-title">여정 시작 쿼리 (진입·인지 후보)</div>
+        <EndpointTable rows={report.startKeywords} shareLabel="경로 비중" />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">단계별 상위 키워드 (세션 수 기준)</div>
-        <div className="kbf-grid">
-          {report.stages.map((s) => (
-            <div key={s.stage} className="kbf-card">
-              <div className="kbf-card-title">{s.stage}</div>
-              {s.topNodes.length === 0 ? (
-                <div className="kbf-card-empty">노드 없음</div>
-              ) : (
-                <ul className="kbf-card-list">
-                  {s.topNodes.map((n) => (
-                    <li key={n.keyword}>
-                      <span>{n.keyword}</span>
-                      <span className="cep-card-volume">
-                        {n.sessionCount.value.toLocaleString()} <LabelBadge basis={n.sessionCount.basis} />
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </div>
+        <div className="detail-section-title">여정 종착 쿼리 (결정·이탈 지점 후보)</div>
+        <EndpointTable rows={report.endKeywords} shareLabel="경로 비중" />
+        <p className="estimate-box-note" style={{ marginTop: 8 }}>
+          시작/종착은 경로 내 위치 기반 근사이며 퍼널 단계 분류가 아닙니다. 종착이 결정인지 이탈인지는 단정할
+          수 없습니다.
+        </p>
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">상위 이동 흐름</div>
+        <div className="detail-section-title">최다 전이 (연속 쿼리 쌍)</div>
         <div className="cross-table-wrap">
           <table className="cross-table">
             <thead>
               <tr>
                 <th>From</th>
                 <th>To</th>
-                <th>전환 확률</th>
+                <th>등장 수</th>
+                <th>전이 비중</th>
               </tr>
             </thead>
             <tbody>
@@ -84,8 +86,9 @@ export function A4ReportView({ report }: { report: A4Report }) {
                 <tr key={`${t.from}-${t.to}-${i}`}>
                   <th>{t.from}</th>
                   <td>{t.to}</td>
+                  <td>{t.count}</td>
                   <td>
-                    {t.weight.value} <LabelBadge basis={t.weight.basis} />
+                    {t.sharePct.value}% <LabelBadge basis={t.sharePct.basis} />
                   </td>
                 </tr>
               ))}

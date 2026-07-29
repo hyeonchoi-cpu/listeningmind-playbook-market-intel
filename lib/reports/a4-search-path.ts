@@ -1,14 +1,31 @@
-// A-4 · 인지→구매 검색 경로 (path_finder, 카테고리 수준).
+// A-4 · 인지→구매 검색 경로 (path_finder — 경로 시퀀스 기반).
 //
-// C-3(브랜드 유입·이탈)와 같은 커넥터를 쓰지만 관점이 다르다 — 카테고리 전체 여정의
-// 퍼널 단계 분포와 단계 이동 흐름을 본다. LLM 없음(단계 분류는 path_finder 스펙상 알고리즘 추정).
+// 실응답(2026-07-29 실측 검증): data = 검색 경로 배열(시간순 키워드 시퀀스). 원 스펙 문서의
+// 퍼널 단계(stage) 필드는 실제 API에 없으므로, 위치 기반으로 여정을 해석한다:
+//  시작 쿼리 = 경로의 첫 키워드 (카테고리 진입/인지 후보)
+//  종착 쿼리 = 경로의 마지막 키워드 (결정 또는 이탈 지점 후보 — 단정 금지)
+//  전이     = 연속 쿼리 쌍의 등장 빈도
+// 모든 비중은 경로 집계 파생값. LLM 없음.
 import { pathFinder, type Gl } from "@/lib/daas";
 import { getComplianceBlock } from "@/lib/compliance";
-import type { A4Report, A4Stage, Industry, ReportInsight } from "@/types";
+import type { A4FlowRow, A4Report, A4TransitionRow, Industry, ReportInsight } from "@/types";
 
-const TOP_NODES_PER_STAGE = 6;
+const PATH_LIMIT = 150;
+const TOP_ROWS = 10;
 const TOP_TRANSITIONS = 12;
-const STAGE_ORDER = ["awareness", "consideration", "decision"];
+
+function aggregateEndpoints(keywords: string[], totalPaths: number): A4FlowRow[] {
+  const agg = new Map<string, number>();
+  for (const kw of keywords) agg.set(kw, (agg.get(kw) ?? 0) + 1);
+  return [...agg.entries()]
+    .map(([keyword, count]) => ({
+      keyword,
+      count,
+      sharePct: { value: Math.round((count / Math.max(1, totalPaths)) * 1000) / 10, basis: "derived" as const },
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, TOP_ROWS);
+}
 
 export async function generateA4Report(input: {
   industry: Industry;
@@ -17,42 +34,43 @@ export async function generateA4Report(input: {
 }): Promise<A4Report> {
   const { industry, category, gl } = input;
 
-  const { nodes, edges, cost } = await pathFinder(category.trim(), gl, 200);
-  if (nodes.length === 0 && edges.length === 0) {
+  const { paths, cost } = await pathFinder(category.trim(), gl, PATH_LIMIT);
+  if (paths.length === 0) {
     throw new Error(
-      `"${category}" 키워드의 검색 여정 데이터가 없습니다. 시드 검색량 부족(월 1,000 미만 의심)일 수 있으니 더 대표적인 카테고리 키워드로 시도해보세요.`,
+      `"${category}" 키워드의 검색 여정 데이터가 없습니다. 시드 검색량 부족일 수 있으니 더 대표적인 카테고리 키워드로 시도해보세요.`,
     );
   }
 
-  const byStage = new Map<string, typeof nodes>();
-  for (const n of nodes) {
-    const stage = n.stage ?? "미분류";
-    if (!byStage.has(stage)) byStage.set(stage, []);
-    byStage.get(stage)!.push(n);
-  }
-  const stageRank = (s: string) => {
-    const i = STAGE_ORDER.indexOf(s.toLowerCase());
-    return i === -1 ? STAGE_ORDER.length : i;
-  };
-  const stages: A4Stage[] = [...byStage.entries()]
-    .map(([stage, ns]) => ({
-      stage,
-      nodeCount: ns.length,
-      topNodes: [...ns]
-        .sort((a, b) => b.sessionCount - a.sessionCount)
-        .slice(0, TOP_NODES_PER_STAGE)
-        .map((n) => ({ keyword: n.keyword, sessionCount: { value: n.sessionCount, basis: "measured" as const } })),
-    }))
-    .sort((a, b) => stageRank(a.stage) - stageRank(b.stage));
+  const startKeywords = aggregateEndpoints(paths.map((p) => p[0]), paths.length);
+  const endKeywords = aggregateEndpoints(paths.map((p) => p[p.length - 1]), paths.length);
 
-  const topTransitions = [...edges]
-    .sort((a, b) => b.weight - a.weight)
-    .slice(0, TOP_TRANSITIONS)
-    .map((e) => ({
-      from: e.from,
-      to: e.to,
-      weight: { value: Math.round(e.weight * 1000) / 1000, basis: "measured" as const },
-    }));
+  const transAgg = new Map<string, number>();
+  let totalTransitions = 0;
+  for (const path of paths) {
+    for (let i = 0; i < path.length - 1; i++) {
+      if (path[i] === path[i + 1]) continue;
+      const key = JSON.stringify([path[i], path[i + 1]]);
+      transAgg.set(key, (transAgg.get(key) ?? 0) + 1);
+      totalTransitions += 1;
+    }
+  }
+  const topTransitions: A4TransitionRow[] = [...transAgg.entries()]
+    .map(([key, count]) => {
+      const [from, to] = JSON.parse(key) as [string, string];
+      return {
+        from,
+        to,
+        count,
+        sharePct: {
+          value: Math.round((count / Math.max(1, totalTransitions)) * 1000) / 10,
+          basis: "derived" as const,
+        },
+      };
+    })
+    .sort((a, b) => b.count - a.count)
+    .slice(0, TOP_TRANSITIONS);
+
+  const avgLen = paths.reduce((s, p) => s + p.length, 0) / paths.length;
 
   return {
     meta: {
@@ -60,60 +78,58 @@ export async function generateA4Report(input: {
       reportCode: "A-4",
       category,
       gl,
-      totalNodes: nodes.length,
-      totalEdges: edges.length,
+      totalPaths: paths.length,
+      avgPathLength: { value: Math.round(avgLen * 10) / 10, basis: "derived" },
       generatedAt: new Date().toISOString(),
     },
-    stages,
+    startKeywords,
+    endKeywords,
     topTransitions,
-    insights: computeInsights(stages, topTransitions, nodes.length),
+    insights: computeInsights(category, startKeywords, endKeywords, topTransitions, avgLen),
     compliance: getComplianceBlock(industry),
     costLog: [{ endpoint: "path_finder", calls: 1, totalCost: cost }],
   };
 }
 
 function computeInsights(
-  stages: A4Stage[],
-  transitions: { from: string; to: string; weight: { value: number } }[],
-  totalNodes: number,
+  category: string,
+  starts: A4FlowRow[],
+  ends: A4FlowRow[],
+  transitions: A4TransitionRow[],
+  avgLen: number,
 ): ReportInsight[] {
   const insights: ReportInsight[] = [];
 
-  const classified = stages.filter((s) => s.stage !== "미분류");
-  if (classified.length) {
-    const top = [...classified].sort((a, b) => b.nodeCount - a.nodeCount)[0];
+  if (starts.length) {
     insights.push({
-      kind: "stage_weight",
-      title: `여정 무게중심 · ${top.stage} (${Math.round((top.nodeCount / Math.max(1, totalNodes)) * 100)}%)`,
-      body: `노드 ${totalNodes}개 중 ${top.stage} 단계가 최다 · 단계 분류는 알고리즘 추정이므로 참고용`,
+      kind: "entry",
+      title: `최다 여정 시작 · "${starts[0].keyword}" (${starts[0].sharePct.value}%)`,
+      body: `카테고리 여정의 진입 쿼리 최다 · 인지 단계 콘텐츠·광고 키워드 후보 (위치 기반 근사, 단계 분류 아님)`,
     });
   }
-
+  if (ends.length) {
+    insights.push({
+      kind: "destination",
+      title: `최다 여정 종착 · "${ends[0].keyword}" (${ends[0].sharePct.value}%)`,
+      body: `여정이 가장 많이 끝나는 쿼리 · 결정 지점일 수도, 관심 이탈일 수도 있음 — 단정 금지, 해당 쿼리의 전환 장치 점검 대상`,
+    });
+  }
   if (transitions.length) {
     const t = transitions[0];
     insights.push({
       kind: "transition",
-      title: `최강 이동 · "${t.from}" → "${t.to}"`,
-      body: `전환 확률 ${t.weight.value} 최상위 시퀀스 · 두 쿼리를 잇는 콘텐츠·랜딩 연결 검토 대상 (집계 그래프 기준, 개인 추적 아님)`,
+      title: `최다 전이 · "${t.from}" → "${t.to}"`,
+      body: `${t.count}회 등장한 최다 연속 쿼리 쌍 · 두 쿼리를 잇는 콘텐츠·랜딩 연결 검토 대상 (집계 그래프 기준, 개인 추적 아님)`,
     });
   }
-
-  const thin = stages.filter((s) => s.stage !== "미분류" && s.nodeCount < 5);
-  if (thin.length) {
-    insights.push({
-      kind: "data_gap",
-      title: `신뢰도 낮은 단계 ${thin.length}개`,
-      body: `노드 5개 미만 단계(${thin.map((s) => s.stage).join(", ")})는 분석 신뢰도가 낮습니다(path_finder 스펙 기준).`,
-    });
-  }
-  const unclassified = stages.find((s) => s.stage === "미분류");
-  if (unclassified && unclassified.nodeCount > totalNodes * 0.3) {
-    insights.push({
-      kind: "data_gap",
-      title: `미분류 노드 ${unclassified.nodeCount}개`,
-      body: "단계가 분류되지 않은 노드가 30%를 넘습니다 · 퍼널 해석은 분류된 구간 위주로만 하세요.",
-    });
-  }
+  insights.push({
+    kind: "depth",
+    title: `평균 여정 깊이 ${Math.round(avgLen * 10) / 10}개 쿼리`,
+    body:
+      avgLen >= 4
+        ? "비교·검토 쿼리가 긴 카테고리 — 여정 중간 단계 콘텐츠 커버리지가 중요하다는 신호(단정 아님)"
+        : "짧은 여정 위주 — 진입 쿼리에서 곧바로 결정으로 이어지는 패턴이 많다는 신호(단정 아님)",
+  });
 
   return insights;
 }

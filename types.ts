@@ -328,18 +328,15 @@ export type C2Report = {
   costLog: CostLogEntry[];
 };
 
-// ── C-3 · 자사 검색 전환·이탈 구간 (path_finder) ──
+// ── C-3 · 자사 검색 전환·이탈 구간 (path_finder — 경로 시퀀스 기반, 실응답 검증됨) ──
 export type C3FlowRow = {
   keyword: string;
-  /** 전환 확률 (Markov weight) — path_finder 스펙상 실측 */
-  weight: LabeledValue<number>;
+  /** 해당 전이가 등장한 경로 수 */
+  count: number;
+  /** 같은 방향(유입/유출) 전이 합 대비 비중 — 파생 */
+  sharePct: LabeledValue<number>;
   /** 시드(자사) 키워드를 포함하는가 — 이탈/브랜드 내 이동 구분용 근사 플래그 */
   containsSeed: boolean;
-};
-
-export type C3StageRow = {
-  stage: string;
-  nodeCount: number;
 };
 
 export type C3Report = {
@@ -348,16 +345,15 @@ export type C3Report = {
     reportCode: "C-3";
     category: string; // 시드(자사 브랜드·제품) 키워드
     gl: ReportGl;
-    totalNodes: number;
-    totalEdges: number;
+    totalPaths: number;
+    /** 시드 키워드가 등장하는 경로 수 */
+    pathsWithSeed: number;
     generatedAt: string;
   };
-  /** 시드 방향으로 들어오는 상위 흐름 (유입 트리거) */
+  /** 시드 직전 쿼리 상위 (유입 트리거) */
   inflows: C3FlowRow[];
-  /** 시드에서 나가는 상위 흐름 — containsSeed=false면 이탈 방향 후보 */
+  /** 시드 직후 쿼리 상위 — containsSeed=false면 이탈 방향 후보 */
   outflows: C3FlowRow[];
-  /** 퍼널 단계 분포 — path_finder 스펙상 stage는 LLM 분류(추정) */
-  stages: C3StageRow[];
   insights: ReportInsight[];
   compliance: ComplianceBlock;
   costLog: CostLogEntry[];
@@ -494,11 +490,20 @@ export type D4Report = {
   costLog: CostLogEntry[];
 };
 
-// ── A-4 · 인지→구매 검색 경로 (path_finder, 카테고리 수준) ──
-export type A4Stage = {
-  stage: string; // "awareness" 등 — 스펙상 LLM 분류(추정), 미분류는 "미분류"
-  nodeCount: number;
-  topNodes: { keyword: string; sessionCount: LabeledValue<number> }[];
+// ── A-4 · 인지→구매 검색 경로 (path_finder — 경로 시퀀스 기반, 실응답 검증됨) ──
+export type A4FlowRow = {
+  keyword: string;
+  count: number;
+  /** 전체 경로 수 대비 비중 — 파생 */
+  sharePct: LabeledValue<number>;
+};
+
+export type A4TransitionRow = {
+  from: string;
+  to: string;
+  count: number;
+  /** 전체 전이 수 대비 비중 — 파생 */
+  sharePct: LabeledValue<number>;
 };
 
 export type A4Report = {
@@ -507,12 +512,17 @@ export type A4Report = {
     reportCode: "A-4";
     category: string;
     gl: ReportGl;
-    totalNodes: number;
-    totalEdges: number;
+    totalPaths: number;
+    /** 경로당 평균 쿼리 수 — 여정 깊이 근사 */
+    avgPathLength: LabeledValue<number>;
     generatedAt: string;
   };
-  stages: A4Stage[];
-  topTransitions: { from: string; to: string; weight: LabeledValue<number> }[];
+  /** 여정 시작 쿼리 상위 (진입/인지 후보) */
+  startKeywords: A4FlowRow[];
+  /** 여정 종착 쿼리 상위 (결정/이탈 지점 후보) */
+  endKeywords: A4FlowRow[];
+  /** 최다 등장 전이 (연속 쿼리 쌍) */
+  topTransitions: A4TransitionRow[];
   insights: ReportInsight[];
   compliance: ComplianceBlock;
   costLog: CostLogEntry[];

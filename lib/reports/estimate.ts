@@ -40,11 +40,11 @@ const ESTIMATES: Record<string, ReportEstimate> = {
   "C-1": CLUSTER_PIPELINE_ESTIMATE,
   "C-2": CLUSTER_PIPELINE_ESTIMATE,
   "C-3": {
-    daasCreditsRange: [100, 5000],
+    daasCreditsRange: [3000, 15000],
     claudeUsdRange: [0, 0],
     secondsRange: [10, 40],
     note:
-      "path_finder는 베타 엔드포인트라 단가 편차가 큽니다(위 범위는 가정). 시드 검색량이 월 1,000 미만이면 여정 데이터가 비어 실패할 수 있습니다. " +
+      "path_finder 비용은 반환 경로 키워드 수에 비례합니다(실측 참고: 경로 5개=450 credits, 요청 상한 150경로). 시드 검색량이 부족하면 여정 데이터가 비어 실패할 수 있습니다. " +
       COMMON_NOTE,
   },
   "C-4": CLUSTER_PIPELINE_ESTIMATE,
@@ -56,11 +56,11 @@ const ESTIMATES: Record<string, ReportEstimate> = {
   "D-3": CLUSTER_PIPELINE_ESTIMATE,
   "D-4": CLUSTER_PIPELINE_ESTIMATE,
   "A-4": {
-    daasCreditsRange: [100, 5000],
+    daasCreditsRange: [3000, 15000],
     claudeUsdRange: [0, 0],
     secondsRange: [10, 40],
     note:
-      "path_finder는 베타 엔드포인트라 단가 편차가 큽니다(위 범위는 가정). 시드 검색량이 월 1,000 미만이면 여정 데이터가 비어 실패할 수 있습니다. " +
+      "path_finder 비용은 반환 경로 키워드 수에 비례합니다(실측 참고: 경로 5개=450 credits, 요청 상한 150경로). 시드 검색량이 부족하면 여정 데이터가 비어 실패할 수 있습니다. " +
       COMMON_NOTE,
   },
   "A-5": CLUSTER_PIPELINE_ESTIMATE,

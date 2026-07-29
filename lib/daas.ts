@@ -304,56 +304,25 @@ export function indexByKeyword(items: KeywordInfo[]): Map<string, KeywordInfo> {
   return map;
 }
 
-// ── path_finder (베타) ─────────────────────────────────────────────
-// 요청 형태는 web/lib/daas.ts의 검증된 클라이언트({keyword, gl, limit})를 따르고,
-// 응답은 playbook path-finder-spec.md의 nodes/edges 스키마를 기준으로 방어적으로 파싱한다
-// (베타 엔드포인트라 스키마 변형 가능성 있음).
-export interface PathNode {
-  keyword: string;
-  /** 퍼널 단계 — 스펙상 LLM 분류(추정) */
-  stage: string | null;
-  sessionCount: number;
-}
-
-export interface PathEdge {
-  from: string;
-  to: string;
-  /** 전환 확률 (Markov) — 스펙상 실측 */
-  weight: number;
-}
-
+// ── path_finder ────────────────────────────────────────────────────
+// 실응답 검증 완료(2026-07-29, MCP 실측): data = 검색 경로 배열, 각 경로는 키워드 시퀀스.
+//   {"result":"OK", "data":[["에어컨","에어컨 설치","벽걸이 에어컨 설치"], ...], "cost_detail":{...}}
+// playbook의 path-finder-spec.md(nodes/edges/stage)는 실제 API와 다르다 — 이 파일이 실측 기준 정본.
+// 비용은 반환 키워드 수에 비례(실측: 경로 5개·출력 10키워드 = 450 credits) — limit을 보수적으로 잡는다.
 export interface PathFinderResult {
-  nodes: PathNode[];
-  edges: PathEdge[];
+  /** 검색 경로(시퀀스) 목록 — 집계 행동 그래프이며 개인 추적이 아님 */
+  paths: string[][];
   cost: number;
 }
 
-export async function pathFinder(keyword: string, gl: Gl, limit = 200): Promise<PathFinderResult> {
-  const r = await post<any>("/path_finder", { keyword, gl, limit });
-  const data = r?.data ?? r ?? {};
-  const rawNodes: any[] = Array.isArray(data.nodes) ? data.nodes : [];
-  const rawEdges: any[] = Array.isArray(data.edges) ? data.edges : Array.isArray(data.rels) ? data.rels : [];
-
-  const nodes: PathNode[] = rawNodes
-    .map((n) => ({
-      keyword: keywordOf(n),
-      stage: typeof n?.stage === "string" ? n.stage : null,
-      sessionCount: num(n?.session_count ?? n?.sessionCount ?? 0),
-    }))
-    .filter((n) => n.keyword);
-
-  const edges: PathEdge[] = rawEdges
-    .map((e) => {
-      if (Array.isArray(e) && e.length >= 2) {
-        return { from: keywordOf(e[0]), to: keywordOf(e[1]), weight: num(e[2] ?? 0) };
-      }
-      return {
-        from: keywordOf(e?.from ?? e?.source ?? e?.a),
-        to: keywordOf(e?.to ?? e?.target ?? e?.b),
-        weight: num(e?.weight ?? e?.w ?? 0),
-      };
-    })
-    .filter((e) => e.from && e.to);
-
-  return { nodes, edges, cost: r?.cost_detail?.total_cost ?? 0 };
+export async function pathFinder(keyword: string, gl: Gl, limit = 150): Promise<PathFinderResult> {
+  const r = await post<any>("/path_finder", { keyword, gl, limit, time_point: "curr" });
+  if (r?.result && r.result !== "OK") {
+    throw new DaasError("/path_finder", 200, String(r.reason ?? "FAILED"));
+  }
+  const raw: any[] = Array.isArray(r?.data) ? r.data : [];
+  const paths: string[][] = raw
+    .map((p) => (Array.isArray(p) ? p.map(keywordOf).filter(Boolean) : []))
+    .filter((p) => p.length >= 2);
+  return { paths, cost: r?.cost_detail?.total_cost ?? 0 };
 }
