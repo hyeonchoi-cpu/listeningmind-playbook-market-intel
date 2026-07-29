@@ -583,6 +583,36 @@ export type P1aReport = {
   costLog: CostLogEntry[];
 };
 
+// ── P-2a · 카테고리 진입 트리거 (path_finder 경로의 시드 이전 구간 분석) ──
+export type P2aFlowRow = {
+  keyword: string;
+  count: number;
+  /** 도착 경로 수 대비 비중 — 파생 */
+  sharePct: LabeledValue<number>;
+};
+
+export type P2aReport = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "P-2a";
+    category: string; // 시드(카테고리·제품) 키워드
+    gl: ReportGl;
+    totalPaths: number;
+    /** 선행 검색을 거쳐 시드에 "도착"한 경로 수 (시드가 경로 중간/끝에 등장) */
+    arrivalPaths: number;
+    /** 시드(포함 키워드)에서 곧바로 시작한 경로 비중 — 직접 진입 근사 */
+    directEntrySharePct: LabeledValue<number>;
+    generatedAt: string;
+  };
+  /** 시드 등장 직전 쿼리 상위 (진입 트리거) */
+  triggers: P2aFlowRow[];
+  /** 도착 경로의 시작 쿼리 상위 (진입 여정의 출발점) */
+  origins: P2aFlowRow[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
 // ── P-1b · 시즌 수요 지속성 (monthly 48개월) ──
 export type P1bReport = {
   meta: {

@@ -4,7 +4,7 @@ import type { IndustrySlug, ReportCode, ReportBand } from "@/types";
  * 리포트 코드 카탈로그 — Phase 1 목업.
  *
  * 출처: lima-agents 스킬 `references/question-frame.md` (마케팅팀 표준 질문 프레임 A~D + 퍼블리시스 실전 케이스, 총 18개)를 그대로 이식.
- * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 16/18 — D-2·P-2a만 미지원), 나머지는 "준비 중"/"미지원".
+ * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 17/18 — D-2만 미지원), 나머지는 "준비 중"/"미지원".
  * connectors는 "필요 데이터" 컬럼에서 명시적으로 언급된 DaaS 커넥터만 매핑한 것으로, WebSearch·외부 SERP 스킬처럼
  * DaaS 4커넥터 밖의 소스는 connectors에 넣지 않고 dataNeeds 원문으로만 표시한다(추측 표기 금지).
  *
@@ -224,10 +224,22 @@ export const reportCodes: ReportCode[] = [
     bandTitle: BAND_TITLE.P,
     title: "카테고리 진입 트리거",
     dataNeeds: "path_finder REVERSE",
-    templateFolder: null,
-    status: "unsupported",
+    // 전용 REVERSE 모드는 API에 없지만, 표준 응답의 경로에 시드로 "도착"하는 시퀀스가 포함됨을
+    // 실측으로 확인(2026-07-29) — 시드 이전 구간 분석으로 구현
+    templateFolder: "p2a-entry-trigger",
+    status: "implemented",
     connectors: ["path_finder"],
     caseBrand: "Otrivin",
+    industryExamples: {
+      universal: { keyword: "비염 스프레이", scenario: "원 케이스(Otrivin) — 어떤 증상·상황 검색이 카테고리 진입으로 이어지나" },
+      cosmetics: { keyword: "선크림", scenario: "어떤 피부 고민 검색이 선크림 탐색으로 이어지나" },
+      "health-supplements": { keyword: "유산균", scenario: "어떤 건강 고민 검색이 유산균 탐색으로 이어지나" },
+      appliance: { keyword: "제습기", scenario: "어떤 생활 문제 검색(곰팡이·결로 등)이 제습기 탐색으로 이어지나" },
+      "fin-bank": { keyword: "전세대출", scenario: "어떤 상황 검색(이사·계약 등)이 전세대출 탐색으로 이어지나" },
+      "fin-card": { keyword: "트래블카드", scenario: "어떤 여행 준비 검색이 카드 탐색으로 이어지나" },
+      "fin-insurance": { keyword: "펫보험", scenario: "어떤 반려동물 관련 검색이 펫보험 탐색으로 이어지나" },
+      "fin-securities": { keyword: "ISA", scenario: "어떤 절세·재테크 검색이 ISA 탐색으로 이어지나" },
+    },
   },
   {
     code: "P-2b",

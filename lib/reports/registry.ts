@@ -18,6 +18,7 @@ import { generateD3Report } from "./d3-strength-gap";
 import { generateD4Report } from "./d4-rising-cep";
 import { generateP1aReport } from "./p1a-context-shift";
 import { generateP1bReport } from "./p1b-season-persistence";
+import { generateP2aReport } from "./p2a-entry-trigger";
 import { generateP2bReport } from "./p2b-brand-concern";
 
 export type ReportGenerator = (input: {
@@ -44,6 +45,7 @@ export const REPORT_GENERATORS: Record<string, ReportGenerator> = {
   "D-4": generateD4Report,
   "P-1a": generateP1aReport,
   "P-1b": generateP1bReport,
+  "P-2a": generateP2aReport,
   "P-2b": generateP2bReport,
 };
 

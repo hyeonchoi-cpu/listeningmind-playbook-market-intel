@@ -19,6 +19,7 @@ import { D3ReportView } from "./D3ReportView";
 import { D4ReportView } from "./D4ReportView";
 import { P1aReportView } from "./P1aReportView";
 import { P1bReportView } from "./P1bReportView";
+import { P2aReportView } from "./P2aReportView";
 
 type Phase = "idle" | "confirm" | "loading" | "done" | "error";
 
@@ -45,6 +46,7 @@ const REPORT_VIEWS: Record<string, ComponentType<{ report: any }>> = {
   "A-5": A5ReportView,
   "P-1a": P1aReportView,
   "P-1b": P1bReportView,
+  "P-2a": P2aReportView,
   // P-2b는 C-4 페인포인트 파이프라인의 브랜드 시드 변형 — 뷰도 공유
   "P-2b": C4ReportView,
 };

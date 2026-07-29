@@ -72,6 +72,14 @@ const ESTIMATES: Record<string, ReportEstimate> = {
       "cluster_finder를 curr·12m 두 시점으로 호출하고 keyword_info도 두 시점 합집합을 조회해 크레딧이 다른 코드의 약 2배입니다. " +
       COMMON_NOTE,
   },
+  "P-2a": {
+    daasCreditsRange: [3000, 15000],
+    claudeUsdRange: [0, 0],
+    secondsRange: [10, 40],
+    note:
+      "path_finder 비용은 반환 경로 키워드 수에 비례합니다(실측 참고: 경로 5개=450 credits, 요청 상한 150경로). " +
+      COMMON_NOTE,
+  },
   "P-1b": {
     ...SINGLE_KEYWORD_ESTIMATE,
     note: "메인 키워드 1개의 keyword_info 조회만 사용하는 저비용 리포트입니다. " + COMMON_NOTE,
