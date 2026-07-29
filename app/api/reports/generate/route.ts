@@ -28,6 +28,13 @@ function idempotencyKey(industry: IndustrySlug, code: string, category: string, 
   return `idem:${industry}:${code}:${norm}:${gl}`;
 }
 
+/** LLM 분류가 실패(partial)한 리포트는 캐시 재사용 대상에서 제외 — 재생성이 바로 사용자가 원하는 동작이므로.
+ *  (실사례: ANTHROPIC_API_KEY 미설정 상태에서 생성된 partial 리포트가 6시간 동안 재생성을 막았음) */
+function hasPartialClassification(report: unknown): boolean {
+  const meta = (report as { meta?: Record<string, unknown> } | null)?.meta;
+  return meta?.kbfClassification === "partial" || meta?.cepClassification === "partial";
+}
+
 export async function POST(request: Request) {
   let body: { industry?: string; reportCode?: string; category?: string; gl?: string };
   try {
@@ -65,7 +72,9 @@ export async function POST(request: Request) {
     const cached = await kvGet<ReportJobRecord>(`job:${cachedJobId}`);
     if (cached?.status === "done" && cached.reportUrl) {
       const report = await blobGetJson(cached.reportUrl);
-      if (report) return NextResponse.json({ jobId: cached.jobId, report, cached: true });
+      if (report && !hasPartialClassification(report)) {
+        return NextResponse.json({ jobId: cached.jobId, report, cached: true });
+      }
     }
   }
 
