@@ -70,10 +70,24 @@ export async function POST(request: Request) {
   }
 
   const jobId = randomUUID();
+  let report: unknown;
   try {
-    const report = await generator({ industry, category, gl });
-    const { url: reportUrl } = await blobPutJson(`reports/${jobId}.json`, report);
+    report = await generator({ industry, category, gl });
+  } catch (e) {
+    if (e instanceof DaasError) {
+      return NextResponse.json({ error: e.message }, { status: e.status || 502 });
+    }
+    const msg = e instanceof Error ? e.message : "알 수 없는 오류";
+    return NextResponse.json({ error: `리포트 생성 실패: ${msg}` }, { status: 500 });
+  }
 
+  // 여기까지 왔으면 DaaS 크레딧은 이미 소비됐다 — 이후 저장(KV/Blob) 단계가 실패해도
+  // 이미 만든 리포트를 버리지 않고 응답에 그대로 담아 돌려준다. KV/Blob 스토리지가 아직
+  // 연결되지 않은 배포에서는 lib/store.ts의 로컬 파일 폴백이 Vercel의 읽기전용 파일시스템에서
+  // 실패하므로(EROFS), persisted=false로 알려서 UI가 "저장 안 됨" 경고를 띄우게 한다.
+  let persisted = false;
+  try {
+    const { url: reportUrl } = await blobPutJson(`reports/${jobId}.json`, report);
     const record: ReportJobRecord = {
       jobId,
       industry: industry.slug,
@@ -86,13 +100,10 @@ export async function POST(request: Request) {
     };
     await kvSet(`job:${jobId}`, record, { ttlSeconds: JOB_TTL_SECONDS });
     await kvSet(idemKey, jobId, { ttlSeconds: IDEMPOTENCY_TTL_SECONDS });
-
-    return NextResponse.json({ jobId, report, cached: false }, { status: 201 });
+    persisted = true;
   } catch (e) {
-    if (e instanceof DaasError) {
-      return NextResponse.json({ error: e.message }, { status: e.status || 502 });
-    }
-    const msg = e instanceof Error ? e.message : "알 수 없는 오류";
-    return NextResponse.json({ error: `리포트 생성 실패: ${msg}` }, { status: 500 });
+    console.error(`[reports/generate] 저장 실패 (jobId=${jobId}) — 리포트는 생성됐으나 재조회/공유 링크는 동작하지 않음:`, e);
   }
+
+  return NextResponse.json({ jobId, report, cached: false, persisted }, { status: 201 });
 }

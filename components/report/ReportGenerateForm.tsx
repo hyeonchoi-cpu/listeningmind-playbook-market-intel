@@ -19,6 +19,7 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<B1Report | null>(null);
+  const [persisted, setPersisted] = useState(true);
 
   // Phase 2는 B-1 하나만 서비스 — 다른 코드가 실서비스로 붙으면 이 폼도 code.code 분기가 필요해짐
   const estimate = estimateB1();
@@ -44,6 +45,7 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error ?? `요청 실패 (${res.status})`);
       setReport(data.report as B1Report);
+      setPersisted(data.persisted !== false);
       setPhase("done");
     } catch (e) {
       setError(e instanceof Error ? e.message : "알 수 없는 오류가 발생했습니다.");
@@ -54,6 +56,13 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
   if (phase === "done" && report) {
     return (
       <div>
+        {!persisted && (
+          <div className="generate-form-error" style={{ marginBottom: 20 }}>
+            <strong>저장 실패</strong> — 이 리포트는 생성만 됐고 서버에 저장되지 않았습니다 (KV/Blob 스토리지 미연결).
+            새로고침하거나 페이지를 벗어나면 사라지니, 필요하면 지금 화면을 캡처하거나 내려받아 두세요. 관리자에게
+            스토리지 연결을 요청하면 다음부터는 공유 링크로 다시 볼 수 있습니다.
+          </div>
+        )}
         <B1ReportView report={report} />
         <div className="detail-cta" style={{ marginTop: 24 }}>
           <button
