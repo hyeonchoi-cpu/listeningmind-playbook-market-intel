@@ -23,9 +23,10 @@ const GLS: ReportGl[] = ["kr", "us", "jp"];
 const IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60; // 6시간 — 이 창 안에서는 같은 요청을 재사용해 중복 과금 방지
 const JOB_TTL_SECONDS = 30 * 24 * 60 * 60; // 30일 — 공유 링크가 그동안 살아있게
 
-function idempotencyKey(industry: IndustrySlug, code: string, category: string, gl: Gl): string {
+function idempotencyKey(industry: IndustrySlug, code: string, category: string, gl: Gl, brand: string): string {
   const norm = category.trim().toLowerCase();
-  return `idem:${industry}:${code}:${norm}:${gl}`;
+  const brandNorm = brand.trim().toLowerCase();
+  return `idem:${industry}:${code}:${norm}:${gl}${brandNorm ? `:${brandNorm}` : ""}`;
 }
 
 /** LLM 분류가 실패(partial)한 리포트는 캐시 재사용 대상에서 제외 — 재생성이 바로 사용자가 원하는 동작이므로.
@@ -36,7 +37,7 @@ function hasPartialClassification(report: unknown): boolean {
 }
 
 export async function POST(request: Request) {
-  let body: { industry?: string; reportCode?: string; category?: string; gl?: string };
+  let body: { industry?: string; reportCode?: string; category?: string; gl?: string; brand?: string };
   try {
     body = await request.json();
   } catch {
@@ -65,8 +66,10 @@ export async function POST(request: Request) {
   const gl = (GLS as string[]).includes(body.gl ?? "") ? (body.gl as Gl) : null;
   if (!gl) return NextResponse.json({ error: "gl은 kr/us/jp 중 하나여야 합니다." }, { status: 400 });
 
-  // 중복 호출 방지 — 같은 (업권,코드,카테고리,gl) 조합이 6시간 내 이미 생성됐으면 재사용
-  const idemKey = idempotencyKey(industry.slug, code.code, category, gl);
+  const brand = typeof body.brand === "string" ? body.brand.trim().slice(0, 60) : "";
+
+  // 중복 호출 방지 — 같은 (업권,코드,카테고리,gl,브랜드) 조합이 6시간 내 이미 생성됐으면 재사용
+  const idemKey = idempotencyKey(industry.slug, code.code, category, gl, brand);
   const cachedJobId = await kvGet<string>(idemKey);
   if (cachedJobId) {
     const cached = await kvGet<ReportJobRecord>(`job:${cachedJobId}`);
@@ -81,7 +84,7 @@ export async function POST(request: Request) {
   const jobId = randomUUID();
   let report: unknown;
   try {
-    report = await generator({ industry, category, gl });
+    report = await generator({ industry, category, gl, brand: brand || undefined });
   } catch (e) {
     if (e instanceof DaasError) {
       return NextResponse.json({ error: e.message }, { status: e.status || 502 });

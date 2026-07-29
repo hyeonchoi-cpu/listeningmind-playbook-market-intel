@@ -7,14 +7,28 @@ import { generateA1Report } from "./a1-volume-trend";
 import { generateA2Report } from "./a2-demography";
 import { generateA3Report } from "./a3-search-intent";
 import { generateB1Report } from "./b1-segment-intent";
+import { generateC1Report } from "./c1-rising-brand";
+import { generateC2Report } from "./c2-share-of-search";
+import { generateC3Report } from "./c3-conversion-path";
+import { generateC4Report } from "./c4-painpoint";
 
-export type ReportGenerator = (input: { industry: Industry; category: string; gl: Gl }) => Promise<unknown>;
+export type ReportGenerator = (input: {
+  industry: Industry;
+  category: string;
+  gl: Gl;
+  /** C-2(자사 브랜드, 필수)·C-4(선택)에서 사용 — 나머지 코드는 무시 */
+  brand?: string;
+}) => Promise<unknown>;
 
 export const REPORT_GENERATORS: Record<string, ReportGenerator> = {
   "A-1": generateA1Report,
   "A-2": generateA2Report,
   "A-3": generateA3Report,
   "B-1": generateB1Report,
+  "C-1": generateC1Report,
+  "C-2": generateC2Report,
+  "C-3": generateC3Report,
+  "C-4": generateC4Report,
 };
 
 export function getReportGenerator(code: string): ReportGenerator | null {

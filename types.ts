@@ -269,6 +269,123 @@ export type A3Report = {
   costLog: CostLogEntry[];
 };
 
+// ── C 밴드 공용 · 브랜드 집계 행 ──
+export type BrandRow = {
+  name: string;
+  /** 브랜드명을 포함하는 키워드 수 (부분 문자열 매칭 — 근사) */
+  keywordCount: number;
+  totalVolume: LabeledValue<number>;
+  /** 감지된 브랜드 볼륨 합 대비 점유율 — 컴플라이언스 규율상 항상 "검색량 기준 근사"로 표기 */
+  sharePct: LabeledValue<number>;
+  /** 볼륨 가중 평균 volume_trend */
+  weightedTrend: LabeledValue<number>;
+  topKeywords: { keyword: string; volume: number; trend: number }[];
+  isOurs?: boolean;
+};
+
+// ── C-1 · 라이징·경쟁 브랜드 ──
+export type C1Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "C-1";
+    category: string;
+    gl: ReportGl;
+    totalNodes: number;
+    llmModel: string;
+    brandExtraction: "complete" | "partial";
+    generatedAt: string;
+  };
+  /** 볼륨순 정렬 — 라이징 정렬은 뷰에서 weightedTrend 기준 */
+  brands: BrandRow[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── C-2 · 자사 vs 경쟁 검색 점유율 ──
+export type C2Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "C-2";
+    category: string;
+    gl: ReportGl;
+    ourBrand: string;
+    totalNodes: number;
+    llmModel: string;
+    brandExtraction: "complete" | "partial";
+    generatedAt: string;
+  };
+  brands: BrandRow[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── C-3 · 자사 검색 전환·이탈 구간 (path_finder) ──
+export type C3FlowRow = {
+  keyword: string;
+  /** 전환 확률 (Markov weight) — path_finder 스펙상 실측 */
+  weight: LabeledValue<number>;
+  /** 시드(자사) 키워드를 포함하는가 — 이탈/브랜드 내 이동 구분용 근사 플래그 */
+  containsSeed: boolean;
+};
+
+export type C3StageRow = {
+  stage: string;
+  nodeCount: number;
+};
+
+export type C3Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "C-3";
+    category: string; // 시드(자사 브랜드·제품) 키워드
+    gl: ReportGl;
+    totalNodes: number;
+    totalEdges: number;
+    generatedAt: string;
+  };
+  /** 시드 방향으로 들어오는 상위 흐름 (유입 트리거) */
+  inflows: C3FlowRow[];
+  /** 시드에서 나가는 상위 흐름 — containsSeed=false면 이탈 방향 후보 */
+  outflows: C3FlowRow[];
+  /** 퍼널 단계 분포 — path_finder 스펙상 stage는 LLM 분류(추정) */
+  stages: C3StageRow[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── C-4 · 자사·경쟁 페인포인트·부정 키워드 ──
+export type C4PainGroup = {
+  label: string;
+  keywordCount: number;
+  volume: LabeledValue<number>;
+  topKeywords: { keyword: string; volume: number }[];
+  /** 입력한 브랜드명을 포함하는 페인 키워드 수 (브랜드 미입력 시 0) */
+  brandKeywordCount: number;
+};
+
+export type C4Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "C-4";
+    category: string;
+    gl: ReportGl;
+    brand: string | null;
+    totalNodes: number;
+    llmModel: string;
+    painClassification: "complete" | "partial";
+    generatedAt: string;
+  };
+  painGroups: C4PainGroup[];
+  /** 전체 카테고리 볼륨 대비 페인 키워드 볼륨 비중 — 근사 */
+  painSharePct: LabeledValue<number>;
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
 export type Persona = {
   slug: string;          // "cmo"
   code: PersonaCode;

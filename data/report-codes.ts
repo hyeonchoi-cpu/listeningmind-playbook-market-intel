@@ -4,7 +4,7 @@ import type { ReportCode, ReportBand } from "@/types";
  * 리포트 코드 카탈로그 — Phase 1 목업.
  *
  * 출처: lima-agents 스킬 `references/question-frame.md` (마케팅팀 표준 질문 프레임 A~D + 퍼블리시스 실전 케이스, 총 18개)를 그대로 이식.
- * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 A-1·A-2·A-3·B-1), 나머지는 "준비 중"/"미지원".
+ * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 A-1~3·B-1·C-1~4), 나머지는 "준비 중"/"미지원".
  * connectors는 "필요 데이터" 컬럼에서 명시적으로 언급된 DaaS 커넥터만 매핑한 것으로, WebSearch·외부 SERP 스킬처럼
  * DaaS 4커넥터 밖의 소스는 connectors에 넣지 않고 dataNeeds 원문으로만 표시한다(추측 표기 금지).
  *
@@ -94,7 +94,7 @@ export const reportCodes: ReportCode[] = [
     title: "라이징·경쟁 브랜드",
     dataNeeds: "detected_entities.brands · volume_trend",
     templateFolder: "c1-rising-brand",
-    status: "planned",
+    status: "implemented",
     connectors: ["cluster_finder", "keyword_info"],
   },
   {
@@ -104,7 +104,7 @@ export const reportCodes: ReportCode[] = [
     title: "자사 vs 경쟁 검색 점유율",
     dataNeeds: "detected_entities · volume",
     templateFolder: "c2-share-of-search",
-    status: "planned",
+    status: "implemented",
     connectors: ["cluster_finder", "keyword_info"],
   },
   {
@@ -114,7 +114,7 @@ export const reportCodes: ReportCode[] = [
     title: "자사 검색 전환·이탈 구간",
     dataNeeds: "path_finder",
     templateFolder: "c3-conversion-path",
-    status: "planned",
+    status: "implemented",
     connectors: ["path_finder"],
   },
   {
@@ -124,8 +124,9 @@ export const reportCodes: ReportCode[] = [
     title: "자사·경쟁 페인포인트·부정 키워드",
     dataNeeds: "CEP HOW_FEEL 부작용·우려 서브그룹",
     templateFolder: "c4-painpoint",
-    status: "planned",
-    connectors: ["cluster_finder"],
+    status: "implemented",
+    // 구현이 볼륨 확보를 위해 keyword_info도 호출
+    connectors: ["cluster_finder", "keyword_info"],
   },
 
   // ─────────── D · 전략 제안 ───────────

@@ -270,3 +270,57 @@ export function indexByKeyword(items: KeywordInfo[]): Map<string, KeywordInfo> {
   for (const item of items) if (item.keyword) map.set(item.keyword, item);
   return map;
 }
+
+// ── path_finder (베타) ─────────────────────────────────────────────
+// 요청 형태는 web/lib/daas.ts의 검증된 클라이언트({keyword, gl, limit})를 따르고,
+// 응답은 playbook path-finder-spec.md의 nodes/edges 스키마를 기준으로 방어적으로 파싱한다
+// (베타 엔드포인트라 스키마 변형 가능성 있음).
+export interface PathNode {
+  keyword: string;
+  /** 퍼널 단계 — 스펙상 LLM 분류(추정) */
+  stage: string | null;
+  sessionCount: number;
+}
+
+export interface PathEdge {
+  from: string;
+  to: string;
+  /** 전환 확률 (Markov) — 스펙상 실측 */
+  weight: number;
+}
+
+export interface PathFinderResult {
+  nodes: PathNode[];
+  edges: PathEdge[];
+  cost: number;
+}
+
+export async function pathFinder(keyword: string, gl: Gl, limit = 200): Promise<PathFinderResult> {
+  const r = await post<any>("/path_finder", { keyword, gl, limit });
+  const data = r?.data ?? r ?? {};
+  const rawNodes: any[] = Array.isArray(data.nodes) ? data.nodes : [];
+  const rawEdges: any[] = Array.isArray(data.edges) ? data.edges : Array.isArray(data.rels) ? data.rels : [];
+
+  const nodes: PathNode[] = rawNodes
+    .map((n) => ({
+      keyword: keywordOf(n),
+      stage: typeof n?.stage === "string" ? n.stage : null,
+      sessionCount: num(n?.session_count ?? n?.sessionCount ?? 0),
+    }))
+    .filter((n) => n.keyword);
+
+  const edges: PathEdge[] = rawEdges
+    .map((e) => {
+      if (Array.isArray(e) && e.length >= 2) {
+        return { from: keywordOf(e[0]), to: keywordOf(e[1]), weight: num(e[2] ?? 0) };
+      }
+      return {
+        from: keywordOf(e?.from ?? e?.source ?? e?.a),
+        to: keywordOf(e?.to ?? e?.target ?? e?.b),
+        weight: num(e?.weight ?? e?.w ?? 0),
+      };
+    })
+    .filter((e) => e.from && e.to);
+
+  return { nodes, edges, cost: r?.cost_detail?.total_cost ?? 0 };
+}

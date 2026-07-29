@@ -7,6 +7,10 @@ import { A1ReportView } from "./A1ReportView";
 import { A2ReportView } from "./A2ReportView";
 import { A3ReportView } from "./A3ReportView";
 import { B1ReportView } from "./B1ReportView";
+import { C1ReportView } from "./C1ReportView";
+import { C2ReportView } from "./C2ReportView";
+import { C3ReportView } from "./C3ReportView";
+import { C4ReportView } from "./C4ReportView";
 
 type Phase = "idle" | "confirm" | "loading" | "done" | "error";
 
@@ -22,13 +26,32 @@ const REPORT_VIEWS: Record<string, ComponentType<{ report: any }>> = {
   "A-2": A2ReportView,
   "A-3": A3ReportView,
   "B-1": B1ReportView,
+  "C-1": C1ReportView,
+  "C-2": C2ReportView,
+  "C-3": C3ReportView,
+  "C-4": C4ReportView,
 };
 
 // 인구통계 태깅(KR 중심 커버리지)에 의존하는 코드 — KR 외 국가 선택 시 사전 경고
 const DEMOGRAPHY_DEPENDENT_CODES = new Set(["A-2", "B-1"]);
 
+// 코드별 입력 필드 구성 — 기본은 카테고리만. C-2는 자사 브랜드 필수, C-4는 선택,
+// C-3는 카테고리 입력 자체가 자사 시드 키워드 역할.
+const CODE_FORM: Record<
+  string,
+  { categoryLabel?: string; categoryPlaceholder?: string; brand?: "required" | "optional" }
+> = {
+  "C-2": { brand: "required" },
+  "C-3": {
+    categoryLabel: "자사 브랜드·제품 키워드 (여정 시드)",
+    categoryPlaceholder: "예: 삼성 비스포크, 현대해상 다이렉트",
+  },
+  "C-4": { brand: "optional" },
+};
+
 export function ReportGenerateForm({ industry, code }: { industry: Industry; code: ReportCode }) {
   const [category, setCategory] = useState("");
+  const [brand, setBrand] = useState("");
   const [gl, setGl] = useState<ReportGl>("kr");
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -38,10 +61,19 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
   const estimate = estimateForCode(code.code);
   const usesLlm = estimate.claudeUsdRange[1] > 0;
   const ReportView = REPORT_VIEWS[code.code];
+  const formConfig = CODE_FORM[code.code] ?? {};
 
   function handleSubmitClick() {
     if (!category.trim()) {
-      setError("카테고리를 입력해주세요. (예: 스킨케어, 전세대출, 다이어트 보조제)");
+      setError(
+        formConfig.categoryLabel
+          ? `${formConfig.categoryLabel}을(를) 입력해주세요.`
+          : "카테고리를 입력해주세요. (예: 스킨케어, 전세대출, 다이어트 보조제)",
+      );
+      return;
+    }
+    if (formConfig.brand === "required" && !brand.trim()) {
+      setError("자사 브랜드를 입력해주세요. (예: 삼성, 현대해상)");
       return;
     }
     setError(null);
@@ -55,7 +87,13 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
       const res = await fetch("/api/reports/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ industry: industry.slug, reportCode: code.code, category: category.trim(), gl }),
+        body: JSON.stringify({
+          industry: industry.slug,
+          reportCode: code.code,
+          category: category.trim(),
+          gl,
+          ...(brand.trim() ? { brand: brand.trim() } : {}),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error ?? `요청 실패 (${res.status})`);
@@ -98,18 +136,34 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
     <div className="generate-form">
       <div className="generate-form-row">
         <label className="generate-form-label" htmlFor="category">
-          카테고리
+          {formConfig.categoryLabel ?? "카테고리"}
         </label>
         <input
           id="category"
           className="generate-form-input"
           type="text"
-          placeholder="예: 스킨케어, 전세대출, 다이어트 보조제"
+          placeholder={formConfig.categoryPlaceholder ?? "예: 스킨케어, 전세대출, 다이어트 보조제"}
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           disabled={phase === "loading" || phase === "confirm"}
         />
       </div>
+      {formConfig.brand && (
+        <div className="generate-form-row">
+          <label className="generate-form-label" htmlFor="brand">
+            {formConfig.brand === "required" ? "자사 브랜드" : "자사/관심 브랜드 (선택)"}
+          </label>
+          <input
+            id="brand"
+            className="generate-form-input"
+            type="text"
+            placeholder="예: 삼성, 현대해상, 토스"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            disabled={phase === "loading" || phase === "confirm"}
+          />
+        </div>
+      )}
       <div className="generate-form-row">
         <label className="generate-form-label" htmlFor="gl">
           국가

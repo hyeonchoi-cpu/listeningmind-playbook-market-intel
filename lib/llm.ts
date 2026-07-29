@@ -225,3 +225,139 @@ export async function classifyCep(
   console.error(`[llm.classifyCep] ${MAX_ATTEMPTS}회 시도 후 실패:`, lastError);
   return { groups: {}, status: "partial", model };
 }
+
+// ─────────── 브랜드 엔티티 추출 (C-1·C-2) ───────────
+// web/lib/llm.ts geo 파이프라인의 검증된 규율을 따름: LLM은 후보를 추리기만 하고,
+// 실제 키워드에 부분 문자열로 등장하는 이름만 살아남는다(환각 방지 — 추측 브랜드 창작 금지).
+
+export type BrandExtraction = {
+  /** 검증 통과한 브랜드명 (실제 키워드에 등장하는 표기 그대로) */
+  brands: string[];
+  status: "complete" | "partial";
+  model: string;
+};
+
+function buildBrandSystemPrompt(category: string, industry: Industry): string {
+  return `당신은 "${category}" 카테고리(${industry.label} 업권) 검색 키워드에서 브랜드·제조사·기관명을 식별하는 분석가입니다.
+
+업권 참고: ${industry.entityDictionaryLabel}.
+
+입력된 키워드 목록에서 **실제 브랜드·제조사·기관명인 토큰만** 최대 15개 추출하세요.
+- 키워드에 실제로 보이는 표기 그대로 적으세요 (파이프라인이 부분 문자열 매칭으로 재검증하므로, 목록에 없는 브랜드를 추측·창작하면 버려집니다).
+- 일반명사·사양어·상황어(예: 추천, 가격, 대용량, 저소음)는 브랜드가 아니므로 제외.
+- 브랜드가 없으면 빈 배열.
+
+출력은 오직 아래 JSON 형식으로만 (설명·마크다운·코드펜스 금지):
+{"brands":["브랜드1","브랜드2"]}`;
+}
+
+export async function extractBrands(
+  category: string,
+  industry: Industry,
+  keywords: string[],
+): Promise<BrandExtraction> {
+  const model = process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
+  const distinct = [...new Set(keywords.filter(Boolean))].slice(0, MAX_KEYWORDS_PER_CALL);
+  if (distinct.length === 0) return { brands: [], status: "complete", model };
+
+  const system = buildBrandSystemPrompt(category, industry);
+  const userPayload = JSON.stringify({ category, keywords: distinct });
+  const lowerKws = distinct.map((k) => k.toLowerCase());
+
+  let lastError: unknown = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const text = await callClaude(system, userPayload, model);
+      const parsed = parseJson(text) as { brands?: unknown };
+      if (Array.isArray(parsed.brands)) {
+        // 환각 방지: 실제 키워드에 부분 문자열로 등장하는 이름만 통과
+        const verified = [
+          ...new Set(
+            parsed.brands
+              .filter((b): b is string => typeof b === "string" && b.trim().length > 0)
+              .map((b) => b.trim())
+              .filter((b) => lowerKws.some((kw) => kw.includes(b.toLowerCase()))),
+          ),
+        ].slice(0, 15);
+        return { brands: verified, status: "complete", model };
+      }
+      lastError = new Error("응답에 brands 배열이 없음");
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  console.error(`[llm.extractBrands] ${MAX_ATTEMPTS}회 시도 후 실패:`, lastError);
+  return { brands: [], status: "partial", model };
+}
+
+// ─────────── 페인포인트 분류 (C-4) ───────────
+
+export type PainClassification = {
+  taxonomy: string[];
+  /** keyword → 페인 그룹 라벨들. 페인·우려·불만이 아닌 키워드는 빈 배열 */
+  labels: Record<string, string[]>;
+  status: "complete" | "partial";
+  model: string;
+};
+
+function buildPainSystemPrompt(category: string, industry: Industry): string {
+  const guardrails = industry.guardrailSummary.map((g) => `- ${g}`).join("\n");
+  return `당신은 "${category}" 카테고리(${industry.label} 업권) 검색 키워드에서 페인포인트·부정 신호를 분류하는 분석가입니다.
+
+이 업권 리포트에는 아래 가드레일이 항상 적용됩니다 — 그룹 라벨명이 이 규칙을 위반하는 단정 표현이 되지 않게 하세요:
+${guardrails}
+
+작업 순서:
+1) 이 카테고리의 페인포인트 그룹을 3~6개 스스로 정의하세요. 한국어 2~8자 명사구 (예: "부작용·안전 우려", "고장·내구성 불만", "가격 불만", "효과 의문").
+2) 입력 키워드 중 **소비자의 우려·불만·부정 인식을 담은 키워드만** 해당 그룹으로 분류하세요. 중립·긍정 키워드(추천, 가격 비교, 사용법 등)는 빈 배열로 두세요 — 페인이 아닌 것을 억지로 분류하지 마세요.
+
+출력은 오직 아래 JSON 형식으로만 (설명·마크다운·코드펜스 금지):
+{"taxonomy":["그룹1","그룹2"],"labels":{"키워드1":["그룹1"],"키워드2":[]}}
+입력 키워드를 빠짐없이 labels의 키로 포함하세요.`;
+}
+
+export async function classifyPainpoints(
+  category: string,
+  industry: Industry,
+  keywords: string[],
+): Promise<PainClassification> {
+  const model = process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
+  const distinct = [...new Set(keywords.filter(Boolean))].slice(0, MAX_KEYWORDS_PER_CALL);
+  if (distinct.length === 0) return { taxonomy: [], labels: {}, status: "complete", model };
+
+  const system = buildPainSystemPrompt(category, industry);
+  const userPayload = JSON.stringify({ category, keywords: distinct });
+
+  let lastError: unknown = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const text = await callClaude(system, userPayload, model);
+      const parsed = parseJson(text);
+      if (isValid(parsed, distinct)) {
+        const labels: Record<string, string[]> = {};
+        for (const kw of distinct) {
+          const v = (parsed.labels as Record<string, unknown>)[kw];
+          labels[kw] = Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+        }
+        return {
+          taxonomy: (parsed.taxonomy as string[]).filter((x) => typeof x === "string"),
+          labels,
+          status: "complete",
+          model,
+        };
+      }
+      lastError = new Error("응답이 스키마 검증(80% 키워드 커버리지)을 통과하지 못함");
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  console.error(`[llm.classifyPainpoints] ${MAX_ATTEMPTS}회 시도 후 실패:`, lastError);
+  return {
+    taxonomy: [],
+    labels: Object.fromEntries(distinct.map((k) => [k, []])),
+    status: "partial",
+    model,
+  };
+}

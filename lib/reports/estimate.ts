@@ -37,6 +37,17 @@ const ESTIMATES: Record<string, ReportEstimate> = {
   },
   "A-3": CLUSTER_PIPELINE_ESTIMATE,
   "B-1": CLUSTER_PIPELINE_ESTIMATE,
+  "C-1": CLUSTER_PIPELINE_ESTIMATE,
+  "C-2": CLUSTER_PIPELINE_ESTIMATE,
+  "C-3": {
+    daasCreditsRange: [100, 5000],
+    claudeUsdRange: [0, 0],
+    secondsRange: [10, 40],
+    note:
+      "path_finder는 베타 엔드포인트라 단가 편차가 큽니다(위 범위는 가정). 시드 검색량이 월 1,000 미만이면 여정 데이터가 비어 실패할 수 있습니다. " +
+      COMMON_NOTE,
+  },
+  "C-4": CLUSTER_PIPELINE_ESTIMATE,
 };
 
 export function estimateForCode(code: string): ReportEstimate {
