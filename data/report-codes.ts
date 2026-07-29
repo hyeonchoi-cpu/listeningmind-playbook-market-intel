@@ -4,7 +4,7 @@ import type { ReportCode, ReportBand } from "@/types";
  * 리포트 코드 카탈로그 — Phase 1 목업.
  *
  * 출처: lima-agents 스킬 `references/question-frame.md` (마케팅팀 표준 질문 프레임 A~D + 퍼블리시스 실전 케이스, 총 18개)를 그대로 이식.
- * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 A-1~3·B-1·C-1~4), 나머지는 "준비 중"/"미지원".
+ * status: implemented = lib/reports/registry.ts에 생성기 존재 (현재 A-1~3·B-1·C-1~4·D-1·D-3·D-4), 나머지는 "준비 중"/"미지원".
  * connectors는 "필요 데이터" 컬럼에서 명시적으로 언급된 DaaS 커넥터만 매핑한 것으로, WebSearch·외부 SERP 스킬처럼
  * DaaS 4커넥터 밖의 소스는 connectors에 넣지 않고 dataNeeds 원문으로만 표시한다(추측 표기 금지).
  *
@@ -137,8 +137,9 @@ export const reportCodes: ReportCode[] = [
     title: "카테고리 선점 CEP",
     dataNeeds: "cluster_finder + CEP 7W 전체",
     templateFolder: "d1-cep-preemption",
-    status: "planned",
-    connectors: ["cluster_finder"],
+    status: "implemented",
+    // 구현이 볼륨 확보를 위해 keyword_info도 호출
+    connectors: ["cluster_finder", "keyword_info"],
   },
   {
     code: "D-2",
@@ -157,7 +158,7 @@ export const reportCodes: ReportCode[] = [
     title: "자사 강점·부족 검색 키워드",
     dataNeeds: "detected_entities + volume",
     templateFolder: "d3-strength-gap",
-    status: "planned",
+    status: "implemented",
     connectors: ["cluster_finder", "keyword_info"],
   },
   {
@@ -167,8 +168,9 @@ export const reportCodes: ReportCode[] = [
     title: "함께 검색되는 라이징 CEP·연관 아이템",
     dataNeeds: "CEP WITH_WHAT + rels",
     templateFolder: "d4-rising-cep",
-    status: "planned",
-    connectors: ["cluster_finder"],
+    status: "implemented",
+    // 구현이 볼륨·트렌드 확보를 위해 keyword_info도 호출
+    connectors: ["cluster_finder", "keyword_info"],
   },
 
   // ─────────── P · 퍼블리시스 실전 케이스 ───────────

@@ -388,6 +388,104 @@ export type C4Report = {
   costLog: CostLogEntry[];
 };
 
+// ── D-1 · 카테고리 선점 CEP ──
+export type D1CepOpportunity = {
+  id: string;
+  axis: string;
+  cepShort: string;
+  situation: string;
+  keywordCount: number;
+  volume: LabeledValue<number>;
+  /** 브랜드 미포함(논브랜드) 키워드 볼륨 비중 — 높을수록 브랜드 선점 여지 크다는 가정 */
+  unbrandedSharePct: LabeledValue<number>;
+  /** 정규화 볼륨 × 논브랜드 비중 (0~100) — 산식 자체가 가정 */
+  opportunityScore: LabeledValue<number>;
+  topKeywords: { keyword: string; volume: number; branded: boolean }[];
+};
+
+export type D1Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "D-1";
+    category: string;
+    gl: ReportGl;
+    totalNodes: number;
+    llmModel: string;
+    cepClassification: "complete" | "partial";
+    brandExtraction: "complete" | "partial";
+    generatedAt: string;
+  };
+  /** opportunityScore 내림차순 */
+  opportunities: D1CepOpportunity[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── D-3 · 자사 강점·부족 검색 키워드 ──
+export type D3KeywordRow = {
+  keyword: string;
+  volume: LabeledValue<number>;
+  trend: LabeledValue<number>;
+  /** 이 키워드를 커버하는 경쟁 브랜드명 (자사 제외) */
+  coveredBy: string[];
+};
+
+export type D3Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "D-3";
+    category: string;
+    gl: ReportGl;
+    ourBrand: string;
+    totalNodes: number;
+    llmModel: string;
+    brandExtraction: "complete" | "partial";
+    generatedAt: string;
+  };
+  ourCoverage: { keywordCount: number; volume: LabeledValue<number> };
+  /** 자사 커버 상위 키워드 (강점) */
+  strengths: D3KeywordRow[];
+  /** 경쟁 브랜드는 커버하는데 자사는 미커버인 상위 키워드 (부족) */
+  competitorGaps: D3KeywordRow[];
+  /** 어떤 브랜드도 붙지 않은 상위 논브랜드 키워드 (열린 기회) */
+  unbrandedOpportunities: D3KeywordRow[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
+// ── D-4 · 함께 검색되는 라이징 CEP·연관 아이템 ──
+export type D4RisingItem = {
+  keyword: string;
+  volume: LabeledValue<number>;
+  trend: LabeledValue<number>;
+  /** 시드(카테고리) 키워드와 rels 직접 이웃인가 */
+  neighborOfSeed: boolean;
+  /** LLM WITH_WHAT류 상황 해석 — partial 시 빈 문자열 */
+  axis: string;
+  cepShort: string;
+  situation: string;
+};
+
+export type D4Report = {
+  meta: {
+    industry: IndustrySlug;
+    reportCode: "D-4";
+    category: string;
+    gl: ReportGl;
+    totalNodes: number;
+    totalEdges: number;
+    llmModel: string;
+    cepClassification: "complete" | "partial";
+    generatedAt: string;
+  };
+  risingItems: D4RisingItem[];
+  insights: ReportInsight[];
+  compliance: ComplianceBlock;
+  costLog: CostLogEntry[];
+};
+
 export type Persona = {
   slug: string;          // "cmo"
   code: PersonaCode;

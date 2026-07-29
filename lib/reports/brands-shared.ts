@@ -22,7 +22,22 @@ export type BrandLandscape = {
   llmModel: string;
   brandExtraction: "complete" | "partial";
   costLog: CostLogEntry[];
+  /** 키워드 수준 후속 분석(D-3 등)용 내부 데이터 — 리포트 JSON에 직렬화하지 말 것 */
+  allKeywords: string[];
+  kw2vol: Map<string, number>;
+  kw2trend: Map<string, number>;
 };
+
+const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, "");
+
+/** 브랜드 별칭 매칭 규칙 — 부분 문자열 포함 + 단독 기업명 쿼리 제외. C 밴드·D-3가 공유. */
+export function matchesBrand(keyword: string, aliases: string[]): boolean {
+  const kl = keyword.toLowerCase();
+  if (!aliases.some((a) => kl.includes(a))) return false;
+  const kn = normalize(keyword);
+  if (aliases.some((a) => normalize(a) === kn)) return false;
+  return true;
+}
 
 export async function buildBrandLandscape(input: {
   industry: Industry;
@@ -68,18 +83,10 @@ export async function buildBrandLandscape(input: {
     if (!exists) brandDefs.push({ name: must, aliases: [mustLower] });
   }
 
-  const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, "");
-
   const rows: BrandRow[] = brandDefs.map((def) => {
     const aliases = def.aliases.length ? def.aliases : [def.name.toLowerCase()];
-    const aliasNorms = aliases.map(normalize);
-    const matched = allKws.filter((kw) => {
-      const kl = kw.toLowerCase();
-      if (!aliases.some((a) => kl.includes(a))) return false;
-      // 단독 기업명 쿼리 제외 — 키워드 전체가 별칭 그 자체면 카테고리 의도 모호 (상단 규칙 2)
-      if (aliasNorms.includes(normalize(kw))) return false;
-      return true;
-    });
+    // 매칭 규칙(부분 문자열 + 단독 기업명 쿼리 제외)은 matchesBrand 단일 소스 사용
+    const matched = allKws.filter((kw) => matchesBrand(kw, aliases));
     const totalVolume = matched.reduce((s, kw) => s + (kw2vol.get(kw) ?? 0), 0);
     const weightedTrend =
       totalVolume > 0
@@ -127,5 +134,8 @@ export async function buildBrandLandscape(input: {
       { endpoint: "cluster_finder", calls: 1, totalCost: costCf },
       { endpoint: "keyword_info", calls: Math.ceil(allKws.length / 1000), totalCost: costKi },
     ],
+    allKeywords: allKws,
+    kw2vol,
+    kw2trend,
   };
 }

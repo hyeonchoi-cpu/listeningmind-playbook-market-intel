@@ -11,6 +11,9 @@ import { C1ReportView } from "./C1ReportView";
 import { C2ReportView } from "./C2ReportView";
 import { C3ReportView } from "./C3ReportView";
 import { C4ReportView } from "./C4ReportView";
+import { D1ReportView } from "./D1ReportView";
+import { D3ReportView } from "./D3ReportView";
+import { D4ReportView } from "./D4ReportView";
 
 type Phase = "idle" | "confirm" | "loading" | "done" | "error";
 
@@ -30,6 +33,9 @@ const REPORT_VIEWS: Record<string, ComponentType<{ report: any }>> = {
   "C-2": C2ReportView,
   "C-3": C3ReportView,
   "C-4": C4ReportView,
+  "D-1": D1ReportView,
+  "D-3": D3ReportView,
+  "D-4": D4ReportView,
 };
 
 // 인구통계 태깅(KR 중심 커버리지)에 의존하는 코드 — KR 외 국가 선택 시 사전 경고
@@ -47,6 +53,7 @@ const CODE_FORM: Record<
     categoryPlaceholder: "예: 삼성 비스포크, 현대해상 다이렉트",
   },
   "C-4": { brand: "optional" },
+  "D-3": { brand: "required" },
 };
 
 export function ReportGenerateForm({ industry, code }: { industry: Industry; code: ReportCode }) {

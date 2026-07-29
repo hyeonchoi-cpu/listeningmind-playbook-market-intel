@@ -48,6 +48,13 @@ const ESTIMATES: Record<string, ReportEstimate> = {
       COMMON_NOTE,
   },
   "C-4": CLUSTER_PIPELINE_ESTIMATE,
+  "D-1": {
+    ...CLUSTER_PIPELINE_ESTIMATE,
+    claudeUsdRange: [0.1, 0.5],
+    note: "CEP 해석 + 브랜드 추출로 LLM을 2회 호출해 Claude 비용이 다른 코드보다 높습니다. " + COMMON_NOTE,
+  },
+  "D-3": CLUSTER_PIPELINE_ESTIMATE,
+  "D-4": CLUSTER_PIPELINE_ESTIMATE,
 };
 
 export function estimateForCode(code: string): ReportEstimate {

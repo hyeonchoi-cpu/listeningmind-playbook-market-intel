@@ -149,6 +149,33 @@ function groupByCommunity(nodes: any[]): string[][] {
   return [...groups.values()].map(dedupe);
 }
 
+/** cluster_finder 응답의 rels를 무방향 인접 맵으로 정규화 (키는 소문자 trim).
+ *  web/lib/daas.ts의 parseRels와 동일한 케이스 커버리지. */
+export function parseRels(resp: ClusterResponse): Record<string, string[]> {
+  const r = resp?.data?.rels;
+  const out: Record<string, string[]> = {};
+  const add = (a: string, b: string) => {
+    const ka = a.trim().toLowerCase();
+    const kb = b.trim().toLowerCase();
+    if (!ka || !kb || ka === kb) return;
+    (out[ka] ??= []).push(kb);
+    (out[kb] ??= []).push(ka);
+  };
+  if (Array.isArray(r)) {
+    for (const e of r as any[]) {
+      if (Array.isArray(e) && e.length >= 2) add(keywordOf(e[0]), keywordOf(e[1]));
+      else if (e && typeof e === "object")
+        add(keywordOf((e as any).source ?? (e as any).from ?? (e as any).a), keywordOf((e as any).target ?? (e as any).to ?? (e as any).b));
+    }
+  } else if (r && typeof r === "object") {
+    for (const [k, neigh] of Object.entries(r as Record<string, unknown>)) {
+      if (Array.isArray(neigh)) for (const nb of neigh) add(k, keywordOf(nb));
+    }
+  }
+  for (const k of Object.keys(out)) out[k] = [...new Set(out[k])];
+  return out;
+}
+
 /** cluster_finder 응답에서 고유 키워드 우주를 추출한다 — nodes → communities → rels 폴백. */
 export function uniqueKeywords(resp: ClusterResponse): string[] {
   const nodes = resp?.data?.nodes;

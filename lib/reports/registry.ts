@@ -11,6 +11,9 @@ import { generateC1Report } from "./c1-rising-brand";
 import { generateC2Report } from "./c2-share-of-search";
 import { generateC3Report } from "./c3-conversion-path";
 import { generateC4Report } from "./c4-painpoint";
+import { generateD1Report } from "./d1-cep-preemption";
+import { generateD3Report } from "./d3-strength-gap";
+import { generateD4Report } from "./d4-rising-cep";
 
 export type ReportGenerator = (input: {
   industry: Industry;
@@ -29,6 +32,9 @@ export const REPORT_GENERATORS: Record<string, ReportGenerator> = {
   "C-2": generateC2Report,
   "C-3": generateC3Report,
   "C-4": generateC4Report,
+  "D-1": generateD1Report,
+  "D-3": generateD3Report,
+  "D-4": generateD4Report,
 };
 
 export function getReportGenerator(code: string): ReportGenerator | null {
