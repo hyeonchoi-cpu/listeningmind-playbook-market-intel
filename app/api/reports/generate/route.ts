@@ -23,8 +23,9 @@ const GLS: ReportGl[] = ["kr", "us", "jp"];
 const IDEMPOTENCY_TTL_SECONDS = 6 * 60 * 60; // 6시간 — 이 창 안에서는 같은 요청을 재사용해 중복 과금 방지
 const JOB_TTL_SECONDS = 30 * 24 * 60 * 60; // 30일 — 공유 링크가 그동안 살아있게
 // 파이프라인 로직이 바뀌면 올린다 — 캐시된 구버전 결과가 6시간 동안 새 로직을 가리는 것을 방지
-// (v2: 브랜드 별칭 정규화 + 단독 기업명 쿼리 제외 / v3: 분류용 포함 판정 분리 + 기타 엔티티 제외)
-const PIPELINE_VERSION = "3";
+// (v2: 브랜드 별칭 정규화 + 단독 기업명 쿼리 제외 / v3: 분류용 포함 판정 분리 + 기타 엔티티 제외
+//  / v4: 비소비 맥락(주식·취업) 토큰 필터)
+const PIPELINE_VERSION = "4";
 
 function idempotencyKey(industry: IndustrySlug, code: string, category: string, gl: Gl, brand: string): string {
   const norm = category.trim().toLowerCase();

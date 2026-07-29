@@ -108,8 +108,9 @@ export function D3ReportView({ report }: { report: D3Report }) {
         <KeywordTable rows={report.unbrandedOpportunities} emptyText="논브랜드 키워드가 확인되지 않았습니다." />
         <p className="estimate-box-note" style={{ marginTop: 8 }}>
           커버리지 분류는 브랜드 별칭 <strong>포함</strong> 기준 근사입니다(단독 기업명 쿼리도 브랜드 연관으로
-          취급). 소비자 브랜드가 아닌 기업·기관·종목명이 붙은 키워드도 열린 기회에서 제외했습니다. 실제 SERP
-          노출·콘텐츠 보유 여부와는 다릅니다.
+          취급). 소비자 브랜드가 아닌 기업·기관·종목명이 붙은 키워드, 그리고 비소비 맥락(주식·취업 등) 토큰
+          키워드 {report.meta.nonConsumerExcluded.toLocaleString()}개는 분류에서 제외했습니다(토큰 사전 기반
+          가정). 실제 SERP 노출·콘텐츠 보유 여부와는 다릅니다.
         </p>
       </div>
 

@@ -47,8 +47,8 @@ export function BrandTable({ brands }: { brands: BrandRow[] }) {
       </div>
       <p className="estimate-box-note" style={{ marginTop: 8 }}>
         점유율은 감지된 브랜드의 검색량 합 기준 근사이며 실제 판매·가입 점유율이 아닙니다. 매칭은 브랜드별
-        별칭(한/영/축약, 표 안에 표시) 부분 문자열 기준이고, 단독 기업명 쿼리(예: &ldquo;삼성&rdquo; 단독)는
-        카테고리 의도가 모호해 집계에서 제외했습니다(가정).
+        별칭(한/영/축약, 표 안에 표시) 부분 문자열 기준이고, 단독 기업명 쿼리(예: &ldquo;삼성&rdquo; 단독)와
+        비소비 맥락(주식·취업 등) 키워드는 집계에서 제외했습니다(가정).
       </p>
     </div>
   );

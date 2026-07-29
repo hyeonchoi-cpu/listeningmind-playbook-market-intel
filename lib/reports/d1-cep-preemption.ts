@@ -15,6 +15,7 @@ import {
 import { classifyCep, extractBrands, type CepGroupInput } from "@/lib/llm";
 import { getComplianceBlock } from "@/lib/compliance";
 import { containsBrandToken } from "./brands-shared";
+import { isNonConsumerKeyword } from "./consumer-filter";
 import type { D1CepOpportunity, D1Report, Industry, ReportInsight } from "@/types";
 
 const TOP_CLUSTERS = 12;
@@ -72,10 +73,12 @@ export async function generateD1Report(input: {
     extractBrands(category, industry, topKwsForBrands),
   ]);
   // 논브랜드 비중 판정은 "포함" 기준 — 단독 기업명 쿼리·기타 기업(공급망·주식 맥락)명이 붙은
-  // 키워드도 브랜드/엔티티 연관 수요로 취급해야 선점 여지가 과대 측정되지 않는다
+  // 키워드도 브랜드/엔티티 연관 수요로 취급해야 선점 여지가 과대 측정되지 않는다.
+  // 비소비 맥락(주식·취업 등) 키워드도 같은 이유로 "선점 가능한 논브랜드 수요"가 아니므로 branded 취급.
   const aliasSets = brandExtraction.brands.map((b) => b.aliases);
   const isBranded = (kw: string) => {
     if (aliasSets.some((aliases) => containsBrandToken(kw, aliases))) return true;
+    if (isNonConsumerKeyword(kw, industry.slug)) return true;
     const kl = kw.toLowerCase();
     return brandExtraction.otherEntities.some((e) => kl.includes(e));
   };

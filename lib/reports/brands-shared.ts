@@ -11,6 +11,7 @@
 //     모호한 쿼리라 특정 카테고리 SoV에 넣으면 대형 기업 브랜드가 과대 측정된다(가정으로 명시).
 import { clusterFinder, uniqueKeywords, keywordInfoAll, indexByKeyword, type Gl } from "@/lib/daas";
 import { extractBrands } from "@/lib/llm";
+import { isNonConsumerKeyword } from "./consumer-filter";
 import type { BrandRow, CostLogEntry, Industry } from "@/types";
 
 const TOP_KEYWORDS_FOR_EXTRACTION = 250;
@@ -97,8 +98,11 @@ export async function buildBrandLandscape(input: {
 
   const rows: BrandRow[] = brandDefs.map((def) => {
     const aliases = def.aliases.length ? def.aliases : [def.name.toLowerCase()];
-    // 매칭 규칙(부분 문자열 + 단독 기업명 쿼리 제외)은 matchesBrand 단일 소스 사용
-    const matched = allKws.filter((kw) => matchesBrand(kw, aliases));
+    // 매칭 규칙(부분 문자열 + 단독 기업명 쿼리 제외)은 matchesBrand 단일 소스 사용.
+    // 비소비 맥락 키워드(예: "삼성전자 주가")는 브랜드 수요가 아니므로 볼륨 집계에서 제외 — 가정.
+    const matched = allKws.filter(
+      (kw) => matchesBrand(kw, aliases) && !isNonConsumerKeyword(kw, industry.slug),
+    );
     const totalVolume = matched.reduce((s, kw) => s + (kw2vol.get(kw) ?? 0), 0);
     const weightedTrend =
       totalVolume > 0

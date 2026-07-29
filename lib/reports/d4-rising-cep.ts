@@ -16,6 +16,7 @@ import {
 } from "@/lib/daas";
 import { classifyCep, type CepGroupInput } from "@/lib/llm";
 import { getComplianceBlock } from "@/lib/compliance";
+import { isNonConsumerKeyword } from "./consumer-filter";
 import type { D4Report, D4RisingItem, Industry, ReportInsight } from "@/types";
 
 const TOP_RISING = 12;
@@ -52,9 +53,11 @@ export async function generateD4Report(input: {
     kw2trend.set(kw, infoByKw.get(kw)?.volumeTrend ?? 0);
   }
 
-  // 후보: 카테고리명 미포함(연관 아이템) + 볼륨 하한 통과 → 트렌드 내림차순
+  // 후보: 카테고리명 미포함(연관 아이템) + 비소비 맥락(주식·취업 등) 제외 + 볼륨 하한 통과 → 트렌드 내림차순
+  // (필터가 없으면 "oled 관련주" 같은 주식 급등 키워드가 라이징 연관 아이템으로 오인됨)
   const rising = allKws
     .filter((kw) => !kw.toLowerCase().includes(categoryLower))
+    .filter((kw) => !isNonConsumerKeyword(kw, industry.slug))
     .filter((kw) => (kw2vol.get(kw) ?? 0) >= MIN_VOLUME)
     .sort((a, b) => (kw2trend.get(b) ?? 0) - (kw2trend.get(a) ?? 0))
     .slice(0, TOP_RISING);

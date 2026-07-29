@@ -445,6 +445,8 @@ export type D3Report = {
     gl: ReportGl;
     ourBrand: string;
     totalNodes: number;
+    /** 비소비 맥락(주식·취업 등) 토큰 필터로 분류에서 제외된 키워드 수 — 투명성 표기용 */
+    nonConsumerExcluded: number;
     llmModel: string;
     brandExtraction: "complete" | "partial";
     generatedAt: string;

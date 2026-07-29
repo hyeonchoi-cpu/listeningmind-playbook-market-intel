@@ -10,6 +10,7 @@
 import type { Gl } from "@/lib/daas";
 import { getComplianceBlock } from "@/lib/compliance";
 import { buildBrandLandscape, containsBrandToken } from "./brands-shared";
+import { isNonConsumerKeyword } from "./consumer-filter";
 import type { D3KeywordRow, D3Report, Industry, ReportInsight } from "@/types";
 
 const TOP_ROWS = 10;
@@ -27,7 +28,12 @@ export async function generateD3Report(input: {
   }
 
   const landscape = await buildBrandLandscape({ industry, category, gl, mustInclude: [ourBrand] });
-  const { allKeywords, kw2vol, kw2trend } = landscape;
+  const { kw2vol, kw2trend } = landscape;
+
+  // 비소비 맥락(주식·취업 등) 키워드는 강점/부족/기회 어느 축에도 넣지 않는다 —
+  // "자사 주가"가 강점으로, "oled 관련주"가 열린 기회로 새는 것 모두 오분류이기 때문
+  const allKeywords = landscape.allKeywords.filter((kw) => !isNonConsumerKeyword(kw, industry.slug));
+  const nonConsumerExcluded = landscape.allKeywords.length - allKeywords.length;
 
   const ourLower = ourBrand.toLowerCase();
   const ours = landscape.brands.find(
@@ -85,6 +91,7 @@ export async function generateD3Report(input: {
       gl,
       ourBrand,
       totalNodes: landscape.totalNodes,
+      nonConsumerExcluded,
       llmModel: landscape.llmModel,
       brandExtraction: landscape.brandExtraction,
       generatedAt: new Date().toISOString(),
