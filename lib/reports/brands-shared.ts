@@ -18,6 +18,8 @@ const TOP_KEYWORDS_PER_BRAND = 5;
 
 export type BrandLandscape = {
   brands: BrandRow[];
+  /** 소비자 브랜드가 아닌 기업·기관·종목명 (논브랜드 판정 제외용 — 소문자) */
+  otherEntities: string[];
   totalNodes: number;
   llmModel: string;
   brandExtraction: "complete" | "partial";
@@ -30,13 +32,23 @@ export type BrandLandscape = {
 
 const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, "");
 
-/** 브랜드 별칭 매칭 규칙 — 부분 문자열 포함 + 단독 기업명 쿼리 제외. C 밴드·D-3가 공유. */
+/** 볼륨 집계용 매칭 규칙 — 부분 문자열 포함 + 단독 기업명 쿼리 제외.
+ *  SoV처럼 "이 볼륨을 어느 브랜드 수요로 셀 것인가"에 쓴다 (단독 기업명 쿼리는 카테고리 의도가
+ *  모호해 대기업 과대 측정을 만들므로 집계에서 뺀다). */
 export function matchesBrand(keyword: string, aliases: string[]): boolean {
   const kl = keyword.toLowerCase();
   if (!aliases.some((a) => kl.includes(a))) return false;
   const kn = normalize(keyword);
   if (aliases.some((a) => normalize(a) === kn)) return false;
   return true;
+}
+
+/** 분류용 판정 규칙 — 부분 문자열 포함만 본다 (단독 기업명 쿼리도 브랜드 연관으로 취급).
+ *  "이 키워드가 브랜드와 무관한가"(D-3 논브랜드 기회, D-1 논브랜드 비중)에 쓴다 — 여기서
+ *  matchesBrand를 쓰면 단독 "삼성" 쿼리가 논브랜드로 새는 실사례가 있었음. */
+export function containsBrandToken(keyword: string, aliases: string[]): boolean {
+  const kl = keyword.toLowerCase();
+  return aliases.some((a) => kl.includes(a));
 }
 
 export async function buildBrandLandscape(input: {
@@ -127,6 +139,7 @@ export async function buildBrandLandscape(input: {
 
   return {
     brands: kept,
+    otherEntities: extraction.otherEntities,
     totalNodes: allKws.length,
     llmModel: extraction.model,
     brandExtraction: extraction.status,

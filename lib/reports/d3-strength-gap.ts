@@ -1,13 +1,15 @@
 // D-3 · 자사 강점·부족 검색 키워드 — 브랜드 지형 공용 파이프라인의 키워드 수준 확장.
 //
 // 3개 축으로 나눈다:
-//  강점  = 자사 별칭이 매칭되는 상위 키워드
+//  강점  = 자사 별칭을 포함하는 상위 키워드
 //  부족  = 경쟁 브랜드는 커버하는데 자사는 미커버인 상위 키워드
-//  기회  = 어떤 브랜드도 붙지 않은 상위 논브랜드 키워드 (콘텐츠·SEO 열린 공간)
-// 매칭 규칙은 C 밴드와 동일(별칭 부분 문자열 + 단독 기업명 쿼리 제외 — matchesBrand 단일 소스).
+//  기회  = 어떤 브랜드/기업 토큰도 붙지 않은 상위 논브랜드 키워드 (콘텐츠·SEO 열린 공간)
+// 분류 판정은 containsBrandToken(부분 문자열 포함 — 단독 기업명 쿼리도 브랜드 연관으로 취급)을 쓴다.
+// SoV용 matchesBrand(단독 쿼리 제외)를 여기 쓰면 단독 "삼성"이 논브랜드 기회로 새는 실사례가 있었음.
+// 소비자 브랜드가 아닌 기업·기관·종목명(otherEntities — 예: 공급망·주식 맥락 기업)도 논브랜드에서 제외.
 import type { Gl } from "@/lib/daas";
 import { getComplianceBlock } from "@/lib/compliance";
-import { buildBrandLandscape, matchesBrand } from "./brands-shared";
+import { buildBrandLandscape, containsBrandToken } from "./brands-shared";
 import type { D3KeywordRow, D3Report, Industry, ReportInsight } from "@/types";
 
 const TOP_ROWS = 10;
@@ -35,7 +37,11 @@ export async function generateD3Report(input: {
   const competitors = landscape.brands.filter((b) => b !== ours);
 
   const coveredByFor = (kw: string) =>
-    competitors.filter((c) => matchesBrand(kw, c.aliases)).map((c) => c.name);
+    competitors.filter((c) => containsBrandToken(kw, c.aliases)).map((c) => c.name);
+  const touchesOtherEntity = (kw: string) => {
+    const kl = kw.toLowerCase();
+    return landscape.otherEntities.some((e) => kl.includes(e));
+  };
 
   const row = (kw: string, coveredBy: string[]): D3KeywordRow => ({
     keyword: kw,
@@ -46,19 +52,25 @@ export async function generateD3Report(input: {
 
   const byVolume = (a: string, b: string) => (kw2vol.get(b) ?? 0) - (kw2vol.get(a) ?? 0);
 
-  const ourKws = allKeywords.filter((kw) => matchesBrand(kw, ourAliases));
+  const ourKws = allKeywords.filter((kw) => containsBrandToken(kw, ourAliases));
   const strengths = [...ourKws].sort(byVolume).slice(0, TOP_ROWS).map((kw) => row(kw, coveredByFor(kw)));
 
   const gaps = allKeywords
-    .filter((kw) => !matchesBrand(kw, ourAliases))
+    .filter((kw) => !containsBrandToken(kw, ourAliases))
     .map((kw) => ({ kw, coveredBy: coveredByFor(kw) }))
     .filter((x) => x.coveredBy.length > 0)
     .sort((a, b) => byVolume(a.kw, b.kw))
     .slice(0, TOP_ROWS)
     .map((x) => row(x.kw, x.coveredBy));
 
+  // 열린 기회 = 자사·경쟁 브랜드 토큰도, 기타 기업·기관명도 붙지 않은 키워드만
   const unbranded = allKeywords
-    .filter((kw) => !matchesBrand(kw, ourAliases) && coveredByFor(kw).length === 0)
+    .filter(
+      (kw) =>
+        !containsBrandToken(kw, ourAliases) &&
+        coveredByFor(kw).length === 0 &&
+        !touchesOtherEntity(kw),
+    )
     .sort(byVolume)
     .slice(0, TOP_ROWS)
     .map((kw) => row(kw, []));

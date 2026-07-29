@@ -107,8 +107,9 @@ export function D3ReportView({ report }: { report: D3Report }) {
         <div className="detail-section-title">열린 기회 — 어떤 브랜드도 없는 논브랜드 상위 키워드</div>
         <KeywordTable rows={report.unbrandedOpportunities} emptyText="논브랜드 키워드가 확인되지 않았습니다." />
         <p className="estimate-box-note" style={{ marginTop: 8 }}>
-          커버리지는 브랜드 별칭 부분 문자열 매칭 기준 근사이며(단독 기업명 쿼리 제외), 실제 SERP 노출·콘텐츠
-          보유 여부와는 다릅니다.
+          커버리지 분류는 브랜드 별칭 <strong>포함</strong> 기준 근사입니다(단독 기업명 쿼리도 브랜드 연관으로
+          취급). 소비자 브랜드가 아닌 기업·기관·종목명이 붙은 키워드도 열린 기회에서 제외했습니다. 실제 SERP
+          노출·콘텐츠 보유 여부와는 다릅니다.
         </p>
       </div>
 

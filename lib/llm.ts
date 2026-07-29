@@ -243,6 +243,10 @@ export type ExtractedBrand = {
 
 export type BrandExtraction = {
   brands: ExtractedBrand[];
+  /** 이 카테고리의 소비자 브랜드는 아니지만 키워드에 등장하는 기업·기관·종목명 등 —
+   *  "논브랜드 키워드" 판정에서 제외하기 위한 목록 (실사례: oled tv 클러스터의 솔루스·선익시스템 같은
+   *  공급망·주식 맥락 기업명이 논브랜드 기회로 잘못 분류됨). 검증 통과분만 */
+  otherEntities: string[];
   status: "complete" | "partial";
   model: string;
 };
@@ -255,14 +259,17 @@ function buildBrandSystemPrompt(category: string, industry: Industry, mustInclud
 
 업권 참고: ${industry.entityDictionaryLabel}.
 
-입력된 키워드 목록에서 브랜드·제조사·기관을 최대 12개 추출하되, 각 브랜드를 **대표명(name) + 별칭(aliases)**으로 정규화하세요.
+입력된 키워드 목록에서 두 종류의 엔티티를 추출하세요.
+
+1) brands — 이 카테고리의 소비자 브랜드·제조사·기관, 최대 12개. 각 브랜드를 **대표명(name) + 별칭(aliases)**으로 정규화:
 - name은 기업/브랜드 수준 대표명 — "lg tv"처럼 카테고리 단어가 붙은 형태 금지(카테고리 단어를 제거한 "LG"로). 모든 브랜드가 같은 수준이어야 점유율 비교가 공정해집니다.
-- aliases는 키워드 목록에 **실제로 보이는** 표기 변형만: 한글/영문/축약/붙여쓰기 (예: LG → ["lg","엘지","lg전자","엘지전자"]). 파이프라인이 부분 문자열 매칭으로 재검증하므로 목록에 없는 표기를 창작하면 버려집니다.
+- aliases는 키워드 목록에 **실제로 보이는** 표기 변형을 최대한 폭넓게: 한글/영문/축약/붙여쓰기 (예: LG → ["lg","엘지","lg전자","엘지전자","lg티비"의 "lg"]처럼 짧은 공통 토큰 위주로). 파이프라인이 부분 문자열 매칭으로 재검증하므로 목록에 없는 표기를 창작하면 버려집니다.
 - 일반명사·사양어·상황어(추천, 가격, 대용량, 저소음 등)는 브랜드가 아니므로 제외.${mustLine}
-- 브랜드가 없으면 빈 배열.
+
+2) otherEntities — 이 카테고리의 소비자 브랜드는 **아니지만** 키워드에 등장하는 기업·기관·종목명 (예: 부품·소재·장비 공급사, 주식 맥락의 기업명, 유통사). 논브랜드 수요 판정에서 제외하는 데 쓰입니다. 키워드에 보이는 표기 그대로, 최대 15개.
 
 출력은 오직 아래 JSON 형식으로만 (설명·마크다운·코드펜스 금지):
-{"brands":[{"name":"LG","aliases":["lg","엘지","lg전자"]},{"name":"삼성","aliases":["삼성","samsung","삼성전자"]}]}`;
+{"brands":[{"name":"LG","aliases":["lg","엘지","lg전자"]}],"otherEntities":["솔루스","선익시스템"]}`;
 }
 
 export async function extractBrands(
@@ -273,7 +280,7 @@ export async function extractBrands(
 ): Promise<BrandExtraction> {
   const model = process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
   const distinct = [...new Set(keywords.filter(Boolean))].slice(0, MAX_KEYWORDS_PER_CALL);
-  if (distinct.length === 0) return { brands: [], status: "complete", model };
+  if (distinct.length === 0) return { brands: [], otherEntities: [], status: "complete", model };
 
   const system = buildBrandSystemPrompt(category, industry, mustInclude);
   const userPayload = JSON.stringify({ category, keywords: distinct });
@@ -283,7 +290,7 @@ export async function extractBrands(
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
       const text = await callClaude(system, userPayload, model);
-      const parsed = parseJson(text) as { brands?: unknown };
+      const parsed = parseJson(text) as { brands?: unknown; otherEntities?: unknown };
       if (Array.isArray(parsed.brands)) {
         const seen = new Set<string>();
         const verified: ExtractedBrand[] = [];
@@ -305,7 +312,19 @@ export async function extractBrands(
           verified.push({ name, aliases });
           if (verified.length >= 12) break;
         }
-        return { brands: verified, status: "complete", model };
+        // 기타 엔티티 — 동일한 환각 방지 검증, 브랜드 별칭과 중복되는 토큰은 제외
+        const brandAliasSet = new Set(verified.flatMap((b) => b.aliases));
+        const rawEntities: unknown[] = Array.isArray(parsed.otherEntities) ? parsed.otherEntities : [];
+        const otherEntities = [
+          ...new Set(
+            rawEntities
+              .filter((e): e is string => typeof e === "string")
+              .map((e) => e.trim().toLowerCase())
+              .filter((e) => e.length >= 2 && !brandAliasSet.has(e))
+              .filter((e) => lowerKws.some((kw) => kw.includes(e))),
+          ),
+        ].slice(0, 15);
+        return { brands: verified, otherEntities, status: "complete", model };
       }
       lastError = new Error("응답에 brands 배열이 없음");
     } catch (e) {
@@ -314,7 +333,7 @@ export async function extractBrands(
   }
 
   console.error(`[llm.extractBrands] ${MAX_ATTEMPTS}회 시도 후 실패:`, lastError);
-  return { brands: [], status: "partial", model };
+  return { brands: [], otherEntities: [], status: "partial", model };
 }
 
 // ─────────── 페인포인트 분류 (C-4) ───────────

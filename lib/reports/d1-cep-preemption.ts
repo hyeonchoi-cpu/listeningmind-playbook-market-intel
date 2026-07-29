@@ -14,7 +14,7 @@ import {
 } from "@/lib/daas";
 import { classifyCep, extractBrands, type CepGroupInput } from "@/lib/llm";
 import { getComplianceBlock } from "@/lib/compliance";
-import { matchesBrand } from "./brands-shared";
+import { containsBrandToken } from "./brands-shared";
 import type { D1CepOpportunity, D1Report, Industry, ReportInsight } from "@/types";
 
 const TOP_CLUSTERS = 12;
@@ -71,8 +71,14 @@ export async function generateD1Report(input: {
     classifyCep(category, industry, cepInput),
     extractBrands(category, industry, topKwsForBrands),
   ]);
+  // 논브랜드 비중 판정은 "포함" 기준 — 단독 기업명 쿼리·기타 기업(공급망·주식 맥락)명이 붙은
+  // 키워드도 브랜드/엔티티 연관 수요로 취급해야 선점 여지가 과대 측정되지 않는다
   const aliasSets = brandExtraction.brands.map((b) => b.aliases);
-  const isBranded = (kw: string) => aliasSets.some((aliases) => matchesBrand(kw, aliases));
+  const isBranded = (kw: string) => {
+    if (aliasSets.some((aliases) => containsBrandToken(kw, aliases))) return true;
+    const kl = kw.toLowerCase();
+    return brandExtraction.otherEntities.some((e) => kl.includes(e));
+  };
 
   const maxGroupVolume = Math.max(1, ...ranked.map((r) => r.volume));
   const opportunities: D1CepOpportunity[] = ranked
