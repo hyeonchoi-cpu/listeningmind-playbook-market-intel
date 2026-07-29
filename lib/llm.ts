@@ -142,3 +142,86 @@ export async function classifyKbf(
     model,
   };
 }
+
+// ─────────── CEP 7W 분류 (A-3 등) ───────────
+
+export type CepGroupInput = { id: string; keywords: { kw: string; vol: number }[] };
+
+export type CepClassification = {
+  /** cluster id → 7W 라벨. 실패 시 비어있고 status가 partial */
+  groups: Record<string, { axis: string; cepShort: string; situation: string }>;
+  status: "complete" | "partial";
+  model: string;
+};
+
+const CEP_AXES = ["WHEN", "WHERE", "WHILE", "WITH_WHOM", "WITH_WHAT", "HOW_FEEL", "WHY", "UNCLEAR"];
+
+function buildCepSystemPrompt(category: string, industry: Industry): string {
+  const guardrails = industry.guardrailSummary.map((g) => `- ${g}`).join("\n");
+  return `당신은 "${category}" 카테고리(${industry.label} 업권)의 검색 키워드 군집을 CEP(카테고리 진입점) 7W 축으로 해석하는 분석가입니다.
+
+입력은 실제 검색 데이터로 만든 키워드 군집들입니다(각 군집의 키워드+검색량). 각 군집이 소비자의 어떤 "검색 목적·상황"을 가리키는지 해석하세요.
+
+이 업권 리포트에는 아래 가드레일이 항상 적용됩니다 — situation 문장이 이 규칙을 위반하는 단정·권유 표현이 되지 않게 하세요:
+${guardrails}
+
+각 군집에 대해:
+1) axis: 7W 축 중 가장 지배적인 하나 — WHEN(언제)/WHERE(어디서)/WHILE(~하다가)/WITH_WHOM(누구와)/WITH_WHAT(무엇과 함께)/HOW_FEEL(어떤 기분·우려)/WHY(왜). 어느 축인지 근거가 약하면 UNCLEAR.
+2) cepShort: 그 상황의 짧은 라벨 (8자 내외, 예: "이사 준비", "부작용 우려").
+3) situation: 군집 키워드가 공통으로 가리키는 검색 상황을 한 문장으로 (브랜드명 나열이 아니라 상황 서술).
+
+출력은 오직 아래 JSON 형식으로만 (설명·마크다운·코드펜스 금지):
+{"groups":{"G1":{"axis":"WHEN","cepShort":"...","situation":"..."},"G2":{...}}}
+입력된 모든 군집 id를 빠짐없이 포함하세요. 한국어로 작성.`;
+}
+
+function isValidCep(parsed: { groups?: unknown }, ids: string[]): boolean {
+  if (!parsed.groups || typeof parsed.groups !== "object") return false;
+  const groups = parsed.groups as Record<string, any>;
+  const covered = ids.filter((id) => {
+    const g = groups[id];
+    return g && typeof g.situation === "string" && typeof g.axis === "string";
+  }).length;
+  return covered >= ids.length * 0.8;
+}
+
+/** 키워드 군집들을 CEP 7W 축으로 해석한다. 실패 시 partial(빈 groups)로 폴백 — B-1 KBF와 동일 규율. */
+export async function classifyCep(
+  category: string,
+  industry: Industry,
+  clusters: CepGroupInput[],
+): Promise<CepClassification> {
+  const model = process.env.ANTHROPIC_MODEL || DEFAULT_MODEL;
+  if (clusters.length === 0) return { groups: {}, status: "complete", model };
+
+  const system = buildCepSystemPrompt(category, industry);
+  const userPayload = JSON.stringify({ category, clusters });
+  const ids = clusters.map((c) => c.id);
+
+  let lastError: unknown = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    try {
+      const text = await callClaude(system, userPayload, model);
+      const parsed = parseJson(text) as { groups?: Record<string, any> };
+      if (isValidCep(parsed, ids)) {
+        const groups: CepClassification["groups"] = {};
+        for (const id of ids) {
+          const g = parsed.groups![id];
+          if (!g) continue;
+          groups[id] = {
+            axis: CEP_AXES.includes(String(g.axis)) ? String(g.axis) : "UNCLEAR",
+            cepShort: typeof g.cepShort === "string" ? g.cepShort : "미분류",
+            situation: typeof g.situation === "string" ? g.situation : "",
+          };
+        }
+        return { groups, status: "complete", model };
+      }
+      lastError = new Error("응답이 스키마 검증(80% 군집 커버리지)을 통과하지 못함");
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  console.error(`[llm.classifyCep] ${MAX_ATTEMPTS}회 시도 후 실패:`, lastError);
+  return { groups: {}, status: "partial", model };
+}

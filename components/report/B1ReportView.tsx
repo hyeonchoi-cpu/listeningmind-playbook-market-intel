@@ -15,7 +15,7 @@ function SegmentBars({ segments }: { segments: B1Segment[] }) {
             <div className="segment-bar-fill" style={{ width: `${(s.totalVolume.value / max) * 100}%` }} />
           </div>
           <span className="segment-bar-value">
-            {s.sharePct.value}% <LabelBadge basis={s.sharePct.basis} />
+            {s.sharePct.basis === "missing" ? "—" : `${s.sharePct.value}%`} <LabelBadge basis={s.sharePct.basis} />
           </span>
         </div>
       ))}
@@ -46,6 +46,16 @@ export function B1ReportView({ report }: { report: B1Report }) {
         </span>
         <span>{generatedAt.toLocaleString("ko-KR")} 생성</span>
       </div>
+
+      {report.meta.demographyCoveragePct < 1 && (
+        <div className="generate-form-error" style={{ marginBottom: 20 }}>
+          <strong>이 시장은 인구통계 데이터가 없습니다</strong> — {report.meta.gl.toUpperCase()} · &ldquo;
+          {report.meta.category}&rdquo; 카테고리에서 성별·연령 태깅 커버리지가 {report.meta.demographyCoveragePct}%
+          입니다({report.meta.totalKeywordsWithDemo.toLocaleString()}/{report.meta.totalNodes.toLocaleString()}개
+          키워드). 아래 세그먼트·KBF는 "0%"가 아니라 <strong>측정 불가</strong>입니다. ListeningMind DaaS의 인구통계
+          태깅은 KR 중심 커버리지라 다른 국가는 카테고리에 따라 비어있을 수 있습니다 — KR로 다시 시도해보세요.
+        </div>
+      )}
 
       {report.meta.kbfClassification === "partial" && (
         <div className="mock-banner">

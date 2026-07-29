@@ -212,7 +212,7 @@ const GUARDRAILS: Record<Industry['slug'], ComplianceBlock> = {
 |---|---|---|
 | **Phase 1** ✅확정 | 카탈로그 UI만. `data/industries.ts`+`report-codes.ts` 채우기, `/industries` 그리드, 각 업권별 리포트 코드 목록(대부분 "준비 중" 배지). 데이터는 기존 `public/sample-data/*.json`처럼 **정적 목업**으로 대체 | 클릭 가능한 정보 구조, 실제 생성 없음 |
 | **Phase 2** ✅구현 | B-1 실서비스화 — `lib/daas.ts`/`lib/llm.ts`(실시간 KBF 분류)/`lib/reports/b1-segment-intent.ts`/`lib/store.ts`(KV+Blob) + `/api/reports/generate`·`/api/reports/[jobId]` + `ReportGenerateForm`/`B1ReportView` UI, 7개 업권 전체에 대해 B-1 생성 가능. `next build` 통과 + 폼 UX(입력→예상치 확인→취소) 브라우저 검증 완료. **실제 크레딧을 쓰는 라이브 생성 호출은 사용자 요청으로 미실행** — 최초 실사용 시 검증 필요 | 코드 완성된 리포트 파이프라인 (라이브 미검증) |
-| **Phase 3** | 나머지 17개 코드 순차 이식 (job별로 1~2개씩, 스펙 없는 코드는 `question-frame.md` 기반 신규 설계 필요) | 풀 카탈로그 |
+| **Phase 3** 🔄진행중 | 나머지 코드 순차 이식. **A-1(월별 추이·YoY)·A-2(성별·연령 분포)·A-3(인텐트 믹스+CEP 7W) 구현 완료** — A-1/A-2는 keyword_info 1콜 저비용(LLM 없음), A-3는 B-1과 동일한 cluster 파이프라인 + 실시간 CEP 7W 분류(`lib/llm.ts classifyCep`). 폼은 코드별 뷰 레지스트리(`REPORT_VIEWS`)·코드별 예상치(`estimateForCode`)로 일반화됨. 남은 것: C-1~4·D-1·D-3·D-4(브랜드 입력 폼 확장 + 엔티티 추출 필요), A-4·C-3(path_finder 커넥터 신규), P-1a/1b/2b(고정 브랜드 케이스), D-2·P-2a(미지원 유지) | A 밴드 완료, C/D/P 밴드 대기 |
 | **Phase 4** | Explorer 모드(클러스터 그래프, `lib/louvain.py` TS 이식 필요) — Report보다 인터랙션 복잡도가 높아 별도 트랙 | 인터랙티브 탐색기 |
 
 ### 2026-07-28 확정된 결정사항

@@ -113,6 +113,42 @@ function flattenRels(r: unknown): string[] {
   return out;
 }
 
+/** cluster_finder 응답의 communities를 "키워드 그룹 배열"로 정규화 — 응답 스키마 변형을 방어적으로 처리.
+ *  (web/lib/daas.ts의 parseCommunities와 동일한 케이스 커버리지) */
+export function parseCommunities(resp: ClusterResponse): string[][] {
+  const c = resp?.data?.communities;
+  if (!c) return [];
+  let groups: string[][] = [];
+  if (!Array.isArray(c) && typeof c === "object") {
+    const vals = Object.values(c as Record<string, unknown>);
+    if (vals.every((v) => Array.isArray(v))) {
+      groups = (vals as unknown[][]).map((g) => dedupe(g.map(keywordOf)));
+    } else {
+      const nodes = (c as any).nodes;
+      if (Array.isArray(nodes)) groups = groupByCommunity(nodes);
+    }
+  } else if (Array.isArray(c)) {
+    if (c.length && Array.isArray((c[0] as any)?.keywords)) {
+      groups = (c as any[]).map((g) => dedupe((g.keywords as unknown[]).map(keywordOf)));
+    } else {
+      groups = groupByCommunity(c as any[]);
+    }
+  }
+  return groups.filter((g) => g.length > 0);
+}
+
+function groupByCommunity(nodes: any[]): string[][] {
+  const groups = new Map<string, string[]>();
+  for (const n of nodes) {
+    const kw = keywordOf(n);
+    if (!kw) continue;
+    const cid = String((n as any)?.community ?? (n as any)?.community_id ?? (n as any)?.group ?? "0");
+    if (!groups.has(cid)) groups.set(cid, []);
+    groups.get(cid)!.push(kw);
+  }
+  return [...groups.values()].map(dedupe);
+}
+
 /** cluster_finder 응답에서 고유 키워드 우주를 추출한다 — nodes → communities → rels 폴백. */
 export function uniqueKeywords(resp: ClusterResponse): string[] {
   const nodes = resp?.data?.nodes;

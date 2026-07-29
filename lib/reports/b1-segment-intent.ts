@@ -77,10 +77,18 @@ export async function generateB1Report(input: {
   const kw2vol = new Map<string, number>();
   for (const kw of allKws) kw2vol.set(kw, infoByKw.get(kw)?.volumeAvg ?? 0);
 
-  // 3) 세그먼트별 노드·볼륨 (실측 keyword_info 기반, 집계는 파생)
+  // 인구통계 태깅 커버리지 — KR 외 시장은 카테고리에 따라 거의 0%일 수 있다(원본 lima-agents B-1 스킬도
+  // kr 시장 기준으로만 검증됨). 커버리지가 사실상 없으면 "0%"가 아니라 "데이터없음"으로 라벨링해야
+  // 정직성 규율(실측/파생/가정/데이터없음)을 지킨다 — 그렇지 않으면 데이터 공백이 "전부 균일하게 0"인
+  // 것처럼 오인된다.
+  const keywordsWithDemo = allKws.filter((kw) => infoByKw.get(kw)?.demography).length;
+  const demographyCoveragePct = allKws.length > 0 ? Math.round((keywordsWithDemo / allKws.length) * 1000) / 10 : 0;
+  const hasDemography = demographyCoveragePct >= 1; // 1% 미만이면 사실상 데이터 없음으로 취급
+
+  // 3) 세그먼트별 노드·볼륨 (실측 keyword_info 기반, 집계는 파생 — 단 커버리지가 없으면 missing)
   const segNodes = new Map<string, string[]>();
   const segmentsOut: B1Segment[] = SEGMENT_DEFS.map((seg) => {
-    const nodes = allKws.filter((kw) => belongsTo(seg, infoByKw.get(kw)?.demography ?? null));
+    const nodes = hasDemography ? allKws.filter((kw) => belongsTo(seg, infoByKw.get(kw)?.demography ?? null)) : [];
     segNodes.set(seg.key, nodes);
     const totalVol = nodes.reduce((sum, kw) => sum + (kw2vol.get(kw) ?? 0), 0);
     return {
@@ -88,8 +96,8 @@ export async function generateB1Report(input: {
       label: seg.label,
       kind: seg.kind,
       keywordCount: nodes.length,
-      totalVolume: { value: totalVol, basis: "derived" },
-      sharePct: { value: 0, basis: "derived" },
+      totalVolume: { value: totalVol, basis: hasDemography ? "derived" : "missing" },
+      sharePct: { value: 0, basis: hasDemography ? "derived" : "missing" },
     };
   });
   for (const kind of ["gender", "age"] as const) {
@@ -157,7 +165,7 @@ export async function generateB1Report(input: {
   }
 
   // 7) 인사이트
-  const insights = computeInsights(segmentsOut, kbfBySeg);
+  const insights = computeInsights(segmentsOut, kbfBySeg, hasDemography);
 
   return {
     meta: {
@@ -166,7 +174,8 @@ export async function generateB1Report(input: {
       category,
       gl,
       totalNodes: allKws.length,
-      totalKeywordsWithDemo: allKws.filter((kw) => infoByKw.get(kw)?.demography).length,
+      totalKeywordsWithDemo: keywordsWithDemo,
+      demographyCoveragePct,
       generatedAt: new Date().toISOString(),
       llmModel: classification.model,
       kbfClassification: classification.status,
@@ -184,8 +193,23 @@ export async function generateB1Report(input: {
   };
 }
 
-function computeInsights(segments: B1Segment[], kbfBySeg: Record<string, B1KbfEntry[]>): B1Insight[] {
+function computeInsights(
+  segments: B1Segment[],
+  kbfBySeg: Record<string, B1KbfEntry[]>,
+  hasDemography: boolean,
+): B1Insight[] {
   const insights: B1Insight[] = [];
+
+  if (!hasDemography) {
+    // 세그먼트가 전부 missing이면 "○○ 0%" 같은 인사이트는 실측처럼 보이는 거짓 신호다 — 만들지 않는다.
+    return [
+      {
+        kind: "data_gap",
+        title: "이 시장은 인구통계 태깅 데이터가 없습니다",
+        body: "ListeningMind DaaS의 성별·연령 태깅은 KR 중심 커버리지라 이 카테고리·국가 조합에서는 세그먼트를 나눌 수 없습니다. B-1은 KR 시장에서 가장 신뢰도가 높습니다 — 다른 국가는 카테고리에 따라 커버리지가 있을 수도 있으니 다시 시도해보되, 이 결과처럼 전 세그먼트가 0이면 데이터 공백으로 해석하세요.",
+      },
+    ];
+  }
 
   const genderSegs = segments.filter((s) => s.kind === "gender");
   if (genderSegs.length) {

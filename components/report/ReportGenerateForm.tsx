@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import type { B1Report, Industry, ReportCode, ReportGl } from "@/types";
-import { estimateB1 } from "@/lib/reports/estimate";
+import { useState, type ComponentType } from "react";
+import type { Industry, ReportCode, ReportGl } from "@/types";
+import { estimateForCode } from "@/lib/reports/estimate";
+import { A1ReportView } from "./A1ReportView";
+import { A2ReportView } from "./A2ReportView";
+import { A3ReportView } from "./A3ReportView";
 import { B1ReportView } from "./B1ReportView";
 
 type Phase = "idle" | "confirm" | "loading" | "done" | "error";
@@ -13,16 +16,28 @@ const GL_OPTIONS: { value: ReportGl; label: string }[] = [
   { value: "jp", label: "일본 (JP)" },
 ];
 
+// 코드별 결과 뷰 — lib/reports/registry.ts에 생성기를 등록할 때 여기에도 뷰를 등록한다.
+const REPORT_VIEWS: Record<string, ComponentType<{ report: any }>> = {
+  "A-1": A1ReportView,
+  "A-2": A2ReportView,
+  "A-3": A3ReportView,
+  "B-1": B1ReportView,
+};
+
+// 인구통계 태깅(KR 중심 커버리지)에 의존하는 코드 — KR 외 국가 선택 시 사전 경고
+const DEMOGRAPHY_DEPENDENT_CODES = new Set(["A-2", "B-1"]);
+
 export function ReportGenerateForm({ industry, code }: { industry: Industry; code: ReportCode }) {
   const [category, setCategory] = useState("");
   const [gl, setGl] = useState<ReportGl>("kr");
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [report, setReport] = useState<B1Report | null>(null);
+  const [report, setReport] = useState<unknown | null>(null);
   const [persisted, setPersisted] = useState(true);
 
-  // Phase 2는 B-1 하나만 서비스 — 다른 코드가 실서비스로 붙으면 이 폼도 code.code 분기가 필요해짐
-  const estimate = estimateB1();
+  const estimate = estimateForCode(code.code);
+  const usesLlm = estimate.claudeUsdRange[1] > 0;
+  const ReportView = REPORT_VIEWS[code.code];
 
   function handleSubmitClick() {
     if (!category.trim()) {
@@ -44,7 +59,7 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error ?? `요청 실패 (${res.status})`);
-      setReport(data.report as B1Report);
+      setReport(data.report);
       setPersisted(data.persisted !== false);
       setPhase("done");
     } catch (e) {
@@ -53,7 +68,7 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
     }
   }
 
-  if (phase === "done" && report) {
+  if (phase === "done" && report && ReportView) {
     return (
       <div>
         {!persisted && (
@@ -63,7 +78,7 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
             스토리지 연결을 요청하면 다음부터는 공유 링크로 다시 볼 수 있습니다.
           </div>
         )}
-        <B1ReportView report={report} />
+        <ReportView report={report} />
         <div className="detail-cta" style={{ marginTop: 24 }}>
           <button
             className="secondary"
@@ -112,6 +127,12 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
             </option>
           ))}
         </select>
+        {DEMOGRAPHY_DEPENDENT_CODES.has(code.code) && gl !== "kr" && (
+          <p className="estimate-box-note" style={{ marginTop: 6 }}>
+            {code.code}의 성별·연령 태깅은 KR 중심 커버리지입니다 — {GL_OPTIONS.find((o) => o.value === gl)?.label}는
+            카테고리에 따라 인구통계 데이터가 없어 결과가 전부 &ldquo;측정 불가&rdquo;로 나올 수 있습니다.
+          </p>
+        )}
       </div>
 
       {error && <div className="generate-form-error">{error}</div>}
@@ -129,7 +150,9 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
             <div>
               <span className="estimate-label">Claude 비용</span>
               <span className="estimate-value">
-                ${estimate.claudeUsdRange[0].toFixed(2)}~${estimate.claudeUsdRange[1].toFixed(2)}
+                {usesLlm
+                  ? `$${estimate.claudeUsdRange[0].toFixed(2)}~$${estimate.claudeUsdRange[1].toFixed(2)}`
+                  : "없음"}
               </span>
             </div>
             <div>
@@ -153,8 +176,8 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
 
       {phase === "loading" && (
         <div className="mock-banner">
-          <strong>생성 중…</strong> DaaS 데이터 조회 + 실시간 KBF 분류를 진행하고 있습니다. 최대 1~2분 정도
-          걸릴 수 있습니다. 페이지를 벗어나지 마세요.
+          <strong>생성 중…</strong> DaaS 데이터 조회{usesLlm ? " + 실시간 LLM 분류" : ""}를 진행하고 있습니다.
+          {usesLlm ? " 최대 1~2분" : " 수 초에서 수십 초"} 정도 걸릴 수 있습니다. 페이지를 벗어나지 마세요.
         </div>
       )}
 
