@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { TopNav } from "@/components/TopNav";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatusBadge } from "@/components/StatusBadge";
 import { ReportGenerateForm } from "@/components/report/ReportGenerateForm";
@@ -42,7 +41,6 @@ export default function ReportCodePage({
 
   return (
     <>
-      <TopNav />
       <main className="page" style={{ marginTop: 0 }}>
         <Breadcrumb
           items={[
@@ -57,15 +55,9 @@ export default function ReportCodePage({
           {code.bandTitle} · {industry.label}
         </div>
         <h1 className="detail-title">{code.title}</h1>
-        {code.caseBrand && (
+        {example && (
           <p className="detail-desc" style={{ marginBottom: 8 }}>
-            퍼블리시스 원 케이스 출처: <strong>{code.caseBrand}</strong>
-            {example && (
-              <>
-                {" "}
-                · {industry.label} 적용 예시: <strong>{example.keyword}</strong> — {example.scenario}
-              </>
-            )}
+            {industry.label} 적용 예시: <strong>{example.keyword}</strong> — {example.scenario}
           </p>
         )}
 

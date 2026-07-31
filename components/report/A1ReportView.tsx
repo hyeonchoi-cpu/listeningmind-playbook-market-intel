@@ -1,10 +1,11 @@
 import type { A1MonthPoint, A1Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 // 결정론적 인라인 SVG 라인 차트 — 외부 차트 라이브러리 금지 규율(설계 원칙 4) 준수
 function TrendChart({ monthly }: { monthly: A1MonthPoint[] }) {
-  const pts = monthly.slice(-36);
+  const pts = monthly.slice(-24);
   if (pts.length < 2) return null;
   const w = 720;
   const h = 180;
@@ -75,20 +76,13 @@ export function A1ReportView({ report }: { report: A1Report }) {
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">월별 검색량 추이 (최근 36개월)</div>
+        <div className="detail-section-title">수요 트렌드·시즌성(Demand & Seasonality) — 최근 24개월</div>
         <TrendChart monthly={report.monthly} />
       </div>
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       {report.yoy.length > 0 && (

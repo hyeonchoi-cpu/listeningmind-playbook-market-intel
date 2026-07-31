@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import { TopNav } from "@/components/TopNav";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ReportCodeCard } from "@/components/ReportCodeCard";
 import { industries, industryBySlug } from "@/data/industries";
 import { BANDS, reportCodesByBand } from "@/data/report-codes";
+import { sampleReports } from "@/data/samples";
 
 export function generateStaticParams() {
   return industries.map((i) => ({ industry: i.slug }));
@@ -24,7 +24,6 @@ export default function IndustryPage({ params }: { params: { industry: string } 
 
   return (
     <>
-      <TopNav />
       <main className="page" style={{ marginTop: 0 }}>
         <Breadcrumb
           items={[
@@ -39,6 +38,23 @@ export default function IndustryPage({ params }: { params: { industry: string } 
         </div>
         <h1 className="detail-title">{industry.label} 리포트 카탈로그</h1>
         <p className="detail-desc">{industry.tagline}</p>
+
+        <div className="sample-section">
+          <div className="sample-section-title">
+            샘플 리포트
+            <span className="sample-section-sub">— 실전 산출물로 결과 형태를 먼저 확인하세요 (새 탭)</span>
+          </div>
+          <div className="sample-grid">
+            {sampleReports.map((s) => (
+              <a key={s.href} href={s.href} target="_blank" rel="noopener" className="sample-card">
+                <span className="sample-kind">{s.kind}</span>
+                <span className="sample-title">{s.title}</span>
+                <span className="sample-headline">{s.headline}</span>
+                <span className="sample-open">리포트 열기 →</span>
+              </a>
+            ))}
+          </div>
+        </div>
 
         <div className="detail-meta">
           <div className="detail-meta-item">

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, type ComponentType } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import type { Industry, ReportCode, ReportGl } from "@/types";
 import { caseExampleFor } from "@/data/report-codes";
 import { estimateForCode } from "@/lib/reports/estimate";
+import { RelatedCards } from "./RelatedCards";
 import { A1ReportView } from "./A1ReportView";
 import { A2ReportView } from "./A2ReportView";
 import { A3ReportView } from "./A3ReportView";
@@ -63,7 +64,7 @@ const CODE_FORM: Record<
   "C-2": { brand: "required" },
   "C-3": {
     categoryLabel: "자사 브랜드·제품 키워드 (여정 시드)",
-    categoryPlaceholder: "예: 삼성 비스포크, 현대해상 다이렉트",
+    categoryPlaceholder: "예: LG 트롬, 삼성 비스포크",
   },
   "C-4": { brand: "optional" },
   "D-3": { brand: "required" },
@@ -82,6 +83,17 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
   const [report, setReport] = useState<unknown | null>(null);
   const [persisted, setPersisted] = useState(true);
 
+  // 연관 분석 카드에서 승계된 입력값 프리필 (유저 플로우 4단계 → 1단계 재진입)
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const c = sp.get("category");
+    const b = sp.get("brand");
+    const g = sp.get("gl");
+    if (c) setCategory(c);
+    if (b) setBrand(b);
+    if (g === "kr" || g === "us" || g === "jp") setGl(g);
+  }, []);
+
   const estimate = estimateForCode(code.code);
   const usesLlm = estimate.claudeUsdRange[1] > 0;
   const ReportView = REPORT_VIEWS[code.code];
@@ -90,19 +102,19 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
   const industryExample = caseExampleFor(code, industry.slug);
   const categoryPlaceholder = industryExample
     ? `예: ${industryExample.keyword}`
-    : formConfig.categoryPlaceholder ?? "예: 스킨케어, 전세대출, 다이어트 보조제";
+    : formConfig.categoryPlaceholder ?? "예: OLED TV, 로봇청소기, 제습기";
 
   function handleSubmitClick() {
     if (!category.trim()) {
       setError(
         formConfig.categoryLabel
           ? `${formConfig.categoryLabel}을(를) 입력해주세요.`
-          : "카테고리를 입력해주세요. (예: 스킨케어, 전세대출, 다이어트 보조제)",
+          : "카테고리를 입력해주세요. (예: OLED TV, 로봇청소기, 제습기)",
       );
       return;
     }
     if (formConfig.brand === "required" && !brand.trim()) {
-      setError("자사 브랜드를 입력해주세요. (예: 삼성, 현대해상)");
+      setError("자사 브랜드를 입력해주세요. (예: LG, 삼성)");
       return;
     }
     setError(null);
@@ -146,6 +158,11 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
           </div>
         )}
         <ReportView report={report} />
+        <RelatedCards
+          currentCode={code.code}
+          industry={industry.slug}
+          inputs={{ category: category.trim(), gl, ...(brand.trim() ? { brand: brand.trim() } : {}) }}
+        />
         <div className="detail-cta" style={{ marginTop: 24 }}>
           <button
             className="secondary"
@@ -186,7 +203,7 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
             id="brand"
             className="generate-form-input"
             type="text"
-            placeholder="예: 삼성, 현대해상, 토스"
+            placeholder="예: LG, 삼성, 코웨이"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
             disabled={phase === "loading" || phase === "confirm"}
@@ -216,6 +233,12 @@ export function ReportGenerateForm({ industry, code }: { industry: Industry; cod
             카테고리에 따라 인구통계 데이터가 없어 결과가 전부 &ldquo;측정 불가&rdquo;로 나올 수 있습니다.
           </p>
         )}
+      </div>
+
+      <div className="estimate-strip">
+        예상 — DaaS {estimate.daasCreditsRange[0].toLocaleString()}~{estimate.daasCreditsRange[1].toLocaleString()} 크레딧
+        {usesLlm ? ` · Claude $${estimate.claudeUsdRange[0].toFixed(2)}~$${estimate.claudeUsdRange[1].toFixed(2)}` : ""}
+        {" "}· {estimate.secondsRange[0]}~{estimate.secondsRange[1]}초 <em>가정</em>
       </div>
 
       {error && <div className="generate-form-error">{error}</div>}

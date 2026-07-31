@@ -17,7 +17,7 @@ const BAND_TITLE: Record<ReportBand, string> = {
   B: "타겟 심층",
   C: "브랜드 맵",
   D: "전략 제안",
-  P: "퍼블리시스 실전 케이스",
+  P: "시점·트리거 심층",
 };
 
 export const reportCodes: ReportCode[] = [
@@ -185,16 +185,8 @@ export const reportCodes: ReportCode[] = [
     status: "implemented",
     // 구현이 볼륨 확보를 위해 keyword_info도 호출 (curr·12m 두 시점 — 크레딧 약 2배)
     connectors: ["cluster_finder", "keyword_info"],
-    caseBrand: "Theraflu",
     industryExamples: {
-      universal: { keyword: "감기약", scenario: "원 케이스(Theraflu) — 소비 맥락이 어떤 상황으로 이동했는지 시점 대조" },
-      cosmetics: { keyword: "선크림", scenario: "여름 자외선 차단 → 사계절 데일리 케어로의 맥락 이동" },
-      "health-supplements": { keyword: "유산균", scenario: "장 건강 → 면역·다이어트 등 인접 맥락으로의 확장" },
       appliance: { keyword: "에어컨", scenario: "여름 냉방 → 제습·공기청정 등 사계절 공조 맥락 이동" },
-      "fin-bank": { keyword: "파킹통장", scenario: "금리 국면 변화 전후 수요 맥락 이동 (상관·동향 서술)" },
-      "fin-card": { keyword: "간편결제", scenario: "온라인 결제 → 오프라인·해외 결제 맥락 확장" },
-      "fin-insurance": { keyword: "실손보험", scenario: "제도 개편 전후 인식 맥락 이동 (상관·동향 서술)" },
-      "fin-securities": { keyword: "ISA", scenario: "세제 이슈 전후 관심 맥락 이동 (상관·동향 서술)" },
     },
   },
   {
@@ -206,16 +198,8 @@ export const reportCodes: ReportCode[] = [
     templateFolder: "p1b-season-persistence",
     status: "implemented",
     connectors: ["keyword_info"],
-    caseBrand: "Theraflu",
     industryExamples: {
-      universal: { keyword: "테라플루", scenario: "원 케이스 — 겨울 시즌 수요가 여름에도 지속되는지" },
-      cosmetics: { keyword: "선크림", scenario: "여름 피크 수요의 비수기 지속성" },
-      "health-supplements": { keyword: "홍삼", scenario: "명절 시즌 수요의 평시 지속성" },
       appliance: { keyword: "제습기", scenario: "장마 피크 수요의 비수기 지속성" },
-      "fin-bank": { keyword: "전세대출", scenario: "이사철 수요의 비수기 지속성" },
-      "fin-card": { keyword: "트래블카드", scenario: "휴가 시즌 수요의 연중 지속성" },
-      "fin-insurance": { keyword: "자동차보험", scenario: "갱신 시즌 반복성과 비수기 수요" },
-      "fin-securities": { keyword: "IRP", scenario: "연말정산 시즌 수요의 연중 지속성" },
     },
   },
   {
@@ -229,16 +213,8 @@ export const reportCodes: ReportCode[] = [
     templateFolder: "p2a-entry-trigger",
     status: "implemented",
     connectors: ["path_finder"],
-    caseBrand: "Otrivin",
     industryExamples: {
-      universal: { keyword: "비염 스프레이", scenario: "원 케이스(Otrivin) — 어떤 증상·상황 검색이 카테고리 진입으로 이어지나" },
-      cosmetics: { keyword: "선크림", scenario: "어떤 피부 고민 검색이 선크림 탐색으로 이어지나" },
-      "health-supplements": { keyword: "유산균", scenario: "어떤 건강 고민 검색이 유산균 탐색으로 이어지나" },
       appliance: { keyword: "제습기", scenario: "어떤 생활 문제 검색(곰팡이·결로 등)이 제습기 탐색으로 이어지나" },
-      "fin-bank": { keyword: "전세대출", scenario: "어떤 상황 검색(이사·계약 등)이 전세대출 탐색으로 이어지나" },
-      "fin-card": { keyword: "트래블카드", scenario: "어떤 여행 준비 검색이 카드 탐색으로 이어지나" },
-      "fin-insurance": { keyword: "펫보험", scenario: "어떤 반려동물 관련 검색이 펫보험 탐색으로 이어지나" },
-      "fin-securities": { keyword: "ISA", scenario: "어떤 절세·재테크 검색이 ISA 탐색으로 이어지나" },
     },
   },
   {
@@ -251,16 +227,8 @@ export const reportCodes: ReportCode[] = [
     status: "implemented",
     // C-4 페인포인트 파이프라인의 브랜드 시드 변형 — keyword_info도 호출
     connectors: ["cluster_finder", "keyword_info"],
-    caseBrand: "Otrivin",
     industryExamples: {
-      universal: { keyword: "오트리빈", scenario: "원 케이스 — 부작용·성분 우려 구조 분해" },
-      cosmetics: { keyword: "레티놀", scenario: "자극·트러블 우려 구조 분해" },
-      "health-supplements": { keyword: "다이어트 보조제", scenario: "부작용·안전성 우려 구조 분해" },
       appliance: { keyword: "로봇청소기", scenario: "소음·고장·A/S 우려 구조 분해" },
-      "fin-bank": { keyword: "인터넷은행", scenario: "안정성·보안 우려 구조 분해" },
-      "fin-card": { keyword: "리볼빙", scenario: "수수료·신용영향 우려 구조 분해" },
-      "fin-insurance": { keyword: "실손보험", scenario: "갱신료·지급 우려 구조 분해" },
-      "fin-securities": { keyword: "레버리지 ETF", scenario: "원금 손실·변동성 우려 구조 분해" },
     },
   },
 ];
@@ -275,3 +243,94 @@ export const reportCodeByCode = (code: string) =>
 export const reportCodesByBand = (band: ReportBand) => reportCodes.filter((r) => r.band === band);
 
 export const BANDS: ReportBand[] = ["A", "B", "C", "D", "P"];
+
+
+// ═══ LM Material — 표준 용어 배지 (헤딩 어휘 원칙: 친화 한국어 + 비즈니스 용어 병기) ═══
+export const CODE_TERMS: Record<string, string> = {
+  "A-1": "Demand", "A-2": "Demography", "A-3": "CEP·Intent", "A-4": "CDJ", "A-5": "SoV proxy",
+  "B-1": "KBF", "C-1": "SoV·Rising", "C-2": "SoV", "C-3": "CDJ", "C-4": "Pain Point",
+  "D-1": "CEP·Opportunity", "D-2": "Positioning", "D-3": "Gap", "D-4": "Rising CEP",
+  "P-1a": "Context Shift", "P-1b": "Seasonality", "P-2a": "CEP·Trigger", "P-2b": "Pain Point",
+};
+
+// ═══ 연관 분석 제안 — 유저 플로우 4단계: 리포트 생성 후 "다음으로 볼 분석" ═══
+// reason은 "왜 이 분석이 다음인가"를 실무 언어로. implemented 코드만 노출된다.
+export const CODE_RELATED: Record<string, { code: string; reason: string }[]> = {
+  "A-1": [
+    { code: "A-3", reason: "수요의 크기를 봤다면, 그 검색이 '어떤 상황·의도'에서 나오는지가 다음 질문" },
+    { code: "P-1b", reason: "피크가 반복 시즌인지 일회성인지 — 다년 캘린더로 지속성 검증" },
+    { code: "C-2", reason: "이 수요에서 우리 브랜드가 몇 %를 가져가는지 점유율 확인" },
+  ],
+  "A-2": [
+    { code: "B-1", reason: "성·연령 분포를 봤다면, 세그먼트별로 '무엇을 사게 하는가(KBF)'로 심화" },
+    { code: "A-3", reason: "인구 축 다음은 의도 축 — 검색 목적·상황(CEP) 구성" },
+  ],
+  "A-3": [
+    { code: "B-1", reason: "전체 인텐트 구성을 세그먼트별로 갈라 타겟 심층으로" },
+    { code: "D-1", reason: "발견한 CEP 중 어떤 브랜드도 선점하지 않은 기회 랭킹" },
+    { code: "A-4", reason: "의도가 실제 검색 여정에서 어떤 경로로 이어지는지 확인" },
+  ],
+  "A-4": [
+    { code: "C-3", reason: "카테고리 여정을 봤다면, 자사 키워드 기준 유입·유출 구간으로" },
+    { code: "P-2a", reason: "여정의 첫 진입 — 어떤 생활 문제가 카테고리를 부르는지" },
+  ],
+  "A-5": [
+    { code: "C-2", reason: "인지 집중도 다음은 점유율 — 자사 vs 경쟁 SoV 정량 비교" },
+    { code: "C-1", reason: "지금 인지가 상승 중인 라이징 브랜드 감지" },
+  ],
+  "B-1": [
+    { code: "C-4", reason: "세그먼트가 원하는 것 다음은 막는 것 — 페인포인트 구조" },
+    { code: "D-3", reason: "세그먼트 니즈 대비 자사 강점·공백 매핑" },
+  ],
+  "C-1": [
+    { code: "C-2", reason: "라이징 브랜드를 봤다면 자사 포함 전체 점유 구도로" },
+    { code: "D-4", reason: "브랜드가 뜨는 배경 — 떠오르는 검색 맥락(CEP) 확인" },
+  ],
+  "C-2": [
+    { code: "C-1", reason: "현재 점유 다음은 변화 — 볼륨 가중 트렌드 상위 라이징 브랜드" },
+    { code: "C-4", reason: "점유를 깎는 요인 — 카테고리 페인포인트·부정 키워드" },
+    { code: "C-3", reason: "자사 키워드로 들어오고 나가는 여정 — 전환·이탈 구간" },
+  ],
+  "C-3": [
+    { code: "C-4", reason: "이탈 구간의 원인 후보 — 페인포인트 구조로 심화" },
+    { code: "A-4", reason: "자사 여정을 카테고리 전체 여정 맥락에 놓고 비교" },
+  ],
+  "C-4": [
+    { code: "P-2b", reason: "카테고리 페인 다음은 자사·특정 브랜드 시드의 우려 심층" },
+    { code: "D-3", reason: "페인포인트를 자사 강점·공백 매핑으로 전환" },
+  ],
+  "D-1": [
+    { code: "D-4", reason: "지금의 선점 기회 다음은 커지는 기회 — 라이징 CEP" },
+    { code: "D-3", reason: "기회 CEP에서 자사가 가진 강점·비어 있는 공백 확인" },
+  ],
+  "D-3": [
+    { code: "D-1", reason: "공백을 확인했다면 논브랜드 선점 기회 랭킹으로" },
+    { code: "C-2", reason: "강점·공백 판단의 기준선 — 현재 점유 구도 재확인" },
+  ],
+  "D-4": [
+    { code: "D-1", reason: "떠오르는 맥락 중 선점 가능한 것의 우선순위화" },
+    { code: "C-1", reason: "같은 상승 구간의 라이징 브랜드 — 누가 먼저 움직이나" },
+  ],
+  "P-1a": [
+    { code: "P-1b", reason: "맥락 이동이 시즌 구조의 변화인지 캘린더로 검증" },
+    { code: "D-4", reason: "이동한 맥락에서 새로 떠오르는 CEP 확인" },
+  ],
+  "P-1b": [
+    { code: "A-1", reason: "시즌 구조를 봤다면 절대 수요 규모·YoY로 되돌아 확인" },
+    { code: "P-1a", reason: "시즌 반복 너머 — 소비 맥락 자체가 이동 중인지 대조" },
+  ],
+  "P-2a": [
+    { code: "A-4", reason: "진입 트리거 이후의 전체 여정 경로 확인" },
+    { code: "D-1", reason: "트리거가 된 생활 문제 중 논브랜드 선점 기회 랭킹" },
+  ],
+  "P-2b": [
+    { code: "C-4", reason: "브랜드 우려를 카테고리 공통 페인 구조와 비교" },
+    { code: "C-2", reason: "우려가 점유에 미치는 영향 — 현재 SoV 구도 확인" },
+  ],
+};
+
+export function relatedFor(code: string): { code: ReportCode; reason: string }[] {
+  return (CODE_RELATED[code] ?? [])
+    .map((r) => ({ code: reportCodeByCode(r.code), reason: r.reason }))
+    .filter((r): r is { code: ReportCode; reason: string } => !!r.code && r.code.status === "implemented");
+}

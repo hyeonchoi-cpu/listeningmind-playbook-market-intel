@@ -10,7 +10,7 @@ import type { Industry } from "@/types";
  * guardrailSummary는 원본 스킬의 컴플라이언스 규칙 요약이며, 전문은 각 스킬의
  * `_shared-core.md` / `overlay-finance.md` / `overlay-*.md` 원본을 참고할 것.
  */
-export const industries: Industry[] = [
+const ALL_INDUSTRIES_INTERNAL: Industry[] = [
   {
     slug: "universal",
     label: "범용 · 업권 무관",
@@ -143,5 +143,8 @@ export const industries: Industry[] = [
     skillRef: "fin-securities",
   },
 ];
+
+// 가전 카탈로그 전용 웹 — appliance만 노출 (타 업권 정의는 향후 확장용으로 보존)
+export const industries = ALL_INDUSTRIES_INTERNAL.filter((i) => i.slug === "appliance");
 
 export const industryBySlug = (slug: string) => industries.find((i) => i.slug === slug);

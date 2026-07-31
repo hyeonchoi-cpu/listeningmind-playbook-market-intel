@@ -1,16 +1,6 @@
-import { Cover } from "@/components/Cover";
-import { PersonaSection } from "@/components/PersonaSection";
-import { TopNav } from "@/components/TopNav";
-import { personas } from "@/data/personas";
+import { redirect } from "next/navigation";
 
-export default function HomePage() {
-  return (
-    <>
-      <TopNav />
-      <Cover />
-      {personas.map((p) => (
-        <PersonaSection key={p.slug} persona={p} />
-      ))}
-    </>
-  );
+// 가전 카탈로그 전용 웹 — 루트는 가전 카탈로그로 직행한다.
+export default function Home() {
+  redirect("/industries/appliance");
 }

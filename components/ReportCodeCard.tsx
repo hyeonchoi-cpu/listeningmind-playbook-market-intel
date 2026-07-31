@@ -1,15 +1,18 @@
 import Link from "next/link";
 import type { IndustrySlug, ReportCode } from "@/types";
-import { caseExampleFor } from "@/data/report-codes";
+import { caseExampleFor, CODE_TERMS } from "@/data/report-codes";
+import { estimateForCode } from "@/lib/reports/estimate";
 import { StatusBadge } from "./StatusBadge";
 
+/** LM Material 리포트 카드 — [코드+용어+상태] → [질문 두괄] → [적용 예시] → [메타: 커넥터·예상 비용(가정)] */
 export function ReportCodeCard({ code, industry }: { code: ReportCode; industry: IndustrySlug }) {
-  // P 밴드는 제목을 제너럴하게 유지하고(카테고리/브랜드명 금지) 업권별 적용 예시를 별도 줄로 보여준다
   const example = caseExampleFor(code, industry);
+  const est = code.status === "implemented" ? estimateForCode(code.code) : null;
   return (
     <Link href={`/industries/${industry}/${code.code}`} className="report-card" data-status={code.status}>
       <div className="report-card-top">
         <span className="report-card-code">{code.code}</span>
+        {CODE_TERMS[code.code] && <span className="lm-term">{CODE_TERMS[code.code]}</span>}
         <StatusBadge status={code.status} />
       </div>
       <h4 className="report-card-title">{code.title}</h4>
@@ -19,6 +22,16 @@ export function ReportCodeCard({ code, industry }: { code: ReportCode; industry:
         </p>
       )}
       <p className="report-card-data">{code.dataNeeds}</p>
+      {est && (
+        <div className="report-card-meta">
+          <span>{code.connectors.length > 0 ? code.connectors.join(" + ") : "외부 소스"}</span>
+          <span>
+            예상 {est.daasCreditsRange[0].toLocaleString()}~{est.daasCreditsRange[1].toLocaleString()} 크레딧{" "}
+            <em>가정</em>
+          </span>
+          <span>{est.secondsRange[0]}~{est.secondsRange[1]}초</span>
+        </div>
+      )}
     </Link>
   );
 }

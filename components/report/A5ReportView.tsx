@@ -1,5 +1,6 @@
 import type { A5Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 import { BrandTable } from "./BrandTable";
 
@@ -56,18 +57,11 @@ export function A5ReportView({ report }: { report: A5Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">브랜드 검색 점유 (볼륨순)</div>
+        <div className="detail-section-title">브랜드별 검색 점유율(SoV) — 볼륨순</div>
         <BrandTable brands={report.brands} />
         <p className="estimate-box-note" style={{ marginTop: 8 }}>
           검색 점유는 설문 기반 비보조 인지도가 아니라 그 검색 프록시(가정)입니다 — 인지도 지표로 인용할 때는

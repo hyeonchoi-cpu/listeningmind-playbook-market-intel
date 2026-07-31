@@ -1,5 +1,6 @@
 import type { C3FlowRow, C3Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 function FlowTable({ rows, emptyText, exitColumn }: { rows: C3FlowRow[]; emptyText: string; exitColumn?: boolean }) {
@@ -47,23 +48,16 @@ export function C3ReportView({ report }: { report: C3Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">유입 흐름 (자사 키워드 직전 쿼리)</div>
+        <div className="detail-section-title">여정(CDJ) 유입 흐름 — 자사 키워드 직전 쿼리</div>
         <FlowTable rows={report.inflows} emptyText="시드 직전 쿼리가 확인되지 않았습니다." />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">유출 흐름 (자사 키워드 직후 쿼리)</div>
+        <div className="detail-section-title">여정(CDJ) 유출 흐름 — 자사 키워드 직후 쿼리</div>
         <FlowTable
           rows={report.outflows}
           emptyText="자사 키워드 직후 쿼리가 확인되지 않았습니다."

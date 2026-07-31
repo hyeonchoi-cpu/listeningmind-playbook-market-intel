@@ -1,5 +1,6 @@
 import type { B1Report, B1Segment } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 // 차트는 결정론적으로 — Chart.js/D3 CDN 대신 순수 CSS width% 바 (설계 원칙 4의 정신을 그대로 따름:
@@ -80,14 +81,7 @@ export function B1ReportView({ report }: { report: B1Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">

@@ -1,5 +1,6 @@
 import type { P2aFlowRow, P2aReport } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 function FlowTable({ rows, emptyText }: { rows: P2aFlowRow[]; emptyText: string }) {
@@ -63,18 +64,11 @@ export function P2aReportView({ report }: { report: P2aReport }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">진입 트리거 (시드 등장 직전 쿼리)</div>
+        <div className="detail-section-title">카테고리 진입 트리거(CEP) — 시드 등장 직전 쿼리</div>
         <FlowTable rows={report.triggers} emptyText="도착 경로가 없어 트리거를 집계할 수 없습니다." />
       </div>
 

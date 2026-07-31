@@ -1,5 +1,6 @@
 import type { C1Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 import { BrandTable } from "./BrandTable";
 
@@ -46,18 +47,11 @@ export function C1ReportView({ report }: { report: C1Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">브랜드 지형 (볼륨순)</div>
+        <div className="detail-section-title">브랜드 지형(SoV) — 볼륨순</div>
         <BrandTable brands={report.brands} />
       </div>
 

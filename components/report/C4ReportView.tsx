@@ -1,5 +1,6 @@
 import type { C4Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 export function C4ReportView({ report }: { report: C4Report }) {
@@ -26,19 +27,12 @@ export function C4ReportView({ report }: { report: C4Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       {report.painGroups.length > 0 && (
         <div className="detail-section">
-          <div className="detail-section-title">페인포인트 그룹 (볼륨순)</div>
+          <div className="detail-section-title">페인포인트(Pain Point) 그룹 — 볼륨순</div>
           <div className="segment-bar-group">
             {report.painGroups.map((g) => (
               <div key={g.label} className="segment-bar-row pain-bar-row">

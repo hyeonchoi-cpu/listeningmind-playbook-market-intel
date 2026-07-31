@@ -1,5 +1,6 @@
 import type { D3KeywordRow, D3Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 function KeywordTable({ rows, showCoveredBy, emptyText }: { rows: D3KeywordRow[]; showCoveredBy?: boolean; emptyText: string }) {
@@ -79,14 +80,7 @@ export function D3ReportView({ report }: { report: D3Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">

@@ -1,26 +1,56 @@
 // 잡 상태(KV) + 완성 리포트(Blob) 저장소 — 서버 전용.
 //
-// 설계 결정(docs/market-intelligence-webapp-design.md §8 결정 2): "Vercel KV + Vercel Blob".
-// 단, @vercel/kv 패키지는 설치 시점에 deprecated로 확인돼(Vercel이 Upstash Redis 직접 사용을 공식
-// 권장) 실제 구현체는 @upstash/redis를 쓴다 — Vercel 마켓플레이스의 Redis 연동을 프로젝트에 붙이면
-// 동일한 KV_REST_API_URL/KV_REST_API_TOKEN 환경변수가 주입되므로 "결정 2"의 의도(관리형 KV 사용)는
-// 그대로 유지된다.
-// 로컬 개발 시 실제 Vercel 리소스가 연결돼 있지 않아도 기능을 통째로 검증할 수 있도록,
-// 관련 환경변수(KV_REST_API_URL / BLOB_READ_WRITE_TOKEN)가 없으면 프로젝트 루트 `.data/`에
-// 파일로 대체 저장한다(.gitignore 처리됨). Vercel에 KV/Blob을 연결하면 env var가 자동 주입되어
-// 코드 변경 없이 그대로 실서비스 저장소로 전환된다.
+// 저장소 우선순위 (2026-07-31 AWS 어댑터 도입):
+//   1) AWS — DynamoDB(잡 상태, TTL 자동 만료) + S3(리포트 JSON, 프라이빗 버킷)
+//      환경변수: LM_AWS_REGION / LM_AWS_ACCESS_KEY_ID / LM_AWS_SECRET_ACCESS_KEY / LM_S3_BUCKET / LM_DDB_TABLE
+//      (Vercel이 AWS_ 접두사 환경변수를 예약하므로 LM_AWS_* 커스텀 이름 사용)
+//      선택 이유: 조직 표준(AWS·Bedrock 로드맵) 정합 + 리포트 JSON을 사내 에이전트가
+//      같은 계정에서 컨텍스트로 직접 읽는 경로 확보 + 데이터 소유권.
+//   2) Vercel Marketplace — Upstash Redis(KV_REST_API_*) + Vercel Blob(BLOB_READ_WRITE_TOKEN)
+//   3) 로컬 파일 폴백 — 프로젝트 루트 .data/ (개발 전용, .gitignore 처리)
 import { promises as fs } from "fs";
 import path from "path";
 
 const LOCAL_ROOT = path.join(process.cwd(), ".data");
 
+// ── AWS (1순위) ──────────────────────────────────────────────────
+function hasAws(): boolean {
+  return !!(
+    process.env.LM_AWS_ACCESS_KEY_ID &&
+    process.env.LM_AWS_SECRET_ACCESS_KEY &&
+    process.env.LM_S3_BUCKET &&
+    process.env.LM_DDB_TABLE
+  );
+}
+
+function awsCreds() {
+  return {
+    region: process.env.LM_AWS_REGION ?? "ap-northeast-2",
+    credentials: {
+      accessKeyId: process.env.LM_AWS_ACCESS_KEY_ID!,
+      secretAccessKey: process.env.LM_AWS_SECRET_ACCESS_KEY!,
+    },
+  };
+}
+
+async function getDdb() {
+  const { DynamoDBClient } = await import("@aws-sdk/client-dynamodb");
+  const { DynamoDBDocumentClient } = await import("@aws-sdk/lib-dynamodb");
+  return DynamoDBDocumentClient.from(new DynamoDBClient(awsCreds()), {
+    marshallOptions: { removeUndefinedValues: true },
+  });
+}
+
+async function getS3() {
+  const { S3Client } = await import("@aws-sdk/client-s3");
+  return new S3Client(awsCreds());
+}
+
+// ── Vercel Marketplace (2순위) ───────────────────────────────────
 function hasKv(): boolean {
   return !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
 }
 
-// Redis.fromEnv()는 UPSTASH_REDIS_REST_URL/_TOKEN 이름을 기대하는데, Vercel Marketplace의
-// Redis(Upstash) 연동은 KV_REST_API_URL/KV_REST_API_TOKEN으로 주입한다 — 이름 불일치를 피하려고
-// 명시적으로 생성한다.
 async function getRedis() {
   const { Redis } = await import("@upstash/redis");
   return new Redis({
@@ -33,6 +63,7 @@ function hasBlob(): boolean {
   return !!process.env.BLOB_READ_WRITE_TOKEN;
 }
 
+// ── 로컬 파일 폴백 (3순위) ────────────────────────────────────────
 async function localReadJson<T>(relPath: string): Promise<T | null> {
   try {
     const raw = await fs.readFile(path.join(LOCAL_ROOT, relPath), "utf-8");
@@ -50,6 +81,16 @@ async function localWriteJson(relPath: string, value: unknown): Promise<void> {
 
 // ── KV (잡/캐시 상태) ─────────────────────────────────────────────
 export async function kvGet<T>(key: string): Promise<T | null> {
+  if (hasAws()) {
+    const { GetCommand } = await import("@aws-sdk/lib-dynamodb");
+    const ddb = await getDdb();
+    const res = await ddb.send(new GetCommand({ TableName: process.env.LM_DDB_TABLE!, Key: { id: key } }));
+    const item = res.Item as { value?: string; expiresAt?: number } | undefined;
+    if (!item?.value) return null;
+    // DynamoDB TTL 삭제는 최대 48h 지연될 수 있음 — 만료 시각을 직접 검사해 캐시 정확성 보장
+    if (item.expiresAt && item.expiresAt * 1000 < Date.now()) return null;
+    return JSON.parse(item.value) as T;
+  }
   if (hasKv()) {
     const redis = await getRedis();
     const v = await redis.get<T>(key);
@@ -59,6 +100,21 @@ export async function kvGet<T>(key: string): Promise<T | null> {
 }
 
 export async function kvSet(key: string, value: unknown, opts: { ttlSeconds?: number } = {}): Promise<void> {
+  if (hasAws()) {
+    const { PutCommand } = await import("@aws-sdk/lib-dynamodb");
+    const ddb = await getDdb();
+    await ddb.send(
+      new PutCommand({
+        TableName: process.env.LM_DDB_TABLE!,
+        Item: {
+          id: key,
+          value: JSON.stringify(value),
+          ...(opts.ttlSeconds ? { expiresAt: Math.floor(Date.now() / 1000) + opts.ttlSeconds } : {}),
+        },
+      }),
+    );
+    return;
+  }
   if (hasKv()) {
     const redis = await getRedis();
     if (opts.ttlSeconds) await redis.set(key, value, { ex: opts.ttlSeconds });
@@ -69,7 +125,22 @@ export async function kvSet(key: string, value: unknown, opts: { ttlSeconds?: nu
 }
 
 // ── Blob (완성된 리포트 JSON) ──────────────────────────────────────
+// AWS 경로의 반환 URL은 "s3:<key>" 프리픽스 — 버킷이 프라이빗이므로 공개 URL 대신
+// blobGetJson이 GetObject로 해석한다 (로컬 "local:" 프리픽스와 같은 패턴).
 export async function blobPutJson(blobPath: string, data: unknown): Promise<{ url: string }> {
+  if (hasAws()) {
+    const { PutObjectCommand } = await import("@aws-sdk/client-s3");
+    const s3 = await getS3();
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.LM_S3_BUCKET!,
+        Key: blobPath,
+        Body: JSON.stringify(data),
+        ContentType: "application/json",
+      }),
+    );
+    return { url: `s3:${blobPath}` };
+  }
   if (hasBlob()) {
     const { put } = await import("@vercel/blob");
     const res = await put(blobPath, JSON.stringify(data), {
@@ -85,6 +156,20 @@ export async function blobPutJson(blobPath: string, data: unknown): Promise<{ ur
 }
 
 export async function blobGetJson<T>(url: string): Promise<T | null> {
+  if (url.startsWith("s3:")) {
+    if (!hasAws()) return null;
+    const { GetObjectCommand } = await import("@aws-sdk/client-s3");
+    const s3 = await getS3();
+    try {
+      const res = await s3.send(
+        new GetObjectCommand({ Bucket: process.env.LM_S3_BUCKET!, Key: url.slice("s3:".length) }),
+      );
+      const body = await res.Body?.transformToString();
+      return body ? (JSON.parse(body) as T) : null;
+    } catch {
+      return null;
+    }
+  }
   if (url.startsWith("local:")) {
     return localReadJson<T>(path.join("blob", url.slice("local:".length)));
   }

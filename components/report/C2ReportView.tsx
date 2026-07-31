@@ -1,5 +1,6 @@
 import type { C2Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 import { BrandTable } from "./BrandTable";
 
@@ -35,7 +36,7 @@ export function C2ReportView({ report }: { report: C2Report }) {
           <div className="detail-section-title">자사 포지션</div>
           <div className="stat-grid">
             <div className="stat-card">
-              <div className="stat-label">검색 점유 (근사)</div>
+              <div className="stat-label">검색 점유율(SoV·근사)</div>
               <div className="stat-value">{ours.sharePct.value}%</div>
               <div className="stat-basis">
                 <LabelBadge basis={ours.sharePct.basis} />
@@ -71,18 +72,11 @@ export function C2ReportView({ report }: { report: C2Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">자사 vs 경쟁 (볼륨순)</div>
+        <div className="detail-section-title">브랜드별 검색 점유율(SoV) — 자사 vs 경쟁 · 볼륨순</div>
         <BrandTable brands={report.brands} />
       </div>
 

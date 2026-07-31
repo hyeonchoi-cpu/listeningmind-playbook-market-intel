@@ -1,5 +1,6 @@
 import type { D1Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 const AXIS_LABEL: Record<string, string> = {
@@ -36,18 +37,11 @@ export function D1ReportView({ report }: { report: D1Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">선점 기회 랭킹 (점수 = 정규화 볼륨 × 논브랜드 비중 · 가정)</div>
+        <div className="detail-section-title">선점 기회 랭킹(Opportunity Score) — 정규화 볼륨 × 논브랜드 비중 · 가정</div>
         <div className="cep-grid">
           {report.opportunities.map((o) => (
             <div key={o.id} className="insight-card">

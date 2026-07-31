@@ -1,5 +1,6 @@
 import type { A4FlowRow, A4Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 function EndpointTable({ rows, shareLabel }: { rows: A4FlowRow[]; shareLabel: string }) {
@@ -45,23 +46,16 @@ export function A4ReportView({ report }: { report: A4Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">여정 시작 쿼리 (진입·인지 후보)</div>
+        <div className="detail-section-title">검색 여정(CDJ) 시작 쿼리 — 진입·인지 후보</div>
         <EndpointTable rows={report.startKeywords} shareLabel="경로 비중" />
       </div>
 
       <div className="detail-section">
-        <div className="detail-section-title">여정 종착 쿼리 (결정·이탈 지점 후보)</div>
+        <div className="detail-section-title">검색 여정(CDJ) 종착 쿼리 — 결정·이탈 지점 후보</div>
         <EndpointTable rows={report.endKeywords} shareLabel="경로 비중" />
         <p className="estimate-box-note" style={{ marginTop: 8 }}>
           시작/종착은 경로 내 위치 기반 근사이며 퍼널 단계 분류가 아닙니다. 종착이 결정인지 이탈인지는 단정할

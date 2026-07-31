@@ -4,44 +4,82 @@
    ========================================================== */
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
-@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;500;600&display=swap");
 
 :root {
-  --bg: #FFFFFF;
-  --bg-soft: #F8F9FA;
-  --surface: #F1F3F4;
-  --surface-2: #E8EAED;
+  color-scheme: light;
+  /* === 리포트 표준 팔레트 (report-template.html과 얼라인, 2026-07-30) === */
+  --bg: #FCFCFB;
+  --bg-soft: #F7F7F5;
+  --surface: #F1F1EE;
+  --surface-2: #E7E6E0;
 
-  --ink-strong: #1F1F1F;
-  --ink: #3C4043;
-  --ink-soft: #5F6368;
-  --ink-mute: #80868B;
+  --ink-strong: #0B0B0B;
+  --ink: #2A2A27;
+  --ink-soft: #52514E;
+  --ink-mute: #8A887F;
 
-  --line: #E8EAED;
-  --line-soft: #F1F3F4;
+  --line: #E7E6E0;
+  --line-soft: #F1F1EE;
 
-  --blue: #1A73E8;
-  --blue-soft: #E8F0FE;
-  --green: #1E8E3E;
-  --green-soft: #E6F4EA;
-  --yellow: #F9AB00;
-  --yellow-soft: #FEF7E0;
-  --red: #D93025;
-  --red-soft: #FCE8E6;
-  --purple: #8430CE;
-  --purple-soft: #F3E8FD;
-  --teal: #00897B;
-  --teal-soft: #E0F2F1;
+  --blue: #2A78D6;   --blue-soft: #EAF2FC;   /* accent · --s-1 */
+  --green: #1BAF7A;  --green-soft: #E7F6F0;  /* --s-3 */
+  --yellow: #EDA100; --yellow-soft: #FDF3DC;
+  --red: #E34948;    --red-soft: #FBECEC;
+  --purple: #4A3AA7; --purple-soft: #EDEAF8;
+  --teal: #0E8B96;   --teal-soft: #E6F4F5;
 
-  --gradient-google: linear-gradient(135deg, #4285F4 0%, #9B72CB 50%, #D96570 100%);
+  --orange: #EB6834; --orange-soft: #FCEDE5; /* --s-2 (채널·주의) */
+  --warn-bg: #FAF6EC; --warn-bd: #E3D9B8;    /* 준비도 배너 */
+  --nav-bg: rgba(252, 252, 251, 0.85);
+
+  --gradient-google: linear-gradient(135deg, #2A78D6 0%, #245FA8 100%);
 
   --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  --radius: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
 
-  --shadow: 0 1px 3px rgba(60, 64, 67, 0.08), 0 1px 2px rgba(60, 64, 67, 0.04);
-  --shadow-hover: 0 4px 12px rgba(60, 64, 67, 0.10), 0 2px 4px rgba(60, 64, 67, 0.06);
+  --shadow: 0 1px 3px rgba(11, 11, 11, 0.06), 0 1px 2px rgba(11, 11, 11, 0.03);
+  --shadow-hover: 0 4px 12px rgba(11, 11, 11, 0.08), 0 2px 4px rgba(11, 11, 11, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --bg: #161615; --bg-soft: #131312; --surface: #22221F; --surface-2: #2A2A27;
+    --ink-strong: #FFFFFF; --ink: #D9D8D0; --ink-soft: #C3C2B7; --ink-mute: #8F8E85;
+    --line: #33332F; --line-soft: #2A2A27;
+    --blue: #3987E5; --blue-soft: #1C2A3D;
+    --green: #199E70; --green-soft: #17322B;
+    --yellow: #C98500; --yellow-soft: #322A17;
+    --red: #E66767; --red-soft: #3A2222;
+    --purple: #9085E9; --purple-soft: #262242;
+    --teal: #3AA6B0; --teal-soft: #17313A;
+    --orange: #D95926; --orange-soft: #33231B;
+    --warn-bg: #26231A; --warn-bd: #4A4430;
+    --nav-bg: rgba(22, 22, 21, 0.85);
+    --gradient-google: linear-gradient(135deg, #3987E5 0%, #2A6BC0 100%);
+    --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #161615; --bg-soft: #131312; --surface: #22221F; --surface-2: #2A2A27;
+  --ink-strong: #FFFFFF; --ink: #D9D8D0; --ink-soft: #C3C2B7; --ink-mute: #8F8E85;
+  --line: #33332F; --line-soft: #2A2A27;
+  --blue: #3987E5; --blue-soft: #1C2A3D;
+  --green: #199E70; --green-soft: #17322B;
+  --yellow: #C98500; --yellow-soft: #322A17;
+  --red: #E66767; --red-soft: #3A2222;
+  --purple: #9085E9; --purple-soft: #262242;
+  --teal: #3AA6B0; --teal-soft: #17313A;
+  --orange: #D95926; --orange-soft: #33231B;
+  --warn-bg: #26231A; --warn-bd: #4A4430;
+  --nav-bg: rgba(22, 22, 21, 0.85);
+  --gradient-google: linear-gradient(135deg, #3987E5 0%, #2A6BC0 100%);
+  --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.35);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -63,7 +101,7 @@ button { font-family: inherit; cursor: pointer; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255,255,255,0.85);
+  background: var(--nav-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--line);
@@ -103,7 +141,7 @@ button { font-family: inherit; cursor: pointer; }
 .nav-tab {
   padding: 7px 14px;
   border-radius: 999px;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -223,7 +261,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .persona-row:hover { opacity: 0.7; }
 .persona-tag {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
   padding: 3px 8px; border-radius: 6px;
   background: var(--ink-strong); color: var(--bg);
@@ -248,7 +286,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .cover-section-title-row { display: flex; align-items: baseline; gap: 16px; }
 .cover-section-num {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 12px; font-weight: 600;
   color: var(--ink-mute); letter-spacing: 0.05em;
 }
@@ -289,7 +327,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 20px;
 }
 .cover-card-num {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 600;
   color: var(--ink-mute); letter-spacing: 0.06em;
   padding-top: 6px;
@@ -331,14 +369,14 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; gap: 4px; margin-bottom: 10px; flex-wrap: wrap;
 }
 .persona-chip {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9.5px; font-weight: 600; letter-spacing: 0.04em;
   padding: 3px 7px; border-radius: 4px;
   background: var(--surface); color: var(--ink);
 }
 .cover-card-endpoint {
   display: flex; align-items: center; gap: 6px;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px; color: var(--ink-mute);
   letter-spacing: -0.01em;
 }
@@ -346,7 +384,7 @@ button { font-family: inherit; cursor: pointer; }
 .cover-card-endpoint .ep { color: var(--ink); font-weight: 500; }
 .new-badge {
   position: absolute; top: 18px; right: 18px;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9px; font-weight: 600; letter-spacing: 0.08em;
   padding: 3px 7px; border-radius: 4px;
   background: var(--ink-strong); color: var(--bg);
@@ -362,7 +400,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 40px;
 }
 .page-counter {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 500;
   color: var(--ink-mute); letter-spacing: 0.1em;
 }
@@ -370,7 +408,7 @@ button { font-family: inherit; cursor: pointer; }
 .persona-badge {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 8px 14px; border-radius: 999px;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
 }
 .persona-badge .dot {
@@ -378,7 +416,7 @@ button { font-family: inherit; cursor: pointer; }
   background: currentColor;
 }
 .page-meta {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; color: var(--ink-mute);
   letter-spacing: 0.05em; text-align: right;
 }
@@ -426,7 +464,7 @@ button { font-family: inherit; cursor: pointer; }
 .profile-row:first-child { padding-top: 0; }
 .profile-label {
   flex-shrink: 0; width: 80px;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-mute); padding-top: 2px;
@@ -437,7 +475,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .questions { margin-bottom: 48px; }
 .section-label {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--ink-mute); margin-bottom: 14px;
@@ -458,7 +496,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .question-item .q-mark {
   color: var(--ink-mute);
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 12px; font-weight: 600;
   flex-shrink: 0; padding-top: 1px;
 }
@@ -473,7 +511,7 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: -0.03em; color: var(--ink-strong);
 }
 .solutions-meta {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; color: var(--ink-mute);
   letter-spacing: 0.04em;
 }
@@ -507,7 +545,7 @@ button { font-family: inherit; cursor: pointer; }
   align-items: flex-start; margin-bottom: 20px;
 }
 .top-rank {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.08em; color: var(--ink-mute);
   display: flex; align-items: center; gap: 6px;
@@ -533,7 +571,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-top: 18px; padding-top: 14px;
   border-top: 1px solid var(--line);
   display: flex; justify-content: space-between; align-items: center;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px;
 }
 .top-foot .ep-label {
@@ -567,7 +605,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .sec-card:hover { background: var(--surface); }
 .sec-num {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; font-weight: 600;
   color: var(--ink-mute); letter-spacing: 0.05em;
   flex-shrink: 0; width: 24px;
@@ -595,7 +633,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 20px;
 }
 .usecase-eyebrow {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--ink-mute);
@@ -626,11 +664,11 @@ button { font-family: inherit; cursor: pointer; }
   content: "→"; position: absolute;
   left: -16px; top: 50%; transform: translateY(-50%);
   color: var(--ink-mute);
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 14px;
 }
 .flow-num {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9.5px; font-weight: 600;
   letter-spacing: 0.08em; color: var(--ink-mute);
   text-transform: uppercase; margin-bottom: 6px;
@@ -641,7 +679,7 @@ button { font-family: inherit; cursor: pointer; }
   line-height: 1.3; margin-bottom: 4px;
 }
 .flow-tool {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; color: var(--ink-soft);
   letter-spacing: 0.02em;
 }
@@ -663,7 +701,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .cta-content { position: relative; z-index: 1; }
 .cta-eyebrow {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 500;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
@@ -708,7 +746,7 @@ button { font-family: inherit; cursor: pointer; }
 .foot {
   margin-top: 24px;
   display: flex; justify-content: space-between;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px; color: var(--ink-mute);
   letter-spacing: -0.01em;
 }
@@ -776,7 +814,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .detail-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-mute);
@@ -809,7 +847,7 @@ button { font-family: inherit; cursor: pointer; }
   min-width: 120px;
 }
 .detail-meta-label {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9.5px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-mute);
@@ -849,7 +887,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 18px 20px;
 }
 .method-card-label {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-mute); margin-bottom: 8px;
@@ -878,7 +916,7 @@ button { font-family: inherit; cursor: pointer; }
 .pricing-row:last-child { border-bottom: none; }
 .pricing-row.header {
   background: var(--bg-soft);
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-mute);
@@ -897,7 +935,7 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 4px;
   background: var(--yellow-soft);
   color: #8a6500;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -905,7 +943,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-right: 6px;
 }
 .pricing-value .ep-name {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 12px;
 }
 
@@ -967,7 +1005,7 @@ button { font-family: inherit; cursor: pointer; }
   min-width: 0;
 }
 .reports-date {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px;
   color: var(--ink-mute);
   letter-spacing: 0.04em;
@@ -1077,9 +1115,9 @@ button { font-family: inherit; cursor: pointer; }
   transition: all 0.2s;
 }
 .detail-cta .primary {
-  background: var(--ink-strong); color: var(--bg);
+  background: var(--blue); color: #fff; border-radius: 8px; font-weight: 700;
 }
-.detail-cta .primary:hover { transform: scale(1.02); }
+.detail-cta .primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); }
 .detail-cta .secondary {
   background: var(--bg);
   border: 1px solid var(--line);
@@ -1090,7 +1128,7 @@ button { font-family: inherit; cursor: pointer; }
 /* === INDUSTRY CATALOG (market intelligence playbook, Phase 1) === */
 .breadcrumb {
   display: flex; align-items: center; gap: 8px;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11px; color: var(--ink-mute);
   letter-spacing: 0.02em; margin-bottom: 24px;
 }
@@ -1139,13 +1177,13 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 14px; gap: 8px;
 }
 .industry-card-eyebrow {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-mute);
 }
 .compliance-badge {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9px; font-weight: 600; letter-spacing: 0.05em;
   padding: 3px 7px; border-radius: 4px;
   background: var(--red-soft); color: var(--red);
@@ -1175,7 +1213,7 @@ button { font-family: inherit; cursor: pointer; }
 .industry-card-foot {
   display: flex; justify-content: space-between; align-items: center;
   padding-top: 14px; border-top: 1px solid var(--line);
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px; color: var(--ink-mute);
 }
 
@@ -1186,7 +1224,7 @@ button { font-family: inherit; cursor: pointer; }
   border-bottom: 1px solid var(--line);
 }
 .band-tag {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 12px; font-weight: 700;
   color: var(--ink-mute); letter-spacing: 0.06em;
 }
@@ -1198,39 +1236,35 @@ button { font-family: inherit; cursor: pointer; }
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
 }
 .report-card {
-  background: var(--bg);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-  text-decoration: none; color: inherit;
-  display: flex; flex-direction: column; gap: 8px;
-  transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 18px 20px 14px; box-shadow: var(--shadow);
+  transition: box-shadow .15s, transform .15s;
 }
-.report-card:hover { border-color: var(--ink-mute); box-shadow: var(--shadow-hover); }
+.report-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
 .report-card[data-status="unsupported"] { opacity: 0.55; }
-.report-card-top { display: flex; justify-content: space-between; align-items: center; }
+.report-card-top { display: flex; align-items: center; gap: 8px; }
+.report-card-top > :last-child { margin-left: auto; }
 .report-card-code {
-  font-family: "Google Sans Code", monospace;
-  font-size: 13px; font-weight: 700;
-  color: var(--ink-strong); letter-spacing: 0.02em;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 11.5px; font-weight: 700; color: var(--blue);
+  background: var(--blue-soft); border-radius: 6px; padding: 2px 7px;
 }
 .report-card-title {
-  font-size: 14px; font-weight: 600;
-  color: var(--ink-strong); line-height: 1.4; letter-spacing: -0.01em;
+  font-size: 16.5px; font-weight: 750; line-height: 1.4;
+  color: var(--ink-strong); text-wrap: balance; margin: 0;
 }
 .report-card-example {
-  font-size: 11.5px; color: var(--ink);
-  line-height: 1.45;
-  padding-left: 10px;
-  border-left: 2px solid var(--line);
+  font-size: 12.5px; color: var(--ink-soft); line-height: 1.55;
+  border-left: 3px solid var(--line); padding: 2px 0 2px 10px; margin: 0;
 }
 .report-card-data {
-  font-size: 11.5px; color: var(--ink-soft);
-  line-height: 1.5; font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 11px; color: var(--ink-mute); margin: 0;
 }
 
 .status-badge {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9.5px; font-weight: 600; letter-spacing: 0.05em;
   padding: 3px 8px; border-radius: 999px;
   text-transform: uppercase; white-space: nowrap;
@@ -1249,7 +1283,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 16px 18px;
 }
 .mock-kpi-label {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-mute); margin-bottom: 6px;
@@ -1285,7 +1319,7 @@ button { font-family: inherit; cursor: pointer; }
 /* === REPORT GENERATION (Phase 2 — B-1 live pipeline) === */
 .label-badge {
   display: inline-flex; align-items: center;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9px; font-weight: 600; letter-spacing: 0.04em;
   padding: 2px 6px; border-radius: 4px;
   margin-left: 4px; white-space: nowrap;
@@ -1299,12 +1333,12 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; justify-content: space-between; align-items: center;
   padding-bottom: 16px; margin-bottom: 24px;
   border-bottom: 1px solid var(--line);
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 11.5px; color: var(--ink-mute);
 }
 
 .segment-bar-kind {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em;
   text-transform: uppercase; color: var(--ink-mute); margin-bottom: 10px;
 }
@@ -1316,18 +1350,12 @@ button { font-family: inherit; cursor: pointer; }
 }
 .segment-bar-fill { height: 100%; background: var(--gradient-google); border-radius: 999px; }
 .segment-bar-value {
-  font-family: "Google Sans Code", monospace; font-size: 11px;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 11px;
   color: var(--ink-strong); font-weight: 600; white-space: nowrap;
   display: flex; align-items: center;
 }
 
 .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.insight-card {
-  background: var(--bg-soft); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 16px 18px;
-}
-.insight-card-title { font-size: 13.5px; font-weight: 700; color: var(--ink-strong); margin-bottom: 6px; }
-.insight-card-body { font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
 
 .kbf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .kbf-card {
@@ -1342,21 +1370,21 @@ button { font-family: inherit; cursor: pointer; }
 .cross-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
 .cross-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .cross-table th, .cross-table td { padding: 10px 14px; text-align: center; border-bottom: 1px solid var(--line-soft); }
-.cross-table thead th { background: var(--bg-soft); font-family: "Google Sans Code", monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); }
+.cross-table thead th { background: var(--bg-soft); font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); }
 .cross-table tbody th { text-align: left; font-weight: 600; color: var(--ink-strong); background: var(--bg-soft); }
 .cross-table tbody tr:last-child td, .cross-table tbody tr:last-child th { border-bottom: none; }
 
 .generate-form { display: flex; flex-direction: column; gap: 16px; max-width: 480px; }
 .generate-form-row { display: flex; flex-direction: column; gap: 6px; }
 .generate-form-label {
-  font-family: "Google Sans Code", monospace; font-size: 10.5px; font-weight: 600;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 10.5px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute);
 }
 .generate-form-input {
   padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm);
   font-size: 14px; font-family: inherit; color: var(--ink-strong); background: var(--bg);
 }
-.generate-form-input:focus { outline: none; border-color: var(--ink-mute); }
+.generate-form-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
 .generate-form-error {
   font-size: 12.5px; color: var(--red); background: var(--red-soft);
   padding: 10px 14px; border-radius: var(--radius-sm);
@@ -1367,12 +1395,12 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: var(--radius); padding: 20px 22px;
 }
 .estimate-box-title {
-  font-family: "Google Sans Code", monospace; font-size: 11px; font-weight: 700;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 11px; font-weight: 700;
   letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 14px;
 }
 .estimate-box-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 12px; }
 .estimate-label {
-  display: block; font-family: "Google Sans Code", monospace; font-size: 10px;
+  display: block; font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 10px;
   color: var(--ink-mute); margin-bottom: 4px;
 }
 .estimate-value { display: block; font-size: 16px; font-weight: 700; color: var(--ink-strong); }
@@ -1387,7 +1415,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: 16px 18px;
 }
 .stat-label {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-mute); margin-bottom: 6px;
@@ -1408,7 +1436,7 @@ button { font-family: inherit; cursor: pointer; }
 .trend-chart { display: block; width: 100%; height: auto; }
 .trend-chart-axis {
   display: flex; justify-content: space-between;
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px; color: var(--ink-mute);
   margin-top: 6px;
 }
@@ -1417,7 +1445,7 @@ button { font-family: inherit; cursor: pointer; }
 .ours-row th, .ours-row td { background: var(--blue-soft); }
 .ours-chip { background: var(--blue); color: var(--bg); margin-left: 6px; }
 .brand-alias-line {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 9.5px; font-weight: 400;
   color: var(--ink-mute); margin-top: 3px;
 }
@@ -1433,7 +1461,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 8px; gap: 8px;
 }
 .cep-card-volume {
-  font-family: "Google Sans Code", monospace;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 10.5px; color: var(--ink-mute);
   display: flex; align-items: center; white-space: nowrap;
 }
@@ -1492,3 +1520,100 @@ button { font-family: inherit; cursor: pointer; }
   .stat-grid { grid-template-columns: 1fr; }
   .cep-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ═══ LM Material — 카드 모듈 확장 (선택·조회 플로우, 2026-07-30) ═══ */
+.lm-term {
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0;
+  color: var(--ink-mute); border: 1px solid var(--line);
+  border-radius: 6px; padding: 1px 7px;
+}
+.report-card-meta {
+  display: flex; flex-wrap: wrap; gap: 4px 14px;
+  border-top: 1px solid var(--line); padding-top: 9px; margin-top: 2px;
+  font-size: 11px; color: var(--ink-mute);
+}
+.report-card-meta em { font-style: normal; color: var(--yellow); font-weight: 700; }
+.report-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+.related-section { margin-top: 34px; border-top: 2px solid var(--line); padding-top: 20px; }
+.related-title { font-size: 16px; font-weight: 750; color: var(--ink-strong); }
+.related-sub { font-size: 12.5px; font-weight: 500; color: var(--ink-mute); }
+.related-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px; margin-top: 14px;
+}
+.related-card {
+  display: flex; flex-direction: column; gap: 7px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 14px 16px; box-shadow: var(--shadow);
+  transition: box-shadow .15s, transform .15s, border-color .15s;
+}
+.related-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); border-color: var(--blue); }
+.related-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.related-card-top { display: flex; align-items: center; gap: 8px; }
+.related-card-q { font-size: 13.5px; font-weight: 700; line-height: 1.45; color: var(--ink-strong); }
+.related-card-reason {
+  font-size: 12px; color: var(--ink-soft); line-height: 1.5;
+  border-left: 3px solid var(--blue-soft); padding-left: 9px;
+}
+
+
+/* ═══ 샘플 리포트 섹션 (카탈로그 상단) ═══ */
+.sample-section { margin: 26px 0 6px; }
+.sample-section-title { font-size: 16px; font-weight: 750; color: var(--ink-strong); }
+.sample-section-sub { font-size: 12.5px; font-weight: 500; color: var(--ink-mute); }
+.sample-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px; margin-top: 12px;
+}
+.sample-card {
+  display: flex; flex-direction: column; gap: 6px;
+  background: var(--bg); border: 1px solid var(--line); border-left: 4px solid var(--blue);
+  border-radius: var(--radius-lg); padding: 15px 17px; box-shadow: var(--shadow);
+  transition: box-shadow .15s, transform .15s;
+}
+.sample-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+.sample-kind { font-size: 10.5px; font-weight: 750; letter-spacing: .06em; color: var(--blue); }
+.sample-title { font-size: 14.5px; font-weight: 750; color: var(--ink-strong); line-height: 1.4; }
+.sample-headline {
+  font-size: 12px; color: var(--ink-soft); line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.sample-open { font-size: 11.5px; font-weight: 650; color: var(--blue); margin-top: 2px; }
+
+
+/* ═══ 인사이트 카드 — LM Material 시안 ② 캡처 완결형 ═══ */
+.insight-card {
+  display: flex; flex-direction: column; gap: 8px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 15px 17px 0; box-shadow: var(--shadow); overflow: hidden;
+}
+.insight-card-title {
+  font-size: 14.5px; font-weight: 750; line-height: 1.45;
+  color: var(--ink-strong); text-wrap: balance;
+}
+.insight-card-body { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
+.insight-card-foot {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: 6px -17px 0; padding: 8px 17px;
+  border-top: 1px solid var(--line); background: var(--bg-soft);
+  font-size: 10.5px; color: var(--ink-mute);
+}
+.insight-card-src { font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+.insight-copy {
+  margin-left: auto; border: 1px solid var(--line); background: var(--bg);
+  border-radius: 6px; padding: 2px 9px; font-size: 10.5px; font-weight: 650;
+  color: var(--ink-soft); cursor: pointer;
+}
+.insight-copy:hover { border-color: var(--blue); color: var(--blue); }
+
+
+/* 비용 예고 상시 스트립 — "클릭 전 판단" 원칙 */
+.estimate-strip {
+  font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  background: var(--bg-soft); border: 1px dashed var(--line); border-radius: 8px;
+  padding: 8px 12px;
+}
+.estimate-strip em { font-style: normal; font-weight: 750; color: var(--yellow); margin-left: 2px; }

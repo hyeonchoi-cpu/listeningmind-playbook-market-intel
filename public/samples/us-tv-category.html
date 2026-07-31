@@ -1,0 +1,293 @@
+<title>미국 TV 카테고리 리포트 (파이프라인) · 2026-07</title>
+<style>
+:root{
+  color-scheme: light;
+  --paper:#fcfcfb; --card:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --ink3:#8a887f;
+  --line:#e7e6e0; --accent:#2a78d6; --accent-soft:#eaf2fc;
+  --s-1:#2a78d6; --s-2:#eb6834; --s-3:#1baf7a;
+  --warn-bg:#faf6ec; --warn-bd:#e3d9b8;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --paper:#161615; --card:#1e1e1c; --ink:#ffffff; --ink2:#c3c2b7; --ink3:#8f8e85;
+    --line:#33332f; --accent:#3987e5; --accent-soft:#1c2a3d;
+    --s-1:#3987e5; --s-2:#d95926; --s-3:#199e70;
+    --warn-bg:#26231a; --warn-bd:#4a4430;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#161615; --card:#1e1e1c; --ink:#ffffff; --ink2:#c3c2b7; --ink3:#8f8e85;
+  --line:#33332f; --accent:#3987e5; --accent-soft:#1c2a3d;
+  --s-1:#3987e5; --s-2:#d95926; --s-3:#199e70;
+  --warn-bg:#26231a; --warn-bd:#4a4430;
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --paper:#fcfcfb; --card:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --ink3:#8a887f;
+  --line:#e7e6e0; --accent:#2a78d6; --accent-soft:#eaf2fc;
+  --s-1:#2a78d6; --s-2:#eb6834; --s-3:#1baf7a;
+  --warn-bg:#faf6ec; --warn-bd:#e3d9b8;
+}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  line-height:1.6;margin:0;padding:0 20px 80px;}
+.wrap{max-width:960px;margin:0 auto;}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--accent);font-weight:700;margin:48px 0 8px;}
+h1{font-size:32px;line-height:1.25;margin:0 0 6px;text-wrap:balance;font-weight:800;}
+.sub{color:var(--ink2);font-size:14.5px;margin:0 0 4px;}
+.owner{display:inline-block;margin-top:10px;padding:4px 12px;border:1px solid var(--accent);border-radius:20px;
+  font-size:12.5px;font-weight:700;color:var(--accent);}
+.lede{font-size:15.5px;color:var(--ink);max-width:68ch;margin:16px 0 0;}
+.lede b{color:var(--accent);}
+h2{font-size:20px;margin:0 0 4px;font-weight:750;}
+.shead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.shead .no{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;color:var(--ink3);}
+.shead .hint{margin-left:auto;font-size:12px;color:var(--ink3);}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+  padding:2px 8px;border-radius:20px;vertical-align:2px;}
+.b-measured{background:var(--accent-soft);color:var(--accent);}
+.b-derived{background:var(--line);color:var(--ink2);}
+.banner{margin:28px 0 0;padding:12px 16px;border:1px solid var(--warn-bd);background:var(--warn-bg);
+  border-radius:8px;font-size:13.5px;color:var(--ink2);}
+.banner b{color:var(--ink);}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:24px 0 0;}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+.kpi .l{font-size:12px;color:var(--ink3);letter-spacing:.04em;font-weight:600;}
+.kpi .v{font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;margin:2px 0 0;line-height:1.2;}
+.kpi .d{font-size:12.5px;color:var(--ink2);margin-top:2px;}
+.up{color:var(--s-3);font-weight:700;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:20px 0 0;}
+.card .note{font-size:12.5px;color:var(--ink3);margin-top:10px;}
+.chartbox{overflow-x:auto;margin-top:14px;}
+svg{display:block;}
+svg text{font-family:inherit;font-variant-numeric:tabular-nums;}
+.bar-rows{display:flex;flex-direction:column;margin-top:14px;}
+.bar-row{display:grid;grid-template-columns:170px 1fr 120px 60px;align-items:center;gap:10px;padding:6px 0;}
+.bar-row.head{padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:4px;font-size:11px;color:var(--ink3);}
+.bar-row .name{font-size:12.5px;font-weight:650;line-height:1.3;color:var(--ink);}
+.bar-row .name .cat{display:block;font-weight:400;font-size:10px;color:var(--ink3);}
+.bar-row .name .cat.channel{color:var(--s-2);}
+.bar-track{background:var(--paper);border-radius:3px;height:16px;position:relative;overflow:hidden;border:1px solid var(--line);}
+.bar-fill{height:100%;background:var(--s-1);border-radius:3px 0 0 3px;}
+.bar-fill.generic{background:var(--ink3);opacity:.45;}
+.bar-fill.seg{background:var(--s-3);}
+.bar-row .share{font-size:12px;font-variant-numeric:tabular-nums;color:var(--ink2);text-align:right;}
+.bar-row .trend{font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink3);}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+.vscard{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--paper);}
+.vscard h3{margin:0 0 8px;font-size:13.5px;}
+.vscard .big{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;}
+.vscard .big.lg{color:var(--s-1);}
+.vscard .big.ss{color:var(--s-2);}
+.vscard .d{font-size:12px;color:var(--ink2);}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin-top:14px;}
+th{text-align:left;font-size:12px;color:var(--ink3);letter-spacing:.05em;border-bottom:2px solid var(--line);padding:8px 10px;}
+td{border-bottom:1px solid var(--line);padding:9px 10px;vertical-align:top;color:var(--ink2);}
+td:first-child{color:var(--ink);font-weight:650;}
+tr.group td{border-bottom:none;padding:16px 10px 4px;font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.05em;}
+tr.group.g-now td{color:var(--s-3);}
+tr.group.g-watch td{color:var(--accent);}
+tr.group.g-risk td{color:var(--s-2);}
+.veil{display:block;font-size:11.5px;color:var(--ink3);margin-top:3px;font-weight:400;}
+.sc{display:inline-block;font-size:10.5px;font-weight:750;padding:1px 7px;border-radius:4px;margin-right:5px;vertical-align:1px;}
+.sc-l{background:var(--accent-soft);color:var(--accent);}
+.sc-m{background:var(--line);color:var(--ink2);}
+.sc-s{background:transparent;border:1px solid var(--line);color:var(--ink3);}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:stretch;}
+.stage{flex:1 1 160px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--paper);min-width:150px;}
+.stage .n{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em;}
+.stage .t{font-weight:750;font-size:14.5px;margin:2px 0 4px;}
+.stage .q{font-size:12.5px;color:var(--ink2);}
+.stage .q code{background:var(--line);border-radius:4px;padding:0 5px;font-size:11.5px;}
+.foot{margin-top:36px;font-size:12.5px;color:var(--ink3);border-top:1px solid var(--line);padding-top:18px;}
+.foot b{color:var(--ink2);}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--paper);font-size:12px;
+  padding:4px 9px;border-radius:6px;opacity:0;transition:opacity .12s;font-variant-numeric:tabular-nums;z-index:9;}
+@media (prefers-reduced-motion: reduce){.tip{transition:none;}}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">DATABRICKS PIPELINE · US MARKET INTELLIGENCE</div>
+  <h1>미국 TV 카테고리 리포트</h1>
+  <p class="sub">데이터 파이프라인 적재 기반 · 스냅샷 run_date=2026-07-01 · 수집 2026-07-14 · 재적재(v2 수정) 2026-07-29 (gl=us)</p>
+  <p class="sub">소스: us_tv_2026-07 골드 테이블 6종 — keywords_master 30,511 · keyword_monthly 1.47M행 · 시드 81개(L1~L5) · 커버리지 80% [가정]</p>
+  <span class="owner">실행 주체 · LG 브랜드매니저 관점</span>
+
+  <p class="lede">
+    파이프라인 골드 테이블(<b>TAM·SOV·Trend·Persona·Journey·Opportunity</b>)을 재집계해 TV 카테고리 전체를
+    진단했습니다. LM API 재호출 없이 적재 데이터만 사용(추가 크레딧 0). 배지 매핑: <b>MEASURED</b>=파이프라인
+    [실제데이터] · <b>DERIVED</b>=[추정]. 세그먼트 축·페르소나·기회점수는 2026-07-29 골드 수정(v2) 반영분입니다.
+  </p>
+
+  <div class="banner"><b>분석 준비도: READY WITH LIMITS</b> — ① 첫 회차 스냅샷이라 세그먼트 growth는 API volume_trend 폴백 + v2 월별 재집계(스냅샷 diff는 2026-08부터) ② 무브랜드(Generic) 수요가 57.6%로 브랜드 SoV 분모의 구조적 한계(QC WARN) ③ 성·연령 인구통계는 gl=kr 전용 사양 — 미국 분석에서 미제공 ④ 기회 상위에 잔여 노이즈(itvx·azteca 7 등 해외 방송 서비스) 존재 ⑤ 수집 시점 07-14로 최신 2주 미반영 ⑥ <b>노이즈 flag 키워드가 볼륨 기준 ~93%</b> — 키워드수 기준 QC(27.2%)가 볼륨 오염을 과소평가하므로 총량 지표는 반드시 노이즈 제외 기준으로 읽을 것(본 리포트는 유효 수요 기준으로 정정 완료). 이 경계 안에서만 결론을 제시합니다.</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="l">TAM 월평균 검색량</div><div class="v">61.2M</div><div class="d">22,223 유효 키워드 합산 (측정)</div></div>
+    <div class="kpi"><div class="l">유효 수요 YoY (노이즈 제외)</div><div class="v" style="color:var(--s-2);">−10.0%</div><div class="d">최근 12개월 847M vs 이전 941M (파생) · 노이즈 포함 총량은 +5.9%로 착시</div></div>
+    <div class="kpi"><div class="l">LG SoV — 전체 vs OLED</div><div class="v">4.3% → 24.1%</div><div class="d">세그먼트 역전 · OLED 내 브랜드 1위 (측정)</div></div>
+    <div class="kpi"><div class="l">구매 의도(T+C) 비중</div><div class="v">61.5%</div><div class="d">Transactional 50.1% + Commercial 11.3% (측정)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">01</span><h2>수요 트렌드·시즌성(Demand & Seasonality)</h2><span class="badge b-measured">MEASURED</span><span class="hint">trend · keyword_monthly 1.47M행 월별 합산</span></div>
+    <p class="sub">TV 카테고리 <b>유효 수요</b>(노이즈 제외) 월별 총검색량 · 최근 24개월 (단위: 백만 건) · 피크 표시</p>
+    <div class="chartbox">
+    <svg id="trend" viewBox="0 0 880 290" width="880" height="290" role="img" aria-label="TV 카테고리 유효 수요 월별 검색량 최근 24개월">
+      <g stroke="var(--line)" stroke-width="1">
+        <line x1="50" y1="240" x2="850" y2="240"/>
+        <line x1="50" y1="154.7" x2="850" y2="154.7" stroke-dasharray="3 4"/>
+        <line x1="50" y1="69.5" x2="850" y2="69.5" stroke-dasharray="3 4"/>
+      </g>
+      <g fill="var(--ink3)" font-size="11">
+        <text x="44" y="244" text-anchor="end">0</text>
+        <text x="44" y="158" text-anchor="end">50M</text>
+        <text x="44" y="73" text-anchor="end">100M</text>
+        <text x="258.7" y="262" text-anchor="middle">2025</text>
+        <text x="676.1" y="262" text-anchor="middle">2026</text>
+      </g>
+      <path d="M50.0,97.2 L84.8,108.7 L119.6,101.2 L154.3,99.9 L189.1,30.5 L223.9,71.6 L258.7,97.8 L293.5,137.4 L328.3,127.0 L363.0,139.5 L397.8,134.1 L432.6,128.8 L467.4,120.1 L502.2,115.5 L537.0,120.6 L571.7,119.0 L606.5,70.0 L641.3,100.3 L676.1,114.5 L710.9,136.7 L745.7,130.6 L780.4,140.3 L815.2,135.6 L850.0,130.9 L850,240 L50,240 Z"
+        fill="var(--accent)" opacity="0.10"/>
+      <polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"
+        points="50.0,97.2 84.8,108.7 119.6,101.2 154.3,99.9 189.1,30.5 223.9,71.6 258.7,97.8 293.5,137.4 328.3,127.0 363.0,139.5 397.8,134.1 432.6,128.8 467.4,120.1 502.2,115.5 537.0,120.6 571.7,119.0 606.5,70.0 641.3,100.3 676.1,114.5 710.9,136.7 745.7,130.6 780.4,140.3 815.2,135.6 850.0,130.9"/>
+      <g fill="var(--accent)">
+        <circle cx="189.1" cy="30.5" r="4"/><circle cx="606.5" cy="70.0" r="4"/>
+      </g>
+      <g fill="var(--ink2)" font-size="11" font-weight="700">
+        <text x="196" y="27">'24.11 · 123M</text>
+        <text x="606.5" y="62" text-anchor="middle">'25.11 · 100M (−19% YoY)</text>
+      </g>
+      <line id="xh" x1="0" y1="20" x2="0" y2="240" stroke="var(--ink3)" stroke-width="1" opacity="0"/>
+      <rect id="hover" x="50" y="20" width="800" height="220" fill="transparent"/>
+    </svg>
+    </div>
+    <p class="note"><b>정정(v2 재계산)</b> — 초판의 "+5.9% YoY·10월 피크"는 노이즈 포함 총량(월 1.1~1.9B)의 착시였음: 노이즈 flag 키워드가 <b>볼륨 기준 ~93%</b>를 차지(시청·스트리밍 쿼리), 10월 피크는 가을 방송 개편 시청 수요였음. 노이즈 제외 유효 수요로 다시 읽으면 — ① 피크는 <b>11월 블프</b>('24.11 123M → '25.11 100M, −19% YoY)로 스킬 리포트와 정합 ② 유효 수요는 <b>−10.0% YoY</b> 축소 ③ v1 골드 리포트의 "9~1월 성수기·1월 피크 우상향" 서술도 같은 노이즈 아티팩트. 검색량 기준이며 판매량이 아님.</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">02</span><h2>시장 규모·세그먼트 구성(TAM)</h2><span class="badge b-measured">MEASURED</span><span class="hint">tam_analysis · category_lvl2 축 (v2 신설)</span></div>
+    <p class="sub">세그먼트별 월평균 검색량 합산 · 점유율은 카테고리 총량 대비</p>
+    <div class="bar-rows">
+      <div class="bar-row head"><span></span><span>카테고리 총량 대비</span><span style="text-align:right;">월평균 · 비중</span><span style="text-align:right;">YoY</span></div>
+      <div class="bar-row"><span class="name">TV 일반<small class="cat">브랜드·용도 미특정 수요</small></span><div class="bar-track"><div class="bar-fill seg" style="width:100%"></div></div><span class="share">39.4M · 64.5%</span><span class="trend down">▼11.2%</span></div>
+      <div class="bar-row"><span class="name">스마트TV 플랫폼<small class="cat">OS·앱·스트리밍 기기</small></span><div class="bar-track"><div class="bar-fill seg" style="width:28.3%"></div></div><span class="share">11.2M · 18.3%</span><span class="trend down">▼7.8%</span></div>
+      <div class="bar-row"><span class="name">사이즈 일반<small class="cat">인치 중심 탐색</small></span><div class="bar-track"><div class="bar-fill seg" style="width:17.0%"></div></div><span class="share">6.7M · 10.9%</span><span class="trend down">▼15.9%</span></div>
+      <div class="bar-row"><span class="name">OLED TV<small class="cat">패널 세그먼트</small></span><div class="bar-track"><div class="bar-fill seg" style="width:5.2%"></div></div><span class="share">2.1M · 3.4%</span><span class="trend up">▲2.8%</span></div>
+      <div class="bar-row"><span class="name">QLED/LCD<small class="cat">패널 세그먼트</small></span><div class="bar-track"><div class="bar-fill seg" style="width:1.9%"></div></div><span class="share">0.74M · 1.2%</span><span class="trend up">▲58.6%</span></div>
+      <div class="bar-row"><span class="name">기타 4개 세그먼트<small class="cat">4K/UHD·초대형·라이프스타일·8K</small></span><div class="bar-track"><div class="bar-fill seg" style="width:2.7%"></div></div><span class="share">1.1M · 1.8%</span><span class="trend"></span></div>
+    </div>
+    <p class="note">DERIVED — YoY는 세그먼트별 월별 검색량(노이즈 제외)의 최근 12개월 vs 이전 12개월(v2 추가 집계). <b>"OLED 소외 가설" 검증 결과: 반증</b> — 유효 수요 전체가 −10.0%로 축소되는 가운데 ① 볼륨 상위 3개 세그먼트(비수요 언어)는 −8~−16% 하락 ② OLED는 +2.8%로 보합·유지(스킬 리포트의 −45%는 헤드 쿼리 "oled tv" 단독 기준 — 세그먼트 전체 2,207개는 모델명 쿼리 성장이 헤드 하락을 상쇄) ③ 진짜 성장은 <b>QLED/LCD +58.6%</b>. 패널 특정 수요(4.6%)만이 축소 카테고리 안에서 성장 중.</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">03</span><h2>브랜드별 검색 점유율(SoV) — 세그먼트 역전</h2><span class="badge b-measured">MEASURED</span><span class="hint">sov_analysis · segment 축 (v2 신설) · SoV는 검색량 기준 근사</span></div>
+    <p class="sub">카테고리 전체(ALL) 상위 브랜드 · Generic(무브랜드)은 참고용 — 브랜드 아님</p>
+    <div class="bar-rows">
+      <div class="bar-row head"><span></span><span>전체 검색 대비</span><span style="text-align:right;">월평균 · SoV</span><span></span></div>
+      <div class="bar-row"><span class="name">Generic<small class="cat">무브랜드(카테고리 일반) — 브랜드 아님</small></span><div class="bar-track"><div class="bar-fill generic" style="width:100%"></div></div><span class="share">35.2M · 58.6%</span><span class="trend"></span></div>
+      <div class="bar-row"><span class="name">삼성<small class="cat">제조사</small></span><div class="bar-track"><div class="bar-fill" style="width:23.9%"></div></div><span class="share">8.4M · 14.0%</span><span class="trend"></span></div>
+      <div class="bar-row"><span class="name">Roku<small class="cat">플랫폼 겸 제조 브랜드 · 단독 'roku' 쿼리(월 1.0M) 제외</small></span><div class="bar-track"><div class="bar-fill" style="width:12.6%"></div></div><span class="share">4.4M · 7.4%</span><span class="trend"></span></div>
+      <div class="bar-row"><span class="name">LG<small class="cat">제조사</small></span><div class="bar-track"><div class="bar-fill" style="width:7.3%"></div></div><span class="share">2.6M · 4.3%</span><span class="trend"></span></div>
+      <div class="bar-row"><span class="name">Amazon · Vizio · TCL · Sony 외<small class="cat">제조사·플랫폼 23개</small></span><div class="bar-track"><div class="bar-fill" style="width:24.7%"></div></div><span class="share">합 8.7M · 14.5%</span><span class="trend"></span></div>
+    </div>
+    <div class="vs">
+      <div class="vscard"><h3>OLED TV 세그먼트 (2.1M/월)</h3>
+        <div class="big lg">LG 24.1%</div>
+        <div class="d">vs 삼성 13.6% · 소니 2.6% — Generic(59.0%) 제외 브랜드 기준 <b>LG ≈59%</b>로 지배. 스킬 리포트(oled tv 허브 실측 63%)와 교차검증 일치</div>
+      </div>
+      <div class="vscard"><h3>QLED/LCD 세그먼트 (0.74M/월)</h3>
+        <div class="big ss">삼성 33.7%</div>
+        <div class="d">vs LG 5.1% · 소니 2.8% — 정확히 역전된 구도. 삼성의 카테고리 2위(13.8%)는 QLED 세그먼트 지배가 견인</div>
+      </div>
+    </div>
+    <p class="note">DERIVED — [가정] 단독 기업명 쿼리(키워드=별칭 그 자체, 이번 회차 'roku' 월 1.0M)는 의도 불명(주가·채용·타제품)이라 SoV에서 제외 — 결합형(samsung tv 등)·제품 별칭 단독(bravia 등)은 유지. v1 골드는 카테고리 총량 한 시점만 제공해 "삼성이 LG의 3배"로만 읽혔으나, 세그먼트 축 도입으로 <b>패널 기술별 역전 구도</b>가 드러남. LG 관점: 카테고리 4.2%는 열세가 아니라 "OLED 특화 포지션"의 산술적 결과 — OLED 세그먼트 비중(3.4%)이 곧 LG 브랜드 검색의 상한을 규정. Roku 8.9%는 v3 노이즈 룰(플랫폼 콘텐츠·계정 flag) 적용 후 기기 수요만 잔존한 수치(v1 10.6%에서 하향).</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">04</span><h2>검색 의도 구성(Intent Mix) — 페르소나 대체</h2><span class="badge b-measured">MEASURED</span><span class="hint">persona_analysis · 인텐트 단일 축 (v2 재정의)</span></div>
+    <p class="sub">성·연령은 gl=kr 전용 사양으로 미국 분석에서 미제공 — 인텐트 축으로만 제공 (label_demography=데이터공백)</p>
+    <div class="bar-rows">
+      <div class="bar-row head"><span></span><span>볼륨 비중</span><span style="text-align:right;">키워드수 · 비중</span><span></span></div>
+      <div class="bar-row"><span class="name">Transactional<small class="cat">구매·행동 직결</small></span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="share">7,315 · 50.1%</span><span class="trend"></span></div>
+      <div class="bar-row"><span class="name">Informational<small class="cat">정보 탐색</small></span><div class="bar-track"><div class="bar-fill" style="width:60.8%"></div></div><span class="share">11,913 · 30.5%</span><span class="trend"></span></div>
+      <div class="bar-row"><span class="name">Commercial<small class="cat">비교·검토</small></span><div class="bar-track"><div class="bar-fill" style="width:22.6%"></div></div><span class="share">2,231 · 11.3%</span><span class="trend"></span></div>
+      <div class="bar-row"><span class="name">Navigational<small class="cat">특정 목적지 이동</small></span><div class="bar-track"><div class="bar-fill" style="width:16.1%"></div></div><span class="share">764 · 8.1%</span><span class="trend"></span></div>
+    </div>
+    <p class="note">DERIVED — 구매 직결(T+C) 비중 61.5%. Navigational 대표 키워드에 lg tvs·lg televisions 포함 — LG 브랜드 직접 탐색 트래픽 존재(측정). v1의 "M-20s 페르소나 4종"은 demography 부재 시 기본값이 채워지던 골드 결함의 산물로 v2에서 폐기.</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">05</span><h2>기회 키워드(Opportunity Keywords) 상위</h2><span class="badge b-derived">DERIVED</span><span class="hint">opportunity_analysis · v2 산식: log(vol)×(1−경쟁)×(1+성장캡)×인텐트가중</span></div>
+    <p class="sub">임팩트 스케일 = 연환산 검색량: <span class="sc sc-l">L</span>10만+ · <span class="sc sc-m">M</span>1만~10만 · <span class="sc sc-s">S</span>1만 미만</p>
+    <table>
+      <thead><tr><th>키워드</th><th>기회점수</th><th>근거 (측정)</th><th>해석</th></tr></thead>
+      <tbody>
+        <tr><td>best tv / best tvs</td><td>100.0</td><td><span class="sc sc-l">L</span>월 280.5K · LOW 경쟁 · Commercial</td><td>카테고리 헤드 진입로 — 비교·추천 콘텐츠 기회 1순위</td></tr>
+        <tr><td>fire tv stick hd</td><td>97.0</td><td><span class="sc sc-l">L</span>월 39.7K · LOW · Transactional</td><td>스트리밍 기기 인접 수요(제조사 직접 기회 아님)</td></tr>
+        <tr><td>samsung crystal uhd 4k smart tv</td><td>90.3</td><td><span class="sc sc-l">L</span>월 11.6K · LOW · Transactional</td><td>경쟁사 보급형 모델 수요 — 삼성 볼륨존 신호</td></tr>
+        <tr><td>lg c series oled tv</td><td>79.1</td><td><span class="sc sc-m">M</span>월 6.8K · LOW · Transactional</td><td><b>LG 최고 기회 키워드</b> — C시리즈 시리즈명 검색 저경쟁 선점</td></tr>
+        <tr><td>roku tv best buy</td><td>76.1</td><td><span class="sc sc-m">M</span>월 8.0K · LOW · Transactional</td><td>브랜드×리테일 결합 수요 패턴 — LG×양판 결합 벤치마크</td></tr>
+      </tbody>
+    </table>
+    <p class="note">v1 상위를 독식하던 시청·편성 쿼리(courts tv·grit tv·roku channels)는 인텐트 가중+v3 노이즈 룰로 제거. 잔여 노이즈(itvx 98.9 · azteca 7 81.2 — 해외 방송 서비스)는 표에서 제외했으며 차기 노이즈 룰 후보(준비도 배너 ④).</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">06</span><h2>검색 여정(CDJ) — LG 브랜드 경로</h2><span class="badge b-measured">MEASURED</span><span class="hint">journey_analysis · path:lg tv:* 발췌 · 전 단계 BOFU 태깅</span></div>
+    <div class="flow">
+      <div class="stage"><div class="n">ENTRY</div><div class="t">브랜드 직진입</div><div class="q"><code>lg tv</code> — Navigational 트래픽 보유(04 참조)</div></div>
+      <div class="stage"><div class="n">SPEC</div><div class="t">사이즈 구체화</div><div class="q"><code>lg tv 65</code> → <code>lg 65 inch tv</code></div></div>
+      <div class="stage"><div class="n">PANEL</div><div class="t">패널 상향</div><div class="q">→ <code>lg oled 65</code> — 사이즈에서 OLED로 상향 이동</div></div>
+      <div class="stage"><div class="n">FIT</div><div class="t">설치 검증</div><div class="q">→ <code>dimensions</code> · <code>smart</code> — 구매 직전 확인</div></div>
+    </div>
+    <p class="note">DERIVED — LG 브랜드 여정은 브랜드→사이즈→패널(OLED)→설치검증의 BOFU 일관 구조. 스킬 리포트의 카테고리 여정(개념→비교→브랜드)과 상호보완: 브랜드 인입 후에는 비교 관문 없이 스펙 구체화로 직행 — <b>브랜드 선행 인지가 비교전을 우회시키는 구조</b>.</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">07</span><h2>기회 백로그(Opportunity Backlog) — LG 브랜드매니저 관점</h2><span class="badge b-derived">DERIVED</span><span class="hint">TAM·SOV·Persona·Journey·Opportunity 통합 · 의사결정 지원 참고용</span></div>
+    <p class="sub">임팩트 스케일 = 근거 쿼리군 연환산 검색량: <span class="sc sc-l">L</span>10만+ · <span class="sc sc-m">M</span>1만~10만 · <span class="sc sc-s">S</span>1만 미만</p>
+    <table>
+      <thead><tr><th>기회</th><th>근거 (측정)</th><th>LG 액션</th></tr></thead>
+      <tbody>
+        <tr class="group g-now"><td colspan="3">지금 대응할 변화</td></tr>
+        <tr><td>카테고리 헤드("best tv") 진입</td><td><span class="sc sc-l">L</span>월 280.5K·LOW 경쟁·Commercial — 기회점수 100</td><td>OLED 우위를 카테고리 비교 콘텐츠로 번역("best tv = OLED = LG" 서사)<span class="veil">비교 우위 주장은 제3자 리뷰 근거 병기 — 스킬 리포트 RTB(rtings·reddit 의존)와 동일 규율</span></td></tr>
+        <tr><td>C시리즈 시리즈명 수요 선점</td><td><span class="sc sc-m">M</span>lg c series oled tv 월 6.8K·LOW — LG 최고 기회점수(79.1)</td><td>시리즈 허브 랜딩(c1~c6 세대 비교) 구축·검색 광고 저비용 선점</td></tr>
+        <tr class="group g-watch"><td colspan="3">계속 지켜볼 변화</td></tr>
+        <tr><td>세그먼트 상한 돌파</td><td><span class="sc sc-l">L</span>OLED 세그먼트 비중 3.4%(2.1M/월)와 LG 카테고리 SoV 4.2%가 산술적으로 동행 — 세그먼트 YoY +2.8%로 보합</td><td>OLED 세그먼트 자체를 키우는 카테고리 교육 투자 병행 검토<span class="veil">헤드 쿼리("oled tv")는 하락, 모델명 쿼리는 성장 — 세그먼트 내 관심이 모델 레벨로 이동 중(파생, v2 집계)</span></td></tr>
+        <tr><td>브랜드×리테일 결합 수요</td><td><span class="sc sc-m">M</span>roku tv best buy 패턴 · 스킬 리포트의 lg oled tv costco ▲38%와 동일 구조</td><td>양판·클럽 채널 결합 검색 광고 확장</td></tr>
+        <tr class="group g-risk"><td colspan="3">위험 신호</td></tr>
+        <tr><td>QLED 세그먼트 급성장 + 완패 구도</td><td><span class="sc sc-m">M</span>QLED/LCD <b>+58.6% YoY</b>(전 세그먼트 중 유일한 급성장) × 삼성 33.7% vs LG 5.1% 독주</td><td>보급형 라인 검색 존재감 점검 — 축소 카테고리에서 유일하게 크는 세그먼트를 경쟁사가 지배하는 이중 위험. OLED 프리미엄 집중의 트레이드오프를 의사결정으로 명시<span class="veil">⚠ v2 세그먼트×추세 집계로 성장 증거 확보 — 스냅샷 diff 검증은 2026-08 재적재에서 재확인</span></td></tr>
+        <tr><td>유효 수요 축소 국면</td><td><span class="sc sc-l">L</span>노이즈 제외 카테고리 유효 수요 −10.0% YoY · 블프 피크 −19%('24.11 123M→'25.11 100M)</td><td>수요 총량 성장 가정의 계획은 재검토 — 축소 시장의 점유 싸움으로 전제 전환</td></tr>
+        <tr><td>무브랜드 수요 과반</td><td><span class="sc sc-l">L</span>Generic 57.6% — 단, 무브랜드 수요의 본체(TV 일반)도 −11.2%로 축소 중</td><td>무브랜드→브랜드 전환 콘텐츠(비교·가이드)가 SoV 수치보다 큰 전장임을 전제로 예산 배분</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    <b>방법·한계</b> — 소스: us_tv_2026-07 파이프라인 골드 테이블 6종(2026-07-29 v2 재적재: 세그먼트 축·페르소나 재정의·기회 산식 보정·growth 폴백·노이즈 룰 v3) + 수요 추이·세그먼트 YoY는 silver keyword_monthly 1.47M행의 노이즈 제외 재집계(v2 정정 — 초판의 노이즈 포함 +5.9%·10월 피크 서술 폐기). 원 수집 2026-07-14, 크레딧 211,430(수집 시) · 본 리포트 추가 크레딧 <b>0</b>. QC: BLOCK 9종 전부 PASS, WARN 2종(generic_brand_pct 57.6% · cluster_coverage 19.8%) · 개선 권고: 볼륨 기준 노이즈 비율(noise_volume_pct ≈93%) QC 신설.<br><br>
+    <b>가드레일</b> — ① 모든 수치는 검색량 기준이며 판매·점유율·실사용 성능이 아님 ② SoV는 검색량 기준 근사, Generic(무브랜드)은 브랜드 순위에서 분리 표기 ③ 세그먼트 역전 해석은 태깅 룰북(brand_rules v2·category_rules v1) 의존 — 룰북 변경 시 수치 변동 ④ 카테고리 성장(+5.9%)은 시청·편성 쿼리 잔존분 포함 총량이므로 수상기 구매 수요 성장으로 단정 금지 ⑤ 성·연령은 gl=kr 전용 사양으로 미제공 — 세그먼트 판단은 인텐트·쿼리 언어 근거로만 ⑥ 파이프라인 [실제데이터]/[추정] 레이블을 MEASURED/DERIVED 배지로 매핑, [가정]은 본문에 명시.
+  </div>
+</div>
+
+<div class="tip" id="tip"></div>
+<script>
+(function(){
+  var months=["2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"];
+  var vals=[84,77,81,82,123,99,83,60,66,59,62,65,70,73,70,71,100,82,74,61,64,58,61,64];
+  var svg=document.getElementById('trend'),hover=document.getElementById('hover'),
+      xh=document.getElementById('xh'),tip=document.getElementById('tip');
+  if(!svg||!hover)return;
+  var n=vals.length, step=800/(n-1);
+  hover.addEventListener('mousemove',function(e){
+    var r=svg.getBoundingClientRect(),sx=r.width/880;
+    var px=(e.clientX-r.left)/sx;
+    var i=Math.round((px-50)/step); i=Math.max(0,Math.min(n-1,i));
+    var x=50+i*step;
+    xh.setAttribute('x1',x);xh.setAttribute('x2',x);xh.setAttribute('opacity','0.5');
+    tip.textContent=months[i]+' · '+vals[i]+'M';
+    tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY-30)+'px';tip.style.opacity='1';
+  });
+  hover.addEventListener('mouseleave',function(){xh.setAttribute('opacity','0');tip.style.opacity='0';});
+})();
+</script>

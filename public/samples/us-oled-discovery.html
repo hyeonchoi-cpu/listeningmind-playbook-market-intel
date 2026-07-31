@@ -1,0 +1,235 @@
+<title>미국 OLED TV 신규 세그먼트 발굴 · 2026-07</title>
+<style>
+:root{
+  color-scheme: light;
+  --paper:#fcfcfb; --card:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --ink3:#8a887f;
+  --line:#e7e6e0; --accent:#2a78d6; --accent-soft:#eaf2fc;
+  --s-1:#2a78d6; --s-2:#eb6834; --s-3:#1baf7a;
+  --warn-bg:#faf6ec; --warn-bd:#e3d9b8;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --paper:#161615; --card:#1e1e1c; --ink:#ffffff; --ink2:#c3c2b7; --ink3:#8f8e85;
+    --line:#33332f; --accent:#3987e5; --accent-soft:#1c2a3d;
+    --s-1:#3987e5; --s-2:#d95926; --s-3:#199e70;
+    --warn-bg:#26231a; --warn-bd:#4a4430;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:#161615; --card:#1e1e1c; --ink:#ffffff; --ink2:#c3c2b7; --ink3:#8f8e85;
+  --line:#33332f; --accent:#3987e5; --accent-soft:#1c2a3d;
+  --s-1:#3987e5; --s-2:#d95926; --s-3:#199e70;
+  --warn-bg:#26231a; --warn-bd:#4a4430;
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --paper:#fcfcfb; --card:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --ink3:#8a887f;
+  --line:#e7e6e0; --accent:#2a78d6; --accent-soft:#eaf2fc;
+  --s-1:#2a78d6; --s-2:#eb6834; --s-3:#1baf7a;
+  --warn-bg:#faf6ec; --warn-bd:#e3d9b8;
+}
+body{background:var(--paper);color:var(--ink);
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  line-height:1.6;margin:0;padding:0 20px 80px;}
+.wrap{max-width:960px;margin:0 auto;}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--accent);font-weight:700;margin:48px 0 8px;}
+h1{font-size:32px;line-height:1.25;margin:0 0 6px;text-wrap:balance;font-weight:800;}
+.sub{color:var(--ink2);font-size:14.5px;margin:0 0 4px;}
+.owner{display:inline-block;margin-top:10px;padding:4px 12px;border:1px solid var(--accent);border-radius:20px;
+  font-size:12.5px;font-weight:700;color:var(--accent);}
+.lede{font-size:15.5px;color:var(--ink);max-width:68ch;margin:16px 0 0;}
+.lede b{color:var(--accent);}
+h2{font-size:20px;margin:0 0 4px;font-weight:750;}
+.shead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+.shead .no{font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12px;color:var(--ink3);}
+.shead .hint{margin-left:auto;font-size:12px;color:var(--ink3);}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+  padding:2px 8px;border-radius:20px;vertical-align:2px;}
+.b-measured{background:var(--accent-soft);color:var(--accent);}
+.b-derived{background:var(--line);color:var(--ink2);}
+.banner{margin:28px 0 0;padding:12px 16px;border:1px solid var(--warn-bd);background:var(--warn-bg);
+  border-radius:8px;font-size:13.5px;color:var(--ink2);}
+.banner b{color:var(--ink);}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:24px 0 0;}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+.kpi .l{font-size:12px;color:var(--ink3);letter-spacing:.04em;font-weight:600;}
+.kpi .v{font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;margin:2px 0 0;line-height:1.2;}
+.kpi .d{font-size:12.5px;color:var(--ink2);margin-top:2px;}
+.up{color:var(--s-3);font-weight:700;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:20px 0 0;}
+.card .note{font-size:12.5px;color:var(--ink3);margin-top:10px;}
+.funnel{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:stretch;}
+.fstep{flex:1 1 140px;border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--paper);min-width:130px;}
+.fstep .n{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em;}
+.fstep .t{font-weight:750;font-size:14px;margin:2px 0 2px;}
+.fstep .v{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;}
+.fstep .q{font-size:11.5px;color:var(--ink2);}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin-top:14px;}
+th{text-align:left;font-size:12px;color:var(--ink3);letter-spacing:.05em;border-bottom:2px solid var(--line);padding:8px 10px;}
+td{border-bottom:1px solid var(--line);padding:9px 10px;vertical-align:top;color:var(--ink2);font-variant-numeric:tabular-nums;}
+td:first-child{color:var(--ink);font-weight:650;}
+tr.group td{border-bottom:none;padding:16px 10px 4px;font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.05em;}
+tr.group.g-now td{color:var(--s-3);}
+tr.group.g-watch td{color:var(--accent);}
+tr.group.g-risk td{color:var(--s-2);}
+.veil{display:block;font-size:11.5px;color:var(--ink3);margin-top:3px;font-weight:400;}
+.sc{display:inline-block;font-size:10.5px;font-weight:750;padding:1px 7px;border-radius:4px;margin-right:5px;vertical-align:1px;}
+.sc-l{background:var(--accent-soft);color:var(--accent);}
+.sc-m{background:var(--line);color:var(--ink2);}
+.sc-s{background:transparent;border:1px solid var(--line);color:var(--ink3);}
+.segs{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px;margin-top:14px;}
+.seg{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--paper);}
+.seg.confirmed{border-left:4px solid var(--s-3);}
+.seg.watch{border-left:4px solid var(--accent);border-style:solid solid solid solid;opacity:.92;}
+.seg h3{margin:0 0 2px;font-size:15px;}
+.seg .st{font-size:10.5px;font-weight:750;text-transform:uppercase;letter-spacing:.05em;}
+.seg.confirmed .st{color:var(--s-3);}
+.seg.watch .st{color:var(--accent);}
+.seg .cep{font-size:12.5px;color:var(--ink2);margin:6px 0;}
+.seg .cep b{color:var(--ink);}
+.seg ul{margin:6px 0 0;padding-left:16px;font-size:12.5px;color:var(--ink2);}
+.seg li{margin:2px 0;}
+.foot{margin-top:36px;font-size:12.5px;color:var(--ink3);border-top:1px solid var(--line);padding-top:18px;}
+.foot b{color:var(--ink2);}
+.tr-up{color:var(--s-3);font-weight:700;}
+.tr-dn{color:var(--s-2);font-weight:700;}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">LISTENINGMIND · US MARKET INTELLIGENCE · SEGMENT DISCOVERY</div>
+  <h1>미국 OLED TV 신규 세그먼트 발굴</h1>
+  <p class="sub">gaming·sports 외 용도·니즈 기반 서브세그먼트 탐색 · 발굴 모집단: 적재본 OLED 키워드 2,216개(스냅샷 07-14) · 실측 검증 2026-07-29 (gl=us)</p>
+  <span class="owner">실행 주체 · LG 브랜드매니저 관점</span>
+
+  <p class="lede">
+    <b>하이브리드 소스</b>로 진행 — 발굴(①~④)은 파이프라인 적재본(0크레딧: OLED 키워드 2,216개 + 여정 293경로
+    + 군집 494노드), 검증(⑤)만 keyword_info 실측(24크레딧). 기지 세그먼트(gaming·sports) 관련 564개
+    키워드를 마스킹한 잔여 신호에서 후보를 추출하고, <b>독립 신호 2개 이상(쿼리군+여정/군집) + 볼륨 하한 +
+    실측 추세</b>의 3중 게이트로 판정했습니다. MEASURED=실측/적재본 · DERIVED=해석.
+  </p>
+
+  <div class="banner"><b>분석 준비도: READY WITH LIMITS</b> — ① 발굴 모집단은 07-14 스냅샷, 검증 실측은 07-29(15일 시차) ② "밝은 거실"·"아트" 후보는 여정 신호 0건 — 쿼리군+실측 추세로만 판정(단일 축 약함) ③ 세그먼트 볼륨은 겹침 가능(한 쿼리가 복수 맥락) — 합산 금지 ④ 검색량 기준이며 판매·수익성이 아님. 이 경계 안에서만 결론을 제시합니다.</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="l">신규 세그먼트 후보</div><div class="v">4+2</div><div class="d">확정 4 · 관찰 2 (탈락 5) (파생)</div></div>
+    <div class="kpi"><div class="l">최고 성장 신호</div><div class="v up">+504%</div><div class="d">transparent oled tv 3개월 추세 (측정)</div></div>
+    <div class="kpi"><div class="l">저경쟁 기회</div><div class="v">경쟁도 1</div><div class="d">oled bright room — 월 3,900·+51%·CPC $0.53 (측정)</div></div>
+    <div class="kpi"><div class="l">오너십 니즈 풀</div><div class="v">641K/년</div><div class="d">케어·수리·수명 쿼리 140개 합산 (측정·적재본)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">01</span><h2>발굴 퍼널(Discovery Funnel)</h2><span class="badge b-measured">MEASURED</span><span class="hint">방법론 6단계 · 적재본+실측 하이브리드</span></div>
+    <div class="funnel">
+      <div class="fstep"><div class="n">STEP 1</div><div class="t">모집단</div><div class="v">2,216</div><div class="q">적재본 OLED 키워드 (노이즈 제외)</div></div>
+      <div class="fstep"><div class="n">STEP 2</div><div class="t">기지 마스킹</div><div class="v">−564</div><div class="q">gaming·sports 토큰 제거</div></div>
+      <div class="fstep"><div class="n">STEP 3</div><div class="t">맥락 프로브</div><div class="v">11</div><div class="q">용도·공간·니즈 패턴 스캔</div></div>
+      <div class="fstep"><div class="n">STEP 4</div><div class="t">교차 게이트</div><div class="v">6</div><div class="q">쿼리군+여정/군집 독립 2신호</div></div>
+      <div class="fstep"><div class="n">STEP 5</div><div class="t">실측 검증</div><div class="v">24개</div><div class="q">대표 쿼리 볼륨·추세·경쟁 (1콜)</div></div>
+      <div class="fstep"><div class="n">STEP 6</div><div class="t">판정</div><div class="v">4+2</div><div class="q">확정 4 · 관찰 2</div></div>
+    </div>
+    <p class="note">게이트 기준 — 독립 신호 2개 이상(근거 쿼리군 + 여정/군집 동시출현), 연환산 볼륨 하한(S 미만 탈락), 실측 추세 확인. 탈락 5: PC모니터(모니터 카테고리로 분리·TV 결합 볼륨 0), 아웃도어(신호 0), 벽걸이 설치(9K/년·구매 세그먼트 아님), 스트리밍 화질(신호 0), 눈 편안함(기존 리포트에서 기보고 — 비교 관문 레버리지로 유지).</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">02</span><h2>맥락 신호 맵(Context Signal Map)</h2><span class="badge b-measured">MEASURED</span><span class="hint">적재본 프로브 · 볼륨=월합, 여정=path 경유 건수</span></div>
+    <table>
+      <thead><tr><th>맥락 프로브</th><th>키워드수</th><th>월 볼륨합</th><th>여정 신호</th><th>게이트</th></tr></thead>
+      <tbody>
+        <tr><td>케어·수리·유지(애프터마켓)</td><td>140</td><td>53,412</td><td>76건</td><td>✔ 통과</td></tr>
+        <tr><td>침실·세컨드·소형(32~48인치)</td><td>24</td><td>24,180</td><td>1건</td><td>✔ 통과(실측 보강)</td></tr>
+        <tr><td>밝은 거실(내광성)</td><td>7</td><td>11,766</td><td>0건</td><td>△ 실측 추세로 통과</td></tr>
+        <tr><td>신기술 관심(투명·마이크로LED)</td><td>30</td><td>10,463</td><td>0건</td><td>△ 관찰</td></tr>
+        <tr><td>홈시어터·초대형·프로젝터 대체</td><td>33</td><td>8,307</td><td>3건</td><td>✔ 통과</td></tr>
+        <tr><td>아트·인테리어(갤러리·프레임)</td><td>6</td><td>4,582</td><td>0건</td><td>△ 관찰(실측 약함)</td></tr>
+        <tr><td>눈 편안함·시력</td><td>52</td><td>1,259</td><td><b>240건</b></td><td>기보고(비교 관문 축)</td></tr>
+        <tr><td>PC·데스크 모니터 전환</td><td>5</td><td>≈0</td><td>4건</td><td>✘ 탈락(별도 카테고리)</td></tr>
+        <tr><td>벽걸이·설치 / 아웃도어 / 스트리밍 화질</td><td>2/0/0</td><td>710/0/0</td><td>0/1/0</td><td>✘ 탈락</td></tr>
+      </tbody>
+    </table>
+    <p class="note">여정 신호는 path:oled 경로 내 패턴 경유 건수. "눈 편안함"은 볼륨은 작지만 여정 경유 최다(240건) — 신규 세그먼트가 아니라 <b>모든 세그먼트가 통과하는 비교 관문</b>으로 재확인(기존 리포트 결론 유지).</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">03</span><h2>세그먼트 후보(Segment Candidates)</h2><span class="badge b-derived">DERIVED</span><span class="hint">CEP 정의는 검색 언어 기반 해석 · 순서=우선순위</span></div>
+    <div class="segs">
+      <div class="seg confirmed"><span class="st">확정 ①</span><h3>밝은 거실 시청자 (Bright-Room Viewers)</h3>
+        <div class="cep"><b>CEP</b>: 채광 좋은 거실·주간 시청 환경에서 "OLED는 어둡다"는 인식 검증 중</div>
+        <ul><li>oled bright room 3,900/월 <span class="tr-up">▲51%</span> · <b>경쟁도 1</b> · CPC $0.53</li>
+        <li>best tv for bright room 3,366/월 ▲24% (카테고리 관문 쿼리)</li>
+        <li>함의: QLED 이탈 방어 최전선 — 신형 고휘도 패널 소구의 정조준점</li></ul></div>
+      <div class="seg confirmed"><span class="st">확정 ②</span><h3>프로젝터 대체 홈시어터 (Home-Theater Upsizers)</h3>
+        <div class="cep"><b>CEP</b>: 전용 시청 공간 구축 시 프로젝터 vs 초대형 OLED 저울질</div>
+        <ul><li>projector vs oled 2,400/월 <span class="tr-up">▲81%</span> · 경쟁 LOW</li>
+        <li>97인치 <span class="tr-up">▲178%</span> · 83인치 <span class="tr-up">▲108%</span> — 초대형 사이즈 쿼리 동반 급성장</li>
+        <li>함의: 초대형 라인(83~97") 수요 견인축 — 프로젝터 비교 콘텐츠 공백</li></ul></div>
+      <div class="seg confirmed"><span class="st">확정 ③</span><h3>소형·세컨드 OLED (Small-Space Seekers)</h3>
+        <div class="cep"><b>CEP</b>: 침실·서재·원룸 등 두 번째/소공간 설치 — 사이즈 하한 탐색</div>
+        <ul><li>42인치 2,966/월 ▲20% · 48인치 1,766/월 <span class="tr-up">▲50%</span> · small/smallest 1,400/월</li>
+        <li><b>32인치 1,900/월 ▼20%</b> — 해당 제품이 시장에 없는 <b>미충족 수요</b>(하락은 포기 신호 가능)</li>
+        <li>함의: 42/48" 재고·노출 강화 + 소형 라인업 공백의 상품기획 검토</li></ul></div>
+      <div class="seg confirmed"><span class="st">확정 ④</span><h3>오너십 케어 (Owner Care & Longevity)</h3>
+        <div class="cep"><b>CEP</b>: 구매 후 보유 단계 — 번인·수명·청소·수리·보증 관리</div>
+        <ul><li>케어 쿼리군 140개 · <b>641K/년</b>(적재본) · 여정 76건 — 최대 잔존 니즈 풀</li>
+        <li>how long do oled tvs last 720/월 LOW · warranty <span class="tr-up">▲300%</span>(저볼륨)</li>
+        <li>함의: 구매 세그먼트가 아닌 <b>보유자 세그먼트</b> — 케어 콘텐츠·보증 상품·CRM 기회이자 신규 구매자 불안 해소 자산</li></ul></div>
+      <div class="seg watch"><span class="st">관찰 ①</span><h3>차세대 패널 얼리어답터 (Next-Panel Watchers)</h3>
+        <div class="cep"><b>CEP</b>: 신기술 공개 이벤트 후 차세대 디스플레이 탐색</div>
+        <ul><li>transparent oled tv <span class="tr-up">▲504%</span>(1,160/월) · lg transparent tv 966/월 — LG 투명 TV 관심 급등(인과 단정 금지)</li>
+        <li>micro led vs oled ▲47% — 대체 기술 저울질 동반</li>
+        <li>함의: 볼륨 소규모(M 미만)라 관찰 유지 — 급등 지속 시 프리미엄 헤일로 자산화</li></ul></div>
+      <div class="seg watch"><span class="st">관찰 ②</span><h3>아트·인테리어 (Art & Décor)</h3>
+        <div class="cep"><b>CEP</b>: 거실 인테리어 요소로서의 TV — 갤러리·액자 모드 탐색</div>
+        <ul><li>적재본 55K/년(screensaver·wallpaper 사용법 위주) — 실측은 약함(frame tv vs oled 30/월 ▼25%)</li>
+        <li>함의: 구매 세그먼트로는 미성숙 — 단 삼성 The Frame 전장이므로 <b>방어 관찰</b> 유지</li></ul></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">04</span><h2>실측 검증(Validation)</h2><span class="badge b-measured">MEASURED</span><span class="hint">keyword_info 1콜(24그룹) · 2026-07-29 · 볼륨=월평균</span></div>
+    <table>
+      <thead><tr><th>대표 쿼리</th><th>월 볼륨</th><th>3개월 추세</th><th>경쟁</th><th>세그먼트</th></tr></thead>
+      <tbody>
+        <tr><td>oled bright room 그룹</td><td>3,900</td><td class="tr-up">▲51%</td><td>LOW(1)</td><td>밝은 거실</td></tr>
+        <tr><td>best tv for bright room</td><td>3,366</td><td class="tr-up">▲24%</td><td>HIGH</td><td>밝은 거실(관문)</td></tr>
+        <tr><td>42 inch oled tv 그룹</td><td>2,966</td><td class="tr-up">▲20%</td><td>HIGH</td><td>소형·세컨드</td></tr>
+        <tr><td>projector vs oled 그룹</td><td>2,400</td><td class="tr-up">▲81%</td><td>LOW(3)</td><td>홈시어터</td></tr>
+        <tr><td>32 inch oled tv 그룹</td><td>1,900</td><td class="tr-dn">▼20%</td><td>HIGH</td><td>소형(미충족)</td></tr>
+        <tr><td>48 inch oled tv 그룹</td><td>1,766</td><td class="tr-up">▲50%</td><td>HIGH</td><td>소형·세컨드</td></tr>
+        <tr><td>small/smallest oled tv 그룹</td><td>1,400</td><td>0%</td><td>HIGH</td><td>소형·세컨드</td></tr>
+        <tr><td>transparent oled tv</td><td>1,160</td><td class="tr-up">▲504%</td><td>HIGH</td><td>차세대(관찰)</td></tr>
+        <tr><td>micro led vs oled</td><td>1,100</td><td class="tr-up">▲47%</td><td>LOW</td><td>차세대(관찰)</td></tr>
+        <tr><td>lg transparent tv 그룹</td><td>966</td><td class="tr-dn">▼18%</td><td>MED</td><td>차세대(관찰)</td></tr>
+        <tr><td>83 inch oled tv</td><td>770</td><td class="tr-up">▲108%</td><td>HIGH</td><td>홈시어터</td></tr>
+        <tr><td>how long do oled tvs last</td><td>720</td><td>0%</td><td>LOW</td><td>오너십 케어</td></tr>
+        <tr><td>97 inch oled tv</td><td>263</td><td class="tr-up">▲178%</td><td>HIGH</td><td>홈시어터</td></tr>
+        <tr><td>oled screen repair · warranty · anti glare · frame vs oled 등</td><td>30~213</td><td>혼조</td><td>—</td><td>저볼륨 보조 신호</td></tr>
+      </tbody>
+    </table>
+    <p class="note">읽기 — 확정 4개 세그먼트 모두 실측 추세가 보합 이상이며, 특히 <b>밝은 거실(+51%·경쟁도 1)</b>과 <b>홈시어터(+81~178%)</b>는 성장·저경쟁이 겹치는 이중 기회. 32인치 하락(▼20%)은 수요 소멸이 아니라 <b>제품 부재로 인한 탐색 포기</b>일 수 있음(파생 — 재확인 필요).</p>
+  </div>
+
+  <div class="card">
+    <div class="shead"><span class="no">05</span><h2>기회 백로그(Opportunity Backlog) — LG 브랜드매니저 관점</h2><span class="badge b-derived">DERIVED</span><span class="hint">발굴·검증 통합 · 의사결정 지원 참고용</span></div>
+    <p class="sub">임팩트 스케일 = 연환산 검색량: <span class="sc sc-l">L</span>10만+ · <span class="sc sc-m">M</span>1만~10만 · <span class="sc sc-s">S</span>1만 미만</p>
+    <table>
+      <thead><tr><th>기회</th><th>근거 (측정)</th><th>LG 액션</th></tr></thead>
+      <tbody>
+        <tr class="group g-now"><td colspan="3">지금 대응할 변화</td></tr>
+        <tr><td>"밝은 거실" 세그먼트 선점</td><td><span class="sc sc-l">L</span>bright room 계열 ~87K/년 ▲24~51% · oled 결합 쿼리 경쟁도 1</td><td>고휘도 패널 소구의 전용 랜딩+검색 광고 저비용 선점 — QLED 방어 최전선<span class="veil">밝기 수치(nit)는 공시값만 인용(가드레일 ①)</span></td></tr>
+        <tr><td>프로젝터 대체 비교 콘텐츠</td><td><span class="sc sc-m">M</span>projector vs oled 29K/년 ▲81% LOW + 97" ▲178%·83" ▲108%</td><td>초대형 라인 중심 "프로젝터 vs OLED" 총소유비용·설치 비교 콘텐츠 선점</td></tr>
+        <tr class="group g-watch"><td colspan="3">계속 지켜볼 변화</td></tr>
+        <tr><td>소형 라인업 공백(32인치)</td><td><span class="sc sc-m">M</span>32" 23K/년 ▼20%(제품 부재) · 42" ▲20%·48" ▲50%</td><td>42/48" 노출 강화 즉시 + 32인치급 소형 OLED 상품성 검토를 상품기획에 이관<span class="veil">하락 원인(포기 vs 소멸)은 분기 추적 후 판단(파생)</span></td></tr>
+        <tr><td>투명 OLED 관심 급등</td><td><span class="sc sc-s">S</span>transparent 계열 ▲504%(절대량 소규모)</td><td>급등 지속성 3개월 관찰 — 지속 시 프리미엄 헤일로 캠페인 자산화<span class="veil">신제품 이벤트와의 인과 단정 금지(가드레일 ⑤)</span></td></tr>
+        <tr class="group g-risk"><td colspan="3">위험 신호</td></tr>
+        <tr><td>오너십 케어 니즈 방치</td><td><span class="sc sc-l">L</span>케어·수명·수리 641K/년 — 세그먼트 중 최대 풀이 구매 밖에 존재</td><td>케어 허브(번인 진단·청소·보증 연장) 구축 — 방치 시 "OLED=관리 부담" 인식이 신규 구매 전환의 역풍으로 작동<span class="veil">⚠ 수명·번인 서술은 소비자 우려 신호이며 제품 성능 진술 아님(가드레일 ③)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    <b>방법·한계</b> — 하이브리드: 발굴은 us_tv_2026-07 적재본(OLED 2,216키워드·여정 293경로, 스냅샷 07-14, 0크레딧) · 검증은 keyword_info 1콜(24그룹, 2026-07-29). 크레딧 실측: 이번 분석 소진 <b>24</b> (cost_detail.total_cost) · 월간 누적(used_credits) 7,904,685.<br><br>
+    <b>가드레일</b> — ① 모든 수치는 검색량 기준이며 판매·세그먼트 수익성이 아님 ② 세그먼트 볼륨은 쿼리 중복 가능성으로 상호 합산 금지 ③ 번인·수명은 소비자 우려 신호이며 제품 성능 진술 아님 ④ 밝기 등 스펙 수치는 제조사 공시값만 인용 ⑤ 신제품·이벤트와 검색 급등의 인과는 단정하지 않고 동향으로만 서술 ⑥ 성·연령 인구통계는 gl=kr 전용 사양으로 미제공 ⑦ 여정 신호 0건 후보(밝은 거실·아트)는 단일 축 판정임을 명시.
+  </div>
+</div>

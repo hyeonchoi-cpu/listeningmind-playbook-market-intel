@@ -1,5 +1,6 @@
 import type { A3Report } from "@/types";
 import { LabelBadge } from "./LabelBadge";
+import { InsightCards } from "./InsightCards";
 import { ComplianceFooter } from "./ComplianceFooter";
 
 const AXIS_LABEL: Record<string, string> = {
@@ -32,7 +33,7 @@ export function A3ReportView({ report }: { report: A3Report }) {
       )}
 
       <div className="detail-section">
-        <div className="detail-section-title">인텐트 믹스 (플래그 보유 키워드 수 · 볼륨 합)</div>
+        <div className="detail-section-title">검색 의도 구성(Intent Mix) — 플래그 보유 키워드 수 · 볼륨 합</div>
         <div className="stat-grid">
           {report.intentMix.map((row) => (
             <div key={row.key} className="stat-card">
@@ -54,14 +55,7 @@ export function A3ReportView({ report }: { report: A3Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">인사이트</div>
-        <div className="insight-grid">
-          {report.insights.map((ins, i) => (
-            <div key={i} className="insight-card">
-              <div className="insight-card-title">{ins.title}</div>
-              <div className="insight-card-body">{ins.body}</div>
-            </div>
-          ))}
-        </div>
+        <InsightCards insights={report.insights} meta={report.meta} />
       </div>
 
       <div className="detail-section">
