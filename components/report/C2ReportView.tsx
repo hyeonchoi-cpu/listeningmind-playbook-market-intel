@@ -77,7 +77,7 @@ export function C2ReportView({ report }: { report: C2Report }) {
 
       <div className="detail-section">
         <div className="detail-section-title">브랜드별 검색 점유율(SoV) — 자사 vs 경쟁 · 볼륨순</div>
-        <BrandTable brands={report.brands} />
+        <BrandTable brands={report.brands} showAliases={false} />
       </div>
 
       <div className="detail-section">
