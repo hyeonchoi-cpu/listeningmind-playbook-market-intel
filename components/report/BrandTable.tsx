@@ -2,7 +2,7 @@ import type { BrandRow } from "@/types";
 import { LabelBadge } from "./LabelBadge";
 
 /** C-1·C-2 공용 브랜드 지형 테이블 — 점유율은 항상 "검색량 기준 근사" 주석과 함께 렌더 */
-export function BrandTable({ brands, showAliases = true }: { brands: BrandRow[]; showAliases?: boolean }) {
+export function BrandTable({ brands }: { brands: BrandRow[] }) {
   return (
     <div>
       <div className="cross-table-wrap">
@@ -23,7 +23,6 @@ export function BrandTable({ brands, showAliases = true }: { brands: BrandRow[];
                 <th>
                   {b.name}
                   {b.isOurs && <span className="persona-chip ours-chip">자사</span>}
-                  {showAliases && <div className="brand-alias-line">{b.aliases.join(" · ")}</div>}
                 </th>
                 <td>{b.keywordCount}</td>
                 <td>
@@ -47,7 +46,7 @@ export function BrandTable({ brands, showAliases = true }: { brands: BrandRow[];
       </div>
       <p className="estimate-box-note" style={{ marginTop: 8 }}>
         점유율은 감지된 브랜드의 검색량 합 기준 근사이며 실제 판매·가입 점유율이 아닙니다. 매칭은 브랜드별
-        별칭(한/영/축약{showAliases ? ", 표 안에 표시" : ""}) 부분 문자열 기준이고, 단독 기업명 쿼리(예: &ldquo;삼성&rdquo; 단독)와
+        별칭(한/영/축약) 부분 문자열 기준이고, 단독 기업명 쿼리(예: &ldquo;삼성&rdquo; 단독)와
         비소비 맥락(주식·취업 등) 키워드는 집계에서 제외했습니다(가정).
       </p>
     </div>
